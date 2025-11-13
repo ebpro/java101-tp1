@@ -3,7 +3,7 @@ name: Build and deploy Maven site to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - develop
   workflow_dispatch: {}
 
 permissions:
