@@ -1,0 +1,47 @@
+name: Build and deploy Maven site to GitHub Pages
+
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Ensure mvnw is executable
+        run: chmod +x mvnw || true
+
+      - name: Build site (tests + jacoco + site)
+        run: |
+          ./mvnw -B -Pshadedjar clean test jacoco:report site
+
+      - name: Upload site to GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: target/site
+
+  deploy:
+    needs: build-and-upload
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v1
+

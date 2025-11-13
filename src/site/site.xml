@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/DECORATION/1.8.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/DECORATION/1.8.0 https://maven.apache.org/xsd/decoration-1.8.0.xsd"
+         name="Java 101 - TP1">
+
+  <!-- Left banner (title + optional logo + link) -->
+  <bannerLeft>
+    <name>Java 101 — TP1</name>
+    <src>https://raw.githubusercontent.com/ebpro/java101-tp1/main/logo.png</src>
+    <href>https://github.com/ebpro/java101-tp1</href>
+  </bannerLeft>
+
+  <!-- Right banner (small image) -->
+  <bannerRight>
+    <src>https://www.apache.org/images/feather-small.png</src>
+  </bannerRight>
+
+  <!-- Explicit skin declaration to ensure site plugin finds a skin -->
+  <skin>
+    <groupId>org.apache.maven.skins</groupId>
+    <artifactId>maven-fluido-skin</artifactId>
+    <version>2.1.0</version>
+  </skin>
+
+  <body>
+    <!-- Top-level links (helpful references) -->
+    <links>
+      <item name="Project README" href="index.html" />
+      <item name="Repository" href="https://github.com/ebpro/java101-tp1"/>
+      <item name="Maven Guide" href="https://maven.apache.org/guides/index.html"/>
+    </links>
+
+    <!-- Primary menu: local pages + a reference to the standard reports block -->
+    <menu name="Main">
+      <item name="Home" href="index.html"/>
+      <item name="Project Info" href="project-info.html"/>
+      <item name="API Javadoc" href="apidocs/index.html"/>
+      <item name="Tests &amp; Reports">
+        <item name="Unit Tests" href="surefire-report.html"/>
+        <item name="Code Coverage" href="jacoco/index.html"/>
+      </item>
+      <item name="Dependencies" href="dependency-info.html"/>
+    </menu>
+
+    <!-- Insert the standard reports menu provided by the project-info-reports plugin -->
+    <menu ref="reports" />
+
+  </body>
+
+</project>
