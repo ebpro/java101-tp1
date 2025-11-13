@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Demo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">tp1</a> &gt; <a href="index.source.html" class="el_package">fr.univtln.bruno.samples.java101.tp1</a> &gt; <span class="el_source">Demo.java</span></div><h1>Demo.java</h1><pre class="source lang-java linenums">package fr.univtln.bruno.samples.java101.tp1;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import fr.univtln.bruno.samples.java101.tp1.factory.PersonFactory;
+import fr.univtln.bruno.samples.java101.tp1.builder.AddressWithBuilder;
+
+/**
+ * Small demo application that exercises the sample classes from the lab.
+ *
+ * &lt;p&gt;The `main` method demonstrates creating `Person` instances (via the
+ * dedicated `PersonFactory`), creating `Address` with overloaded constructors
+ * and with an explicit Builder (`AddressWithBuilder`), and printing simple
+ * information with a logger. The class is intended as a runnable example for
+ * students to inspect and run.&lt;/p&gt;
+ *
+ * &lt;p&gt;A Logger is a common way to handle output in real applications, as opposed
+ * to using `System.out.println`. It allows more flexible control over logging
+ * levels and output destinations.&lt;/p&gt;
+ * &lt;p&gt;Logging is done via SLF4J; ensure that a suitable binding (e.g., Logback, see pom.xml)
+ * is present on the classpath to see the log output.&lt;/p&gt;
+ */
+public class Demo {
+<span class="nc" id="L25">    private static final Logger logger = LoggerFactory.getLogger(Demo.class);</span>
+
+    /**
+     * Public no-argument constructor for Demo. The class only exposes a static main
+     * method; this constructor exists to satisfy Javadoc conventions and for potential
+     * instantiation in examples/tools.
+     */
+<span class="nc" id="L32">    public Demo() {</span>
+        // no-op constructor: documented and intentionally empty for examples/tools
+<span class="nc" id="L34">    }</span>
+
+    /**
+     * Run the demo. Prints a few example objects to the logger.
+     *
+     * @param args command line arguments (unused)
+     */
+    public static void main(String[] args) {
+        // Create persons using the factory (preferred API)
+<span class="nc" id="L43">        Person p1 = PersonFactory.defaultPerson();</span>
+<span class="nc" id="L44">        Person p2 = PersonFactory.teenager(&quot;Bob&quot;, &quot;Martin&quot;);</span>
+
+        // Address via overloaded constructors (less flexible as options grow)
+<span class="nc" id="L47">        Address a1 = new Address(&quot;1 Example St&quot;, &quot;Example City&quot;, &quot;00000&quot;);</span>
+
+        // Address via explicit Builder pattern
+<span class="nc" id="L50">        AddressWithBuilder a2 = AddressWithBuilder.builder()</span>
+<span class="nc" id="L51">          .street(&quot;2 Example Ave&quot;)</span>
+<span class="nc" id="L52">          .city(&quot;Example City&quot;)</span>
+<span class="nc" id="L53">           .zipCode(&quot;06001&quot;)</span>
+<span class="nc" id="L54">           .build();</span>
+
+        // Print some info via the logger
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        if (logger.isInfoEnabled()) {</span>
+<span class="nc" id="L58">            logger.info(&quot;Person1: {}&quot;, p1.fullName());</span>
+<span class="nc" id="L59">            logger.info(&quot;Address (ctor): {}&quot;, a1);</span>
+<span class="nc" id="L60">            logger.info(&quot;Address (builder): {}&quot;, a2);</span>
+<span class="nc" id="L61">            logger.info(&quot;Second person: {} (age={})&quot;, p2.fullName(), p2.getAge());</span>
+        }
+<span class="nc" id="L63">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
