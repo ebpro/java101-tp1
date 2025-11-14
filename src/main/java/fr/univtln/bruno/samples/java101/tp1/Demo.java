@@ -3,7 +3,7 @@ package fr.univtln.bruno.samples.java101.tp1;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fr.univtln.bruno.samples.java101.tp1.factory.PersonFactory;
+import fr.univtln.bruno.samples.java101.tp1.factory.PersonWithFactory;
 import fr.univtln.bruno.samples.java101.tp1.builder.AddressWithBuilder;
 
 /**
@@ -40,8 +40,8 @@ public class Demo {
      */
     public static void main(String[] args) {
         // Create persons using the factory (preferred API)
-        Person p1 = PersonFactory.defaultPerson();
-        Person p2 = PersonFactory.teenager("Bob", "Martin");
+        fr.univtln.bruno.samples.java101.tp1.factory.PersonWithFactory p1 = PersonWithFactory.defaultPerson();
+        fr.univtln.bruno.samples.java101.tp1.factory.PersonWithFactory p2 = PersonWithFactory.teenager("Bob", "Martin");
 
         // Address via overloaded constructors (less flexible as options grow)
         Address a1 = new Address("1 Example St", "Example City", "00000");
@@ -55,10 +55,10 @@ public class Demo {
 
         // Print some info via the logger
         if (logger.isInfoEnabled()) {
-            logger.info("Person1: {}", p1.fullName());
+            logger.info("Person1: {} {}", p1.getFirstName(), p1.getLastName());
             logger.info("Address (ctor): {}", a1);
             logger.info("Address (builder): {}", a2);
-            logger.info("Second person: {} (age={})", p2.fullName(), p2.getAge());
+            logger.info("Second person: {} {} (age={})", p2.getFirstName(), p2.getLastName(), p2.getAge());
         }
     }
 }

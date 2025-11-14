@@ -17,7 +17,7 @@ import java.util.Objects;
  * overloaded constructors when optional parameters or many variants are required. The
  * constructor approach quickly becomes hard to read and maintain (the "telescoping"
  * or constructor-explosion problem). For flexible construction prefer the dedicated
- * {@code PersonFactory} or a builder: see {@link fr.univtln.bruno.samples.java101.tp1.factory.PersonFactory}.</p>
+ * {@code PersonWithFactory} or a builder: see {@link fr.univtln.bruno.samples.java101.tp1.factory.PersonWithFactory}.</p>
  *
  * <p>Design notes and guarantees:
  * <ul>

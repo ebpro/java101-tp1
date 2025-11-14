@@ -16,7 +16,7 @@
  *   <li>{@link fr.univtln.bruno.samples.java101.tp1.Address} — an immutable value object with
  *       overloaded constructors and a nested {@code Builder} to illustrate different
  *       construction styles.</li>
- *   <li>{@link fr.univtln.bruno.samples.java101.tp1.factory.PersonFactory} — small factory methods
+ *   <li>{@link fr.univtln.bruno.samples.java101.tp1.factory.PersonWithFactory} — small factory methods
  *       demonstrating named constructors to avoid constructor explosion.</li>
  *   <li>{@link fr.univtln.bruno.samples.java101.tp1.immutable.PersonImmutable} — an example of an
  *       immutable class implemented without records (final fields, builder).</li>

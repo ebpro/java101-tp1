@@ -12,7 +12,7 @@ Purpose of this README: present the topics in a learning-friendly order (from ea
    - Goal: show conventional getters/setters, constructor validation, and helper methods (`fullName`, `toString`).
    - Key points: mutable objects are convenient but require careful reasoning about state and thread-safety (the `instanceCount` in `Person` is not atomic).
 
-2. Factory methods (`fr.univtln.bruno.samples.java101.tp1.factory.PersonFactory`)
+2. Factory methods (`fr.univtln.bruno.samples.java101.tp1.factory.PersonWithFactory`)
    - Goal: present named factory methods (`of`, `defaultPerson`, `teenager`) to centralize validation and construction logic.
 
 3. Immutable value via constructors (`Address`)
