@@ -17,7 +17,7 @@ import java.util.Objects;
  * overloaded constructors when optional parameters or many variants are required. The
  * constructor approach quickly becomes hard to read and maintain (the &quot;telescoping&quot;
  * or constructor-explosion problem). For flexible construction prefer the dedicated
- * {@code PersonFactory} or a builder: see {@link fr.univtln.bruno.samples.java101.tp1.factory.PersonFactory}.&lt;/p&gt;
+ * {@code PersonWithFactory} or a builder: see {@link fr.univtln.bruno.samples.java101.tp1.factory.PersonWithFactory}.&lt;/p&gt;
  *
  * &lt;p&gt;Design notes and guarantees:
  * &lt;ul&gt;
@@ -103,7 +103,7 @@ public class Person {
    * @return current first name (may be empty string, never null when constructed)
    */
   public String getFirstName() {
-<span class="fc" id="L106">    return firstName;</span>
+<span class="nc" id="L106">    return firstName;</span>
   }
 
   /**
