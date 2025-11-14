@@ -1,136 +1,114 @@
-# Java 101 Lab — Examples and Teaching Path
+# Java 101 — TP1 (Teaching Examples)
 
-This repository contains small Java examples designed to illustrate core concepts from beginner to intermediate/advanced: simple POJOs, immutability, the Builder pattern, factories, Lombok, unit tests and packaging.
+This repository contains compact Java examples used for teaching Java fundamentals.
+The code is arranged to guide students from simple concepts to slightly more advanced
+patterns. The aim is practical learning: run the code, read the short examples,
+and modify them to explore behaviour.
 
-Purpose of this README: present the topics in a learning-friendly order (from easiest to hardest), explain how to build and run the project, and propose progressive exercises for students.
-
----
-
-## Learning path (easy → advanced)
-
-1. Mutable POJO with validation (`Person`)
-   - Goal: show conventional getters/setters, constructor validation, and helper methods (`fullName`, `toString`).
-   - Key points: mutable objects are convenient but require careful reasoning about state and thread-safety (the `instanceCount` in `Person` is not atomic).
-
-2. Factory methods (`fr.univtln.bruno.samples.java101.tp1.factory.PersonFactory`)
-   - Goal: present named factory methods (`of`, `defaultPerson`, `teenager`) to centralize validation and construction logic.
-
-3. Immutable value via constructors (`Address`)
-   - Goal: show a simple immutable type (final fields) and overloaded constructors.
-   - Key points: input normalization (null → `""`), a readable `toString()`.
-
-4. Builder pattern (`fr.univtln.bruno.samples.java101.tp1.builder.AddressWithBuilder`)
-   - Goal: build immutable objects with many optional fields using a fluent builder.
-   - Key points: builder is mutable, validation happens at `build()` time.
-
-5. Immutable value + Builder (`fr.univtln.bruno.samples.java101.tp1.immutable.PersonImmutable`)
-   - Goal: build thread-safe value objects via a private constructor and a nested Builder.
-   - Key points: builder normalizes/validates inputs before calling the private constructor.
-
-6. Lombok examples (`fr.univtln.bruno.samples.java101.tp1.lombok`)
-   - Goal: compare handwritten boilerplate with Lombok-generated code (`@Builder`, `@Getter`, `@AllArgsConstructor`, etc.).
-   - Key points: Lombok generates code at compile time — configure your IDE with the Lombok plugin to avoid editor warnings.
-
-7. Tests and logging (JUnit, AssertJ, Logback)
-   - Goal: demonstrate unit testing and readable assertions (AssertJ) and structured logging (SLF4J + Logback).
-   - Key points: tests live in `src/test/java`; assertions should focus on behavior (happy path + edge cases).
-
-8. Packaging: creating a fat/uber JAR with Maven Shade (profile `shadedjar`)
-   - Goal: show how to create an executable JAR that embeds dependencies for easy distribution.
-   - Key points: `maven-shade-plugin` supports transformers, filters and optional minimization; be careful with `minimizeJar` (it can break reflection) and with JPMS (`module-info.class`).
+This README is written for students and instructors. It is intentionally concise
+and ordered from easiest to more advanced topics.
 
 ---
 
-## About Maven
+## Learning path (easy → harder)
 
-Maven is the build tool used for this project. It manages compilation, testing, packaging and dependencies.
+1. Mutable objects (POJO)
+   - File: `src/main/java/.../Person.java`
+   - Concepts: fields, getters/setters, simple validation, mutability trade-offs.
 
-- Recommended version: any recent Maven 3.x (the wrapper included in this repo will download a compatible Maven automatically).
-- Java: make sure your `JAVA_HOME` points to the JDK used for the project (this repo targets JDK 21 via the compiler plugin). You can check with `java -version` and `echo $JAVA_HOME` (or `set JAVA_HOME` on Windows).
-- `settings.xml`: advanced users can customize `~/.m2/settings.xml` to configure mirrors, credentials, or local repository location.
-- Profiles: this project defines a `shadedjar` profile used to produce an uber-jar. Activate it with `-Pshadedjar`.
-- Common CLI options students will use:
-  - `-DskipTests=true` or `-DskipTests` — skip tests during packaging (useful for faster iteration)
-  - `-T 1C` — enable multi-threaded builds (use carefully on CI)
-  - `-U` — force update of snapshots
+2. Simple factories and named constructors
+   - File: `src/main/java/.../factory/PersonWithFactory.java`
+   - Concepts: static factory methods (`of`, `defaultPerson`, `teenager`) that
+     improve readability and centralise construction logic.
 
-Troubleshooting tips:
-- If dependency downloads fail, check your network or company proxy settings and your `~/.m2/settings.xml`.
-- If classfile version errors occur, ensure `maven.compiler.release` matches your JDK and that `JAVA_HOME` is correct.
-- To clean build state: `./mvnw clean` then `./mvnw package`.
+3. Immutable value objects
+   - File: `src/main/java/.../Address.java` and `immutable/PersonImmutable.java`
+   - Concepts: final fields, private constructors, thread-safety and why immutability helps.
+
+4. Builder pattern
+   - File: `src/main/java/.../builder/AddressWithBuilder.java`
+   - Concepts: fluent API for building complex/optional configurations, `build()` validation.
+
+5. Lombok-powered examples
+   - Package: `src/main/java/.../lombok`
+   - Concepts: reduce boilerplate with annotations (`@Getter`, `@Builder`, `@ToString`).
+     Note: enable annotation processing in your IDE to avoid warnings.
+
+6. Packaging, testing and site generation
+   - Packaging: Maven Shade profile `shadedjar` for a fat JAR.
+   - Testing: JUnit + AssertJ in `src/test/java`.
+   - Site: `mvnw site` generates project reports and javadoc under `target/site`.
 
 ---
 
-## Maven Wrapper
+## Quick start (students)
 
-This project includes the Maven Wrapper files (`mvnw`, `mvnw.cmd` and the `.mvn/wrapper` directory). Use the wrapper so students do not need a local Maven installation and the build is reproducible across machines and CI.
+1. Ensure you have a JDK (21 is the target). Set `JAVA_HOME` accordingly.
 
-- Unix / macOS:
+2. Use the Maven wrapper included in the project to run builds reproducibly:
 
 ```bash
-./mvnw <goal>   # e.g. ./mvnw verify
-```
-
-- Windows (CMD/PowerShell):
-
-```
-mvnw.cmd <goal>
-```
-
-Notes:
-- Ensure the `mvnw` script is executable on Unix-like systems: `chmod +x mvnw` (one-time).
-- The wrapper will download a Maven distribution the first time it runs; it does not replace the need for a compatible JDK (set `JAVA_HOME` if necessary).
-- If the wrapper is missing you can generate it with: `mvn -N io.takari:maven:wrapper` (requires a local Maven for generation).
-
----
-
-## Useful commands
-
-- Run full build and tests:
-
-```bash
-./mvnw verify
-```
-
-- Build main artifact and attached artifacts (sources & javadoc):
-
-```bash
+# Unix / macOS
 ./mvnw clean package
+
+# Run the demo
+java -cp target/tp1-0.0.1-SNAPSHOT.jar fr.univtln.bruno.samples.java101.tp1.Demo
 ```
 
-- Build the attached shaded (uber) JAR (skip tests for speed):
+3. Produce a site (reports + javadoc):
+
+```bash
+./mvnw -DskipTests site
+# Open site report locally
+open target/site/index.html
+```
+
+4. Build a shaded (fat) JAR for distribution:
 
 ```bash
 ./mvnw -Pshadedjar -DskipTests clean package
+java -jar target/tp1-0.0.1-SNAPSHOT.jar
 ```
 
-The shaded JAR (attached) will be created at:
+---
 
-```
-target/tp1-0.0.1-SNAPSHOT-withdependencies.jar
-```
+## Notes about Maven and the wrapper
 
-Run the shaded jar:
+- This repo includes the Maven Wrapper (`mvnw`) to ensure the same Maven
+  version is used by all students. The wrapper downloads the configured
+  Maven distribution automatically.
+- If you have Maven locally and prefer to use it, ensure it is recent (3.x).
+- If you see classfile or compilation errors, verify your `JAVA_HOME` and the
+  `maven.compiler.release` configuration in `pom.xml`.
 
-```bash
-java -jar target/tp1-0.0.1-SNAPSHOT-withdependencies.jar
-```
+---
 
-- JaCoCo coverage report (after `verify`):
+## Continuous Integration & GitHub
 
-```
-target/site/jacoco/index.html
-```
+This project includes GitHub Actions workflows that:
+- Build and test the project on multiple Java versions (CI workflow).
+- Run CodeQL security analysis (CodeQL workflow).
+- Build and deploy the Maven site to GitHub Pages (deploy-pages workflow).
 
-- Javadoc & javadoc jar:
+Notes for instructors:
+- CI runs on GitHub-hosted runners and uses the Maven wrapper; no additional
+  setup is required in most cases.
+- The GitHub Pages workflow publishes the generated site artifacts; see the
+  workflow YAML in `.github/workflows/deploy-pages.yml`.
 
-```
-target/apidocs/
-target/tp1-0.0.1-SNAPSHOT-javadoc.jar
-```
+---
 
-- Sources jar:
+## What I changed in this repository (instructor-facing summary)
 
-```
-target/tp1-0.0.1-SNAPSHOT-sources.jar
-```
+- Added clear English documentation in package-level Javadoc.
+- Updated `Demo` to show factory, builder and singleton usage.
+- Rewrote this README in English, ordered by difficulty and focused on
+  students (removed exercise sections per request).
+- Ensured Javadoc warnings are addressed where practical.
+
+---
+
+If you want, I can also:
+- Add a short unit test for `PersonSingleton` demonstrating initialization.
+- Add a small section with common IDE setup tips (IntelliJ, VS Code) for Lombok.
+- Set up GitHub Pages publishing to reuse an existing Java 21 build artifact in CI.
