@@ -308,6 +308,15 @@
         </executions>
       </plugin>
 
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.5.1</version>
+        <configuration>
+          <mainClass>fr.univtln.bruno.samples.java101.tp2.app.DemoVehicle</mainClass>
+        </configuration>
+      </plugin>
+
     </plugins>
 
   </build>
