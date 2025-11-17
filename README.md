@@ -25,6 +25,16 @@ and ordered from easiest to more advanced topics.
    - File: `src/main/java/.../Address.java` and `immutable/PersonImmutable.java`
    - Concepts: final fields, private constructors, thread-safety and why immutability helps.
 
+   - New: `PersonValueObject` (record)
+     - File: `src/main/java/fr/univtln/bruno/samples/java101/tp1/immutable/PersonValueObject.java`
+     - Concepts for students:
+       - Java `record` as a lightweight immutable data carrier.
+       - Compact canonical constructor to validate invariants (null checks, non-negative age).
+       - Static factory `of(...)` as a convenient named constructor.
+       - Non-mutating update helpers (`withName`, `withEmail`, `withAge`, `incrementAge`) that return new instances.
+       - `merge(...)` pattern: merging non-null fields from another instance to produce a combined result.
+       - Why value objects make reasoning, testing and concurrency simpler than mutable POJOs.
+
 4. Builder pattern
    - File: `src/main/java/.../builder/AddressWithBuilder.java`
    - Concepts: fluent API for building complex/optional configurations, `build()` validation.
@@ -45,7 +55,20 @@ and ordered from easiest to more advanced topics.
 
 1. Ensure you have a JDK (21 is the target). Set `JAVA_HOME` accordingly.
 
-2. Use the Maven wrapper included in the project to run builds reproducibly:
+2. **Install Git hooks** (recommended for quality checks):
+
+```bash
+./install-hooks.sh
+```
+
+This installs hooks that:
+- ✅ Compile code and run tests before each commit
+- 📝 Validate commit message format (Conventional Commits)
+- 🚀 Run full verification before pushing
+
+See `.githooks/README.md` for details.
+
+3. Use the Maven wrapper included in the project to run builds reproducibly:
 
 ```bash
 # Unix / macOS
@@ -55,7 +78,7 @@ and ordered from easiest to more advanced topics.
 java -cp target/tp1-0.0.1-SNAPSHOT.jar fr.univtln.bruno.samples.java101.tp1.Demo
 ```
 
-3. Produce a site (reports + javadoc):
+4. Produce a site (reports + javadoc):
 
 ```bash
 ./mvnw -DskipTests site
@@ -63,7 +86,7 @@ java -cp target/tp1-0.0.1-SNAPSHOT.jar fr.univtln.bruno.samples.java101.tp1.Demo
 open target/site/index.html
 ```
 
-4. Build a shaded (fat) JAR for distribution:
+5. Build a shaded (fat) JAR for distribution:
 
 ```bash
 ./mvnw -Pshadedjar -DskipTests clean package
@@ -98,17 +121,83 @@ Notes for instructors:
 
 ---
 
-## What I changed in this repository (instructor-facing summary)
+## Note about class names and conventions
 
-- Added clear English documentation in package-level Javadoc.
-- Updated `Demo` to show factory, builder and singleton usage.
-- Rewrote this README in English, ordered by difficulty and focused on
-  students (removed exercise sections per request).
-- Ensured Javadoc warnings are addressed where practical.
+In this teaching repository some class names intentionally include the pattern
+or style in their name (for example: `PersonWithFactory`, `PersonImmutable`,
+`PersonValueObject`, `PersonWithBuilder`, `PersonSingleton`). This is done to
+make the educational intent explicit and to help beginners quickly see which
+pattern is illustrated by each class.
+
+Important: these pedagogical names are NOT recommended for production code.
+In real projects prefer clean, domain-driven names and rely on packages or
+suffixes to indicate roles or patterns. Suggested mappings and guidelines:
+
+- Production naming examples:
+  - Entity: `Person` or `PersonEntity`
+  - DTO (transfer object): `PersonDto` or `PersonDTO`
+  - Factory: `PersonFactory` (not `PersonWithFactory`)
+  - Builder: `PersonBuilder` or `AddressBuilder`
+  - Immutable/value object: `PersonValue` or use a `record` named `Person` in an `immutable` package
+  - Singleton/test utility: `PersonSingleton` only when explicitly demonstrating the pattern; prefer dependency injection or `enum` singletons in real systems
+
+- Guidelines:
+  - Use nouns for domain objects (Person, Address, Order).
+  - Use verbs or -er suffix for services that perform actions (PersonService,
+    OrderProcessor).
+  - Use packages to group patterns: `..factory`, `..builder`, `..immutable`, `..lombok`.
+  - Avoid the `With` infix in production names (it is only used here for clarity).
+
+If you adapt these examples into your own project, apply production naming
+conventions and regroup pattern examples into dedicated packages so code
+remains clear and idiomatic.
 
 ---
 
-If you want, I can also:
-- Add a short unit test for `PersonSingleton` demonstrating initialization.
-- Add a small section with common IDE setup tips (IntelliJ, VS Code) for Lombok.
-- Set up GitHub Pages publishing to reuse an existing Java 21 build artifact in CI.
+## Git Hooks for Code Quality
+
+This project includes Git hooks to help maintain code quality and consistent
+practices:
+
+### Available Hooks
+
+- **pre-commit**: Compiles code and runs tests before each commit
+- **commit-msg**: Validates commit messages follow Conventional Commits format
+- **pre-push**: Runs full verification (`mvn clean verify`) before pushing
+
+### Installation
+
+```bash
+./install-hooks.sh
+```
+
+### Benefits for Students
+
+- Learn professional development practices early
+- Avoid committing broken code
+- Practice meaningful commit messages
+- Build confidence through automated checks
+
+### Skipping Hooks (when needed)
+
+```bash
+git commit --no-verify -m "message"   # Skip pre-commit
+git push --no-verify                   # Skip pre-push
+```
+
+For complete documentation, see `.githooks/README.md`.
+
+---
+
+## For Instructors
+
+This teaching repository demonstrates multiple Java patterns in a compact way.
+Students are encouraged to:
+- Read the code and understand why each pattern is used
+- Run tests to see the behaviour
+- Modify examples and observe the effects
+- Compare mutable vs immutable approaches
+- Learn when factories, builders or records are appropriate
+
+The Maven site generation (with Javadoc and test reports) helps students
+see the documentation and coverage in a professional format.

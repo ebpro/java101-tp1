@@ -15,11 +15,15 @@ import java.util.Objects;
  *   <li>{@code email} - contact email, must be non-null</li>
  *   <li>{@code age} - non-negative integer representing age</li>
  * </ul>
- * </p>
  *
  * <p>Invariants are validated in the compact constructor.</p>
+ *
+ * @param id non-null unique identifier
+ * @param name non-null person name
+ * @param email non-null contact email
+ * @param age non-negative integer representing age
  */
-public record PersonRecord(String id, String name, String email, int age) {
+public record PersonValueObject(String id, String name, String email, int age) {
     /**
      * Compact canonical constructor performing basic validation.
      *
@@ -30,7 +34,7 @@ public record PersonRecord(String id, String name, String email, int age) {
      * @throws NullPointerException if {@code id}, {@code name} or {@code email} is null
      * @throws IllegalArgumentException if {@code age} is negative
      */
-    public PersonRecord {
+    public PersonValueObject {
         Objects.requireNonNull(id, "id ne doit pas être null");
         Objects.requireNonNull(name, "name ne doit pas être null");
         Objects.requireNonNull(email, "email ne doit pas être null");
@@ -48,8 +52,8 @@ public record PersonRecord(String id, String name, String email, int age) {
      * @throws NullPointerException if {@code id}, {@code name} or {@code email} is null
      * @throws IllegalArgumentException if {@code age} is negative
      */
-    public static PersonRecord of(String id, String name, String email, int age) {
-        return new PersonRecord(id, name, email, age);
+    public static PersonValueObject of(String id, String name, String email, int age) {
+        return new PersonValueObject(id, name, email, age);
     }
 
     /**
@@ -59,8 +63,8 @@ public record PersonRecord(String id, String name, String email, int age) {
      * @return a new {@code PersonRecord} with {@code name} set to {@code newName}
      * @throws NullPointerException if {@code newName} is null
      */
-    public PersonRecord withName(String newName) {
-        return new PersonRecord(this.id, Objects.requireNonNull(newName, "name ne doit pas être null"), this.email, this.age);
+    public PersonValueObject withName(String newName) {
+        return new PersonValueObject(this.id, Objects.requireNonNull(newName, "name ne doit pas être null"), this.email, this.age);
     }
 
     /**
@@ -70,8 +74,8 @@ public record PersonRecord(String id, String name, String email, int age) {
      * @return a new {@code PersonRecord} with {@code email} set to {@code newEmail}
      * @throws NullPointerException if {@code newEmail} is null
      */
-    public PersonRecord withEmail(String newEmail) {
-        return new PersonRecord(this.id, this.name, Objects.requireNonNull(newEmail, "email ne doit pas être null"), this.age);
+    public PersonValueObject withEmail(String newEmail) {
+        return new PersonValueObject(this.id, this.name, Objects.requireNonNull(newEmail, "email ne doit pas être null"), this.age);
     }
 
     /**
@@ -81,9 +85,9 @@ public record PersonRecord(String id, String name, String email, int age) {
      * @return a new {@code PersonRecord} with {@code age} set to {@code newAge}
      * @throws IllegalArgumentException if {@code newAge} is negative
      */
-    public PersonRecord withAge(int newAge) {
+    public PersonValueObject withAge(int newAge) {
         if (newAge < 0) throw new IllegalArgumentException("age doit être >= 0");
-        return new PersonRecord(this.id, this.name, this.email, newAge);
+        return new PersonValueObject(this.id, this.name, this.email, newAge);
     }
 
     /**
@@ -91,8 +95,8 @@ public record PersonRecord(String id, String name, String email, int age) {
      *
      * @return a new {@code PersonRecord} with {@code age} = current age + 1
      */
-    public PersonRecord incrementAge() {
-        return new PersonRecord(this.id, this.name, this.email, this.age + 1);
+    public PersonValueObject incrementAge() {
+        return new PersonValueObject(this.id, this.name, this.email, this.age + 1);
     }
 
     /**
@@ -108,11 +112,11 @@ public record PersonRecord(String id, String name, String email, int age) {
      * @param other another {@code PersonRecord} to merge from, may be null
      * @return a new {@code PersonRecord} representing the merged result
      */
-    public PersonRecord merge(PersonRecord other) {
+    public PersonValueObject merge(PersonValueObject other) {
         if (other == null) return this;
         String mergedName = other.name != null ? other.name : this.name;
         String mergedEmail = other.email != null ? other.email : this.email;
         int mergedAge = other.age >= 0 ? other.age : this.age; // suppose age négatif comme "absent"
-        return new PersonRecord(this.id, mergedName, mergedEmail, mergedAge);
+        return new PersonValueObject(this.id, mergedName, mergedEmail, mergedAge);
     }
 }
