@@ -115,7 +115,7 @@ Contributions welcome! Please:
 
 ## 🙏 About
 
-Created for teaching Java programming at **Université de Toulon** by [Emmanuel Bruno](mailto:emmanuel.bruno@univ-tln.fr).
+Created for teaching Java programming at **University of Toulon** by [Emmanuel Bruno](mailto:emmanuel.bruno@univ-tln.fr).
 
 ---
 

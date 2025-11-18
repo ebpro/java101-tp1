@@ -1,0 +1,55 @@
+name: Deploy Preview to Netlify
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - 'feature/**'
+  workflow_dispatch: {}
+
+jobs:
+  deploy-preview:
+    name: Deploy site preview to Netlify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Ensure mvnw and build-site.sh are executable
+        run: |
+          chmod +x mvnw || true
+          chmod +x build-site.sh || true
+
+      - name: Set reproducible build timestamp
+        run: echo "BUILD_TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_ENV
+
+      - name: Build aggregated Maven site (skip tests for faster preview)
+        run: |
+          ./build-site.sh --skip-tests
+        env:
+          MAVEN_OPTS: "-Dproject.build.outputTimestamp=${{ env.BUILD_TIMESTAMP }}"
+
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: './target/staging'
+          production-deploy: false
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Deploy preview for ${{ github.ref_name }} @ ${{ github.sha }}"
+          enable-pull-request-comment: true
+          enable-commit-comment: false
+          overwrites-pull-request-comment: true
+          alias: ${{ github.event.pull_request.number || github.ref_name }}
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 5
+

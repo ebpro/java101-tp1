@@ -41,10 +41,11 @@ jobs:
         with:
           name: reports-java-${{ matrix.java }}-${{ github.run_id }}
           path: |
-            target/surefire-reports/**
-            target/failsafe-reports/**
-            target/jacoco.exec
-            target/site/jacoco/**
+            */target/surefire-reports/**
+            */target/failsafe-reports/**
+            */target/jacoco.exec
+            */target/site/jacoco/**
+          if-no-files-found: warn
 
       - name: Display JVM version
         run: java -XshowSettings:properties -version || true
@@ -78,10 +79,11 @@ jobs:
         with:
           name: reports-java-21-${{ github.run_id }}
           path: |
-            target/surefire-reports/**
-            target/failsafe-reports/**
-            target/jacoco.exec
-            target/site/jacoco/**
+            */target/surefire-reports/**
+            */target/failsafe-reports/**
+            */target/jacoco.exec
+            */target/site/jacoco/**
+          if-no-files-found: warn
 
       - name: Display JVM version
         run: java -XshowSettings:properties -version || true
@@ -113,9 +115,10 @@ jobs:
 
       - name: Download Java 21 test artifacts (jacoco)
         uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
           name: reports-java-21-${{ github.run_id }}
-          path: target
+          path: .
 
       - name: Build shaded JAR with reproducible timestamp
         run: ./mvnw -B -Pshadedjar -DskipTests -Dproject.build.outputTimestamp=${{ env.BUILD_TIMESTAMP }} clean package
@@ -125,17 +128,19 @@ jobs:
         with:
           name: shaded-jar-${{ github.run_id }}
           path: |
-            target/*withdependencies.jar
+            */target/*withdependencies.jar
+          if-no-files-found: warn
 
       - name: Upload build artifacts (jars, sources, javadoc)
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts-${{ github.run_id }}
           path: |
-            target/*.jar
-            target/*-sources.jar
-            target/*-javadoc.jar
-            target/dependency-reduced-pom.xml
+            */target/*.jar
+            */target/*-sources.jar
+            */target/*-javadoc.jar
+            */target/dependency-reduced-pom.xml
+          if-no-files-found: warn
 
       - name: Display JVM version
         run: java -XshowSettings:properties -version || true

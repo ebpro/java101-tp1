@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 # Script pour générer le site Maven agrégé avec tous les modules
-# Usage: ./build-site.sh [--with-tests]
+# Usage: ./build-site.sh [--with-tests|--skip-tests]
 
 set -e
 
@@ -8,9 +8,12 @@ WITH_TESTS=""
 if [[ "$1" == "--with-tests" ]]; then
     echo "🧪 Build avec tests (pour rapport JaCoCo agrégé)"
     WITH_TESTS="true"
-else
+elif [[ "$1" == "--skip-tests" ]] || [[ -z "$1" ]]; then
     echo "⚡ Build rapide sans tests"
     WITH_TESTS="false"
+else
+    echo "❌ Usage: $0 [--with-tests|--skip-tests]"
+    exit 1
 fi
 
 JACOCO_VERSION="0.8.14"
