@@ -4,14 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <!-- Parent agrégateur multi-modules -->
+  <!-- Parent multi-module aggregator -->
   <groupId>fr.univtln.bruno.samples.java101</groupId>
   <artifactId>java101-parent</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>java101-parent</name>
-  <description>Parent multi-modules pour TP Java 101</description>
+  <description>Parent multi-module for Java 101 teaching examples</description>
   <url>https://github.com/ebpro/java101-tp1</url>
 
   <licenses>
@@ -28,7 +28,7 @@
     <developerConnection>scm:git:ssh://git@github.com:ebpro/java101-tp1.git</developerConnection>
   </scm>
 
-  <!-- distributionManagement nécessaire pour site:stage multimodule -->
+  <!-- distributionManagement required for multi-module site:stage -->
   <distributionManagement>
     <site>
       <id>local-staging</id>
@@ -61,7 +61,7 @@
     <!-- Use ISO 8601 UTC e.g. 2025-11-18T00:00:00Z as a safe default for local builds -->
     <project.build.outputTimestamp>2025-11-18T00:00:00Z</project.build.outputTimestamp>
 
-    <!-- Versions centralisées -->
+    <!-- Centralized versions -->
     <maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
     <maven-site-plugin.version>3.21.0</maven-site-plugin.version>
     <maven-project-info-reports-plugin.version>3.9.0</maven-project-info-reports-plugin.version>
@@ -99,7 +99,7 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-      <!-- Centralise versions courantes pour les modules -->
+      <!-- Centralize current versions for modules -->
       <dependency>
         <groupId>org.assertj</groupId>
         <artifactId>assertj-core</artifactId>
@@ -119,7 +119,7 @@
     </dependencies>
   </dependencyManagement>
 
-  <!-- Gestion des plugins (héritage enfants) -->
+  <!-- Plugin management (inherited by children) -->
   <build>
     <pluginManagement>
       <plugins>

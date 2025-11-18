@@ -10,7 +10,7 @@ public class DefaultMethodConflictTest {
     @Test
     void serviceCarResolvesDefaultMethodConflict() {
         ServiceCar sc = new ServiceCar("SVC-1");
-        // start() doit combiner les deux implémentations par défaut
+        // start() should combine the two default implementations
         assertThat(sc.start()).contains("perform pre-check");
         assertThat(sc.start()).contains("start engine");
     }

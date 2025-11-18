@@ -12,7 +12,7 @@
 
   <artifactId>tp1</artifactId>
   <name>TP1 - Fundamentals &amp; Patterns</name>
-  <description>Exemples pédagogiques TP1 (POJO, immutabilité, factory, builder, lombok)</description>
+  <description>Teaching examples for TP1 (POJO, immutability, factory, builder, lombok)</description>
 
   <url>https://github.com/ebpro/java101-tp1/tp1</url>
 

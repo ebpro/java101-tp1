@@ -20,7 +20,7 @@ public final class DemoVehicle {
     private DemoVehicle() {}
 
     public static void main(String[] args) {
-        System.out.println("== Polymorphisme ==");
+        System.out.println("== Polymorphism ==");
         Vehicle v1 = new Car("C1");
         Vehicle v2 = new ElectricCar("E1");
         System.out.println("v1.move() => " + v1.move());
@@ -39,7 +39,7 @@ public final class DemoVehicle {
         ElectricCar ecCopy = ec.copy();
         System.out.println("ElectricCar.copy() => " + ecCopy);
 
-        System.out.println("\n== Délégation ==");
+        System.out.println("\n== Delegation ==");
         ServiceCar svc = new ServiceCar("SVC-1");
         Driver alice = new Driver("Alice", svc);
         System.out.println("Driver.startVehicle() => " + alice.startVehicle());

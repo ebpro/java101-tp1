@@ -89,6 +89,13 @@ Each module contains comprehensive documentation:
 - **Javadoc** for API reference
 - **Quality reports** for code metrics
 
+## 🌐 Preview Environments (Netlify)
+Feature branches and pull requests get ephemeral preview deployments on Netlify:
+  - Deterministic naming: `<repo>-<branch>-preview`
+  - Central index with live status badges: **[Preview Sites](./preview-sites.md)** (regenerated automatically)
+  - Automatic retention of recent deploys per branch; cleanup workflow removes a site after PR closure.
+If a preview does not appear immediately, trigger the preview workflow by pushing a commit to the branch.
+
 ## ℹ️ Project Information
 
 - **[Project Modules](./modules.html)** — Module hierarchy
@@ -101,5 +108,3 @@ Each module contains comprehensive documentation:
 **Architecture:** Multi-module Maven project with a dedicated aggregation module for consolidated reports.
 **Build:** Automated CI/CD with GitHub Actions deploying to GitHub Pages.
 **Version:** 0.0.1-SNAPSHOT
-
-

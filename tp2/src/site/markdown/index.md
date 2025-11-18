@@ -3,6 +3,18 @@
 This module demonstrates advanced object-oriented programming concepts in Java,
 focusing on interfaces, polymorphism, composition, and delegation patterns.
 
+> 🧠 **Key concepts (TP2 — at a glance)**
+>
+> - Interface: a contract of behavior; enables multiple implementations and loose coupling.
+> - Default methods: implement behavior inside interfaces to share code without a base class.
+> - Inheritance: reuse via `extends` (is‑a relation); enables overriding; avoid deep hierarchies and prefer composition when possible.
+> - Abstract class: cannot be instantiated; mixes abstract methods (contracts) with shared state/behavior; choose when you need partial implementation + state.
+> - Polymorphism: treat different real types through the same declared type; behavior chosen at runtime.
+> - Override vs Overload: overriding replaces inherited instance behavior (polymorphic); overloading provides multiple method signatures.
+> - Composition: build behavior by combining objects rather than deep inheritance.
+> - Delegation: forward work to a collaborator instead of inheriting; favors composition.
+> - Liskov Substitution Principle (LSP): subtypes must be substitutable for their base types without breaking expected behavior.
+
 ---
 
 ## 📚 Learning Path
@@ -304,31 +316,6 @@ v.category(); // Calls Vehicle.category(), not Car.category()!
    - Create new interfaces
    - Try different compositions
 
-### Exercises:
-
-1. **Add a `Motorcycle` class**
-   - Extends `MotorVehicle`
-   - Implements `Drivable` and `Refuelable`
-   - Add unique features (e.g., `wheelie()`)
-
-2. **Create a `Fleet` class**
-   - Manages multiple vehicles
-   - Uses composition
-   - Methods: `addVehicle()`, `getTotalFuel()`, etc.
-
-3. **Implement a `MaintenanceSchedule` interface**
-   - Add to appropriate vehicle types
-   - Track maintenance history
-
-4. **Add a `HybridCar` class**
-   - Implements both `Refuelable` and `Rechargeable`
-   - Manages two power sources
-
-5. **Experiment with default methods**
-   - Add a new default method to `Drivable`
-   - See how existing classes behave
-   - Override in some implementations
-
 ---
 
 ## 🔗 Navigation
@@ -337,4 +324,3 @@ v.category(); // Calls Vehicle.category(), not Car.category()!
 - [← Back to Parent](../index.html)
 - [Aggregated Reports →](../report-aggregate/index.html)
 - [All Reports](./project-reports.html)
-

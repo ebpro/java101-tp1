@@ -3,6 +3,20 @@
 This module contains compact Java examples demonstrating core concepts and patterns.
 The code is arranged to guide students from simple concepts to more advanced patterns.
 
+> 🧠 **Key concepts (TP1 — at a glance)**
+>
+> - Class vs Object: a class is a blueprint (type); an object is a concrete instance of that class at runtime.
+> - Members: fields store state, methods define behavior; encapsulate state with private fields and public methods.
+> - Constructor: special method to build valid objects and enforce invariants; can be overloaded; perform input validation.
+> - Static vs Instance: `static` members belong to the class (shared by all instances), instance members belong to each object.
+> - Final: `final` variable assigned once; `final` field makes a reference immutable; `final` method cannot be overridden; `final` class cannot be extended.
+> - POJO: Plain Old Java Object — simple classes with fields and no framework dependencies; used to model data.
+> - Immutability: objects that cannot change state after construction; safer and easier to reason about.
+> - Factory: named creators (e.g., `of(...)`) centralizing construction and validation.
+> - Builder: fluent, step-by-step object construction to avoid complex constructors.
+> - Value object: defined by its data (equals/hashCode), typically immutable.
+> - Lombok: annotations to remove boilerplate (getters, builder, equals/hashCode).
+
 ---
 
 ## 📚 Learning Path (Easy → Advanced)
@@ -201,13 +215,6 @@ java -jar target/tp1-0.0.1-SNAPSHOT-withdependencies.jar
 4. Compare mutable vs immutable approaches
 5. Try implementing your own examples
 
-### Exercises:
-- Convert `Person` to a record
-- Add validation to builder classes
-- Create a factory for different person types
-- Implement a builder for a `Car` class
-- Write tests for edge cases
-
 ---
 
 ## 🔗 Navigation
@@ -215,4 +222,3 @@ java -jar target/tp1-0.0.1-SNAPSHOT-withdependencies.jar
 - [← Back to Parent](../index.html)
 - [TP2 — Interfaces & Polymorphism →](../tp2/index.html)
 - [All Reports](./project-reports.html)
-

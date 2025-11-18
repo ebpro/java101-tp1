@@ -1,0 +1,35 @@
+# Netlify configuration for Java101 multi-module site
+# - production deploys triggered from branch 'develop'
+# - deploy previews (feature branches / PRs) publish the staging site
+# Build command runs our site builder script which prepares target/staging
+
+[build]
+  command = "./build-site.sh --with-tests"
+  publish = "target/staging"
+
+[context.production]
+  # Production (develop branch) uses full build with tests
+  command = "./build-site.sh --with-tests"
+  publish = "target/staging"
+
+[context.deploy-preview]
+  # Deploy previews (PRs / feature branches) should be fast: skip tests
+  command = "./build-site.sh"
+  publish = "target/staging"
+
+[context.branch-deploy]
+  # Generic branch deploys (if Netlify creates branch deploys)
+  command = "./build-site.sh"
+  publish = "target/staging"
+
+[context.environment]
+  # Optional: set any environment variables needed for the build
+  # Example: disable analytics or set a site base URL for previews
+  SITE_BASE_URL = "https://example.netlify.app"
+
+# Redirects (common practice) - keep as example; adjust if needed
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+

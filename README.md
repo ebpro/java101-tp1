@@ -1,124 +1,165 @@
 # Java 101 — Teaching Examples
 
 [![CI](https://github.com/ebpro/java101-tp1/actions/workflows/ci.yml/badge.svg)](https://github.com/ebpro/java101-tp1/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/ebpro/java101-tp1/actions/workflows/codeql.yml/badge.svg)](https://github.com/ebpro/java101-tp1/actions/workflows/codeql.yml)
+[![CodeQL](https://github.com/ebpro/java101-tp1/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/ebpro/java101-tp1/actions/workflows/codeql-analysis.yml)
 [![Pages](https://github.com/ebpro/java101-tp1/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/ebpro/java101-tp1/actions/workflows/deploy-pages.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Java](https://img.shields.io/badge/Java-21%2B-orange)](https://openjdk.org/)
-[![Maven](https://img.shields.io/badge/Maven-3.9%2B-blue)](https://maven.apache.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?logo=mit&logoColor=white)](https://opensource.org/licenses/MIT)
+[![Java](https://img.shields.io/badge/Java-21%2B-orange?logo=openjdk&logoColor=white)](https://openjdk.org/)
+[![Maven](https://img.shields.io/badge/Maven-3.9%2B-blue?logo=apachemaven&logoColor=white)](https://maven.apache.org/)
 
-A multi-module Maven project demonstrating Java fundamentals, design patterns, and object-oriented programming for teaching purposes.
+> 🚀 **Most important — first step for students**
+>
+> Start by visiting the course website for all pedagogical material, module pages and exercises:
+>
+> 🔗 https://ebpro.github.io/java101-tp1/
 
-## 📚 Project Structure
+> **To browse and test the project locally**
+> You can open it directly inside your IDE (JetBrains IntelliJ or VS Code):
+>
+> - Clone the repository using Git CLI or your IDE's Git integration (File → Open or Clone):
+>
+> ```bash
+> git clone https://github.com/ebpro/java101-tp1.git
+> # open the cloned folder in IntelliJ or VS Code
+> ```
+>
 
-- **[TP1](tp1/)** — Fundamentals & Design Patterns (POJOs, immutability, factories, builders, Lombok)
-- **[TP2](tp2/)** — Interfaces & Polymorphism (inheritance, composition, delegation)
-- **[Report Aggregate](report-aggregate/)** — Consolidated quality metrics (JaCoCo, etc.)
+This project is multi-module Maven project with teaching examples to learn Java fundamentals, common design patterns and modern tooling (testing, static analysis, reporting).
 
-## 🌐 Complete Documentation
+> **Quick minimal commands (students)**
+>
+> ```bash
+> # clone the repository (if needed)
+> # git clone https://github.com/ebpro/java101-tp1.git
+> cd java101-tp1
+>
+> # Build the project and run tests (recommended)
+> ./mvnw verify
+>
+> # Run tests for a single module for example tp1 (fast feedback)
+> ./mvnw -pl tp1 -am test
+> ```
+>
+> What `./mvnw verify` does (short):
+> - Runs Maven lifecycle up to `verify`: compile, run unit tests, package artifacts and run verification steps (integration tests if any).
+> - It is the recommended local command to check that your changes pass tests and basic verification.
 
-**👉 [View Full Documentation & Reports](https://ebpro.github.io/java101-tp1/)**
+<!-- Optional / Maintainers technical details -->
 
-The project website includes:
-- 📖 Detailed learning guides for each module
-- 📚 Complete API documentation (Javadoc)
-- 📊 Code coverage reports (JaCoCo)
-- ✅ Code quality analysis (Checkstyle, PMD, SpotBugs)
-- 🧪 Test reports and source cross-references
+## Optional: Technical & Maintainers (skip if you are a student)
+This section contains build details, site generation, CI, previews and maintainers' guides.
 
-## 🚀 Quick Start
+### Project layout (for maintainers)
+- `tp1/`, `tp2/` — teaching modules with sources and tests
+- `report-aggregate/` — aggregates JaCoCo execution data from modules to produce an aggregated coverage report
+- `config/` — shared configuration and resources (e.g. `config/src/main/resources/logback.xml`)
 
-### Prerequisites
+### Quick start (maintainers / devs)
+Requirements:
+- Java 21+, Git, optional Docker for specific reproductions.
+
+Commands (maintainers):
 ```bash
-java -version   # Requires Java 21+
-./mvnw -version # Maven wrapper included
+# Build everything and run tests
+./mvnw -v
+./mvnw clean verify
+
+# Build modules and package
+./mvnw -T 1C -DskipTests=false clean package
 ```
 
-### Build & Test
+### Build site and aggregated reports
+Use the helper script:
 ```bash
-# Build all modules
-./mvnw clean package
+# faster (skip tests)
+./build-site.sh --skip-tests
 
-# Run tests
-./mvnw test
-
-# Generate site with all reports
+# full with tests (for JaCoCo aggregation)
 ./build-site.sh --with-tests
 ```
 
-### Run Examples
-```bash
-# Run TP1 examples
-java -jar tp1/target/tp1-0.0.1-SNAPSHOT-withdependencies.jar
+Generated files are staged under `target/staging/` and the aggregated site entry point is `target/staging/index.html`.
 
-# Or use Maven
-./mvnw -pl tp1 exec:java
+### CI, previews and Netlify
+- CI is configured to run tests, static analysis and publish preview sites to Netlify for PRs.
+- Previews follow the deterministic name: `<repo>-<sanitized-branch>-preview`.
+- Central index is published to `gh-pages` and regenerated by workflows in `.github/workflows/`.
+
+### Reproducible builds
+To help reproducible artifacts, the build can be parameterized with a timestamp:
+```bash
+BUILD_TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+./mvnw -Dproject.build.outputTimestamp=$BUILD_TS clean verify
 ```
 
-## 🧪 Code Quality
+### Contributing (maintainers detail)
+- Use Conventional Commits (pre-commit hooks installed by `./install-hooks.sh`).
+- Branch naming: `feature/*`, `fix/*`, `chore/*`.
+- Site generation and Netlify token usage are handled by workflows; ensure `NETLIFY_TOKEN` and other secrets are stored in repository settings.
 
-### Git Hooks (Recommended)
-Install pre-commit hooks for automatic validation:
+### Clean local build artifacts (if needed)
+To remove ignored generated files locally:
 ```bash
-./install-hooks.sh
+# checks what will be removed
+git clean -ndX
+# remove ignored files
+git clean -fdX
 ```
-
-Features: compile & test validation, commit message format check, pre-push verification.
-
-### CI/CD Pipelines
-- **CI**: Build & test on multiple Java versions
-- **CodeQL**: Security analysis
-- **Pages**: Automated site deployment
-
-## 📖 Learning Resources
-
-### For Students
-1. **[TP1 Guide](https://ebpro.github.io/java101-tp1/tp1/)** — Learn basic patterns (factory, builder, value objects)
-2. **[TP2 Guide](https://ebpro.github.io/java101-tp1/tp2/)** — Master OOP concepts (interfaces, polymorphism, composition)
-3. **[Tests](tp1/src/test/)** — See patterns in action with JUnit 5 & AssertJ
-
-### For Instructors
-Professional development practices demonstrated:
-- Multi-module Maven architecture with aggregation
-- Comprehensive testing strategies
-- Automated documentation & reporting
-- CI/CD integration with GitHub Actions
-
-## 📊 Reports & Metrics
-
-All reports are available on the [project site](https://ebpro.github.io/java101-tp1/):
-
-- **[Aggregated Coverage](https://ebpro.github.io/java101-tp1/report-aggregate/jacoco-aggregate/index.html)** — Combined JaCoCo report
-- **[TP1 Reports](https://ebpro.github.io/java101-tp1/tp1/project-reports.html)** — Tests, coverage, quality
-- **[TP2 Reports](https://ebpro.github.io/java101-tp1/tp2/project-reports.html)** — Tests, coverage, quality
-
-## 🔧 Project Configuration
-
-- `pom.xml` — Maven parent with centralized dependencies & plugins
-- `checkstyle.xml` — Code style rules (Google style adapted)
-- `pmd-ruleset.xml` — Static analysis rules
-- `lombok.config` — Lombok configuration
-- `.githooks/` — Quality automation scripts
-
-## 📄 License
-
-[MIT License](LICENSE) — Free for educational use.
-
-## 👥 Contributing
-
-Contributions welcome! Please:
-1. Fork the repository
-2. Install Git hooks: `./install-hooks.sh`
-3. Create a feature branch
-4. Ensure all tests pass: `./mvnw clean verify`
-5. Submit a pull request
-
-## 🙏 About
-
-Created for teaching Java programming at **University of Toulon** by [Emmanuel Bruno](mailto:emmanuel.bruno@univ-tln.fr).
 
 ---
 
-**📚 Complete guides, examples, and reports:**
-**[https://ebpro.github.io/java101-tp1/](https://ebpro.github.io/java101-tp1/)**
+## Troubleshooting (students & maintainers)
+- JDK mismatch: use `java -version` to confirm JDK 21.
+- Missing artifacts in CI: ensure workflows use `**/target/**` globs and that artifacts are produced in the build.
+- If previews are missing, check Actions logs and the central preview index on `gh-pages`.
 
+---
+
+## License
+MIT — see `LICENSE` for details.
+
+---
+
+If you'd like, I will add a short exercise list (`tp1/EXERCISES.md` and `tp2/EXERCISES.md`) and/or a 15-minute starter lab for students. Which do you want next?
+
+## Advanced technical topics (optional, for maintainers)
+This project also demonstrates several advanced topics used by maintainers and CI:
+
+- Maven multi-module site: we use `maven-site-plugin` with a parent site descriptor to aggregate module sites into a single staged site (`target/staging`). Site content lives under `src/site` and each module contains a `src/site` for local documentation.
+- Aggregated JaCoCo coverage: modules produce `jacoco.exec` during tests; the `report-aggregate` module collects per-module execution files and generates the combined coverage report.
+- CI & previews: GitHub Actions run tests, static analysis and create Netlify preview sites for PRs. Previews use a deterministic name including a sanitized branch name and a central index is published to `gh-pages`.
+- Artifacts and uploads: CI uploads surefire/failsafe reports, jacoco exec files and site artifacts to help debug failures.
+- Pre-commit hooks and Conventional Commits: repository includes hooks to enforce commit style and basic checks (install with `./install-hooks.sh`).
+- Reproducible builds: we support a timestamped build (`-Dproject.build.outputTimestamp`) to make archives deterministic in CI.
+
+> ## Key concepts (at-a-glance)
+>
+> Below are the major concepts used across TP1 and TP2. Each entry is a very short definition you can use as a quick reference.
+>
+> ### TP1 — Fundamentals & Patterns
+>
+> > 🧩 POJO — Plain Old Java Object: a simple class with fields, getters/setters and no framework dependencies; used to model data.
+> >
+> > 🔒 Immutability: objects whose state cannot change after construction; safer for concurrency and easier to reason about.
+> >
+> > 🏭 Factory: a small API that creates instances for you, centralizing construction logic and simplifying tests.
+> >
+> > 🧱 Builder: a fluent helper to construct complex objects step-by-step, improving readability and avoiding telescoping constructors.
+> >
+> > 💎 Value object: an object defined by its data (equals/hashCode) rather than identity; typically immutable.
+> >
+> > ✂️ Lombok: a code-generation tool that removes boilerplate (getters, builders, equals/hashCode) via annotations.
+>
+> ### TP2 — Interfaces & Polymorphism
+>
+> > 📐 Interface: a contract of methods a type must implement; enables loose coupling and multiple implementations.
+> >
+> > 🔀 Polymorphism: the ability to treat different concrete types through the same interface; behavior is chosen at runtime.
+> >
+> > 🤝 Delegation: an object hands work to another object (delegate) instead of inheriting behavior; favors composition.
+> >
+> > 🧩 Composition: building complex behavior by combining simple objects; preferred over deep inheritance hierarchies.
+> >
+> > ⚙️ Default methods (in interfaces): provide a method body in an interface to share common behavior without a superclass.
+>
+> Use these callouts as a quick cheat-sheet; the course website contains extended explanations and examples.

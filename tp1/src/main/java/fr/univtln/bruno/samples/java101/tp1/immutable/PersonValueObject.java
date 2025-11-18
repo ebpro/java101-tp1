@@ -35,10 +35,10 @@ public record PersonValueObject(String id, String name, String email, int age) {
      * @throws IllegalArgumentException if {@code age} is negative
      */
     public PersonValueObject {
-        Objects.requireNonNull(id, "id ne doit pas être null");
-        Objects.requireNonNull(name, "name ne doit pas être null");
-        Objects.requireNonNull(email, "email ne doit pas être null");
-        if (age < 0) throw new IllegalArgumentException("age doit être >= 0");
+        Objects.requireNonNull(id, "id must not be null");
+        Objects.requireNonNull(name, "name must not be null");
+        Objects.requireNonNull(email, "email must not be null");
+        if (age < 0) throw new IllegalArgumentException("age must be >= 0");
     }
 
     /**
@@ -64,7 +64,7 @@ public record PersonValueObject(String id, String name, String email, int age) {
      * @throws NullPointerException if {@code newName} is null
      */
     public PersonValueObject withName(String newName) {
-        return new PersonValueObject(this.id, Objects.requireNonNull(newName, "name ne doit pas être null"), this.email, this.age);
+        return new PersonValueObject(this.id, Objects.requireNonNull(newName, "name must not be null"), this.email, this.age);
     }
 
     /**
@@ -75,7 +75,7 @@ public record PersonValueObject(String id, String name, String email, int age) {
      * @throws NullPointerException if {@code newEmail} is null
      */
     public PersonValueObject withEmail(String newEmail) {
-        return new PersonValueObject(this.id, this.name, Objects.requireNonNull(newEmail, "email ne doit pas être null"), this.age);
+        return new PersonValueObject(this.id, this.name, Objects.requireNonNull(newEmail, "email must not be null"), this.age);
     }
 
     /**
@@ -86,7 +86,7 @@ public record PersonValueObject(String id, String name, String email, int age) {
      * @throws IllegalArgumentException if {@code newAge} is negative
      */
     public PersonValueObject withAge(int newAge) {
-        if (newAge < 0) throw new IllegalArgumentException("age doit être >= 0");
+        if (newAge < 0) throw new IllegalArgumentException("age must be >= 0");
         return new PersonValueObject(this.id, this.name, this.email, newAge);
     }
 
@@ -116,7 +116,7 @@ public record PersonValueObject(String id, String name, String email, int age) {
         if (other == null) return this;
         String mergedName = other.name != null ? other.name : this.name;
         String mergedEmail = other.email != null ? other.email : this.email;
-        int mergedAge = other.age >= 0 ? other.age : this.age; // suppose age négatif comme "absent"
+        int mergedAge = other.age >= 0 ? other.age : this.age; // treat negative age as "absent"
         return new PersonValueObject(this.id, mergedName, mergedEmail, mergedAge);
     }
 }
