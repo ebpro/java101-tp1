@@ -1,0 +1,22 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+Aggregated Reports/tp1,fr.univtln.bruno.samples.java101.tp1.builder,AddressWithBuilder,11,25,0,0,2,8,2,4,2,4
+Aggregated Reports/tp1,fr.univtln.bruno.samples.java101.tp1.builder,AddressWithBuilder.Builder,0,47,0,0,0,12,0,5,0,5
+Aggregated Reports/tp1,fr.univtln.bruno.samples.java101.tp1.factory,PersonWithFactory,96,57,14,2,7,14,12,6,4,6
+Aggregated Reports/tp1,fr.univtln.bruno.samples.java101.tp1.factory,PersonSingleton,94,0,16,0,25,0,16,0,8,0
+Aggregated Reports/tp1,fr.univtln.bruno.samples.java101.tp1.immutable,PersonValueObject,11,131,4,8,0,17,4,9,0,7
+Aggregated Reports/tp1,fr.univtln.bruno.samples.java101.tp1.immutable,PersonImmutable.Builder,0,52,0,2,0,11,0,6,0,5
+Aggregated Reports/tp1,fr.univtln.bruno.samples.java101.tp1.immutable,PersonImmutable,68,19,10,0,8,7,10,3,5,3
+Aggregated Reports/tp1,fr.univtln.bruno.samples.java101.tp1.lombok,PersonLombok,3,0,0,0,2,0,1,0,1,0
+Aggregated Reports/tp1,fr.univtln.bruno.samples.java101.tp1.lombok,PersonLombokSecure,21,15,1,1,6,3,2,1,1,1
+Aggregated Reports/tp2,fr.univtln.bruno.samples.java101.tp2.app,DemoVehicle,126,0,2,0,30,0,2,0,1,0
+Aggregated Reports/tp2,fr.univtln.bruno.samples.java101.tp2.service,Driver,0,20,0,0,0,7,0,4,0,4
+Aggregated Reports/tp2,fr.univtln.bruno.samples.java101.tp2.service,Manufacturer,0,11,0,0,0,4,0,2,0,2
+Aggregated Reports/tp2,fr.univtln.bruno.samples.java101.tp2.impl,ServiceCar,6,14,0,0,1,5,1,2,1,2
+Aggregated Reports/tp2,fr.univtln.bruno.samples.java101.tp2.impl,ElectricCar,16,60,3,1,4,16,5,7,3,7
+Aggregated Reports/tp2,fr.univtln.bruno.samples.java101.tp2.impl,Bike,11,6,0,0,3,3,3,2,3,2
+Aggregated Reports/tp2,fr.univtln.bruno.samples.java101.tp2.impl,ElectricBike,44,30,3,1,10,9,7,4,5,4
+Aggregated Reports/tp2,fr.univtln.bruno.samples.java101.tp2.impl,Car,6,74,2,2,1,19,3,9,1,9
+Aggregated Reports/tp2,fr.univtln.bruno.samples.java101.tp2.model,Vehicle,58,74,15,5,6,17,10,6,0,6
+Aggregated Reports/tp2,fr.univtln.bruno.samples.java101.tp2.model,MotorVehicle,0,11,0,0,0,4,0,2,0,2
+Aggregated Reports/tp2,fr.univtln.bruno.samples.java101.tp2.api,Drivable,0,2,0,0,0,1,0,1,0,1
+Aggregated Reports/tp2,fr.univtln.bruno.samples.java101.tp2.api,Maintainable,0,2,0,0,0,1,0,1,0,1

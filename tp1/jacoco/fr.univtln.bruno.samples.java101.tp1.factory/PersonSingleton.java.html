@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PersonSingleton.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TP1 - Fundamentals &amp; Patterns</a> &gt; <a href="index.source.html" class="el_package">fr.univtln.bruno.samples.java101.tp1.factory</a> &gt; <span class="el_source">PersonSingleton.java</span></div><h1>PersonSingleton.java</h1><pre class="source lang-java linenums">package fr.univtln.bruno.samples.java101.tp1.factory;
+
+/**
+ * Simple educational singleton that holds person attributes directly.
+ *
+ * &lt;p&gt;This class demonstrates a configurable singleton pattern using the
+ * initialization-on-demand idiom (double-checked locking variant here to
+ * allow explicit parameterized initialization).&lt;/p&gt;
+ *
+ * Usage examples:
+ * &lt;pre&gt;
+ *   // Option A: provide parameters explicitly once before first use
+ *   PersonSingleton.initialize(&quot;Alice&quot;, &quot;Smith&quot;, 28);
+ *   PersonSingleton p = PersonSingleton.getInstance();
+ *
+ *   // Option B: use the default instance (created on first access)
+ *   PersonSingleton p2 = PersonSingleton.getInstance();
+ * &lt;/pre&gt;
+ *
+ * Notes for students:
+ * - Call {@link #initialize(String,String,int)} only once before first use if you
+ *   want custom values; subsequent calls have no effect and return the existing
+ *   instance.
+ * - The implementation is thread-safe and lazy: the instance is created only when
+ *   needed.
+ */
+public final class PersonSingleton {
+
+    // Embedded person attributes (example shared resource)
+    private final String firstName;
+    private final String lastName;
+    private final int age;
+
+    // Volatile singleton instance for double-checked locking
+    private static volatile PersonSingleton INSTANCE;
+
+    // Private constructor prevents external instantiation
+<span class="nc" id="L38">    private PersonSingleton(String firstName, String lastName, int age) {</span>
+<span class="nc" id="L39">        this.firstName = firstName;</span>
+<span class="nc" id="L40">        this.lastName = lastName;</span>
+<span class="nc" id="L41">        this.age = age;</span>
+<span class="nc" id="L42">    }</span>
+
+    /**
+     * Initialize the singleton with the provided parameters. If the singleton has
+     * already been created, this call has no effect and the existing instance is
+     * returned.
+     *
+     * @param firstName person's first name (non-null)
+     * @param lastName person's last name (non-null)
+     * @param age person's age (non-negative)
+     * @return the singleton instance
+     * @throws NullPointerException if firstName or lastName is null
+     * @throws IllegalArgumentException if age is negative
+     */
+    public static PersonSingleton initialize(String firstName, String lastName, int age) {
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        if (firstName == null) throw new NullPointerException(&quot;firstName must not be null&quot;);</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (lastName == null) throw new NullPointerException(&quot;lastName must not be null&quot;);</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        if (age &lt; 0) throw new IllegalArgumentException(&quot;age must not be negative&quot;);</span>
+
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        if (INSTANCE == null) {</span>
+<span class="nc" id="L62">            synchronized (PersonSingleton.class) {</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">                if (INSTANCE == null) {</span>
+<span class="nc" id="L64">                    INSTANCE = new PersonSingleton(firstName, lastName, age);</span>
+                }
+<span class="nc" id="L66">            }</span>
+        }
+<span class="nc" id="L68">        return INSTANCE;</span>
+    }
+
+    /**
+     * Return the singleton instance. If it wasn't initialized explicitly, a default
+     * instance is created on first access (with conservative example values).
+     *
+     * @return the singleton instance
+     */
+    public static PersonSingleton getInstance() {
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        if (INSTANCE == null) {</span>
+<span class="nc" id="L79">            synchronized (PersonSingleton.class) {</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">                if (INSTANCE == null) {</span>
+<span class="nc" id="L81">                    INSTANCE = new PersonSingleton(&quot;John&quot;, &quot;Doe&quot;, 30);</span>
+                }
+<span class="nc" id="L83">            }</span>
+        }
+<span class="nc" id="L85">        return INSTANCE;</span>
+    }
+
+    /**
+     * Returns the person's first name.
+     *
+     * @return the person's first name
+     */
+    public String getFirstName() {
+<span class="nc" id="L94">        return firstName;</span>
+    }
+
+    /**
+     * Returns the person's last name.
+     *
+     * @return the person's last name
+     */
+    public String getLastName() {
+<span class="nc" id="L103">        return lastName;</span>
+    }
+
+    /**
+     * Returns the person's age in years.
+     *
+     * @return the person's age
+     */
+    public int getAge() {
+<span class="nc" id="L112">        return age;</span>
+    }
+
+    /**
+     * Returns the person's full name (first + space + last).
+     *
+     * @return the person's full name
+     */
+    public String getFullName() {
+<span class="nc" id="L121">        return firstName + &quot; &quot; + lastName;</span>
+    }
+
+    /**
+     * Convenience: whether the singleton has been initialized (explicitly or by
+     * lazy default initialization).
+     *
+     * @return true if the singleton instance exists
+     */
+    public static boolean isInitialized() {
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        return INSTANCE != null;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PersonWithFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TP1 - Fundamentals &amp; Patterns</a> &gt; <a href="index.source.html" class="el_package">fr.univtln.bruno.samples.java101.tp1.factory</a> &gt; <span class="el_source">PersonWithFactory.java</span></div><h1>PersonWithFactory.java</h1><pre class="source lang-java linenums">package fr.univtln.bruno.samples.java101.tp1.factory;
+
+import java.util.Locale;
+import java.util.Objects;
+
+/**
+ * Simple Person class that demonstrates the private all-arguments constructor
+ * pattern with named factory methods. Instances are created only through the
+ * static factory methods {@link #of(String,String,int)}, {@link #defaultPerson()} and
+ * {@link #teenager(String,String)}.
+ */
+public final class PersonWithFactory {
+
+    private final String firstName;
+    private final String lastName;
+    private final int age;
+
+    /**
+     * Private all-args constructor. Instances must be created via factory methods.
+     */
+<span class="fc" id="L21">    private PersonWithFactory(String firstName, String lastName, int age) {</span>
+<span class="fc" id="L22">        this.firstName = Objects.requireNonNull(firstName, &quot;firstName must not be null&quot;);</span>
+<span class="fc" id="L23">        this.lastName = Objects.requireNonNull(lastName, &quot;lastName must not be null&quot;);</span>
+<span class="pc bpc" id="L24" title="1 of 2 branches missed.">        if (age &lt; 0) throw new IllegalArgumentException(&quot;age must be &gt;= 0&quot;);</span>
+<span class="fc" id="L25">        this.age = age;</span>
+<span class="fc" id="L26">    }</span>
+
+    /**
+     * Create a new validated person instance.
+     *
+     * @param firstName first name (not null)
+     * @param lastName last name (not null)
+     * @param age age, must be &gt;= 0
+     * @return a validated, immutable {@link PersonWithFactory}
+     */
+    public static PersonWithFactory of(String firstName, String lastName, int age) {
+<span class="fc" id="L37">        String fn = Objects.requireNonNull(firstName, &quot;firstName must not be null&quot;).strip();</span>
+<span class="fc" id="L38">        String ln = Objects.requireNonNull(lastName, &quot;lastName must not be null&quot;).strip();</span>
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">        if (age &lt; 0) throw new IllegalArgumentException(&quot;age must be &gt;= 0&quot;);</span>
+<span class="fc" id="L40">        return new PersonWithFactory(fn, ln, age);</span>
+    }
+
+    /**
+     * Default example person useful for demos and tests.
+     *
+     * @return an example {@link PersonWithFactory} with default values
+     */
+    public static PersonWithFactory defaultPerson() {
+<span class="fc" id="L49">        return of(&quot;John&quot;, &quot;Doe&quot;, 30);</span>
+    }
+
+    /**
+     * Convenience factory for a teenager example.
+     *
+     * @param firstName first name (not null)
+     * @param lastName last name (not null)
+     * @return an example teen {@link PersonWithFactory}
+     */
+    public static PersonWithFactory teenager(String firstName, String lastName) {
+<span class="fc" id="L60">        return of(firstName, lastName, 15);</span>
+    }
+
+    /**
+     * Returns the person's first name.
+     *
+     * @return first name (never null)
+     */
+<span class="fc" id="L68">    public String getFirstName() { return firstName; }</span>
+
+    /**
+     * Returns the person's last name.
+     *
+     * @return last name (never null)
+     */
+<span class="nc" id="L75">    public String getLastName() { return lastName; }</span>
+
+    /**
+     * Returns the person's age.
+     *
+     * @return age in years
+     */
+<span class="fc" id="L82">    public int getAge() { return age; }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L86">        return String.format(&quot;%s, %s (%d)&quot;, lastName.toUpperCase(Locale.ROOT), firstName.toUpperCase(Locale.ROOT), age);</span>
+    }
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        if (this == o) return true;</span>
+<span class="nc bnc" id="L92" title="All 4 branches missed.">        if (o == null || getClass() != o.getClass()) return false;</span>
+<span class="nc" id="L93">        PersonWithFactory that = (PersonWithFactory) o;</span>
+<span class="nc bnc" id="L94" title="All 6 branches missed.">        return age == that.age &amp;&amp; Objects.equals(firstName, that.firstName) &amp;&amp; Objects.equals(lastName, that.lastName);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L99">        return Objects.hash(firstName, lastName, age);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

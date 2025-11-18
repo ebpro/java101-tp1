@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>Car.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Aggregated Reports</a> &gt; <a href="../index.html" class="el_bundle">tp2</a> &gt; <a href="index.source.html" class="el_package">fr.univtln.bruno.samples.java101.tp2.impl</a> &gt; <span class="el_source">Car.java</span></div><h1>Car.java</h1><pre class="source lang-java linenums">package fr.univtln.bruno.samples.java101.tp2.impl;
+
+import fr.univtln.bruno.samples.java101.tp2.api.Drivable;
+import fr.univtln.bruno.samples.java101.tp2.api.Refuelable;
+import fr.univtln.bruno.samples.java101.tp2.model.MotorVehicle;
+
+/**
+ * Concrete Vehicle implementation representing a car.
+ * Designed to stay small and focused: minimal state and behaviour.
+ */
+public class Car extends MotorVehicle implements Drivable, Refuelable {
+
+    private double fuelLevel; // percentage 0.0 .. 100.0
+
+    public Car(String id) {
+<span class="fc" id="L16">        super(id);</span>
+<span class="fc" id="L17">        this.fuelLevel = 100.0; // default full tank for demo</span>
+<span class="fc" id="L18">    }</span>
+
+    public Car(String id, String make, String model, int year) {
+<span class="fc" id="L21">        super(id, make, model, year);</span>
+<span class="fc" id="L22">        this.fuelLevel = 100.0;</span>
+<span class="fc" id="L23">    }</span>
+
+    /** {@inheritDoc} */
+    @Override
+    public String move() {
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">        if (fuelLevel &lt;= 0) return &quot;cannot move (no fuel)&quot;;</span>
+        // simulate fuel consumption
+<span class="fc" id="L30">        fuelLevel = Math.max(0.0, fuelLevel - 5.0);</span>
+<span class="fc" id="L31">        return &quot;drives&quot;;</span>
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String drive() {
+<span class="fc" id="L37">        return move();</span>
+    }
+
+    /**
+     * Returns the current fuel level as a percentage.
+     * @return fuel level in percent.
+     */
+    public double getFuelLevel() {
+<span class="fc" id="L45">        return fuelLevel;</span>
+    }
+
+    /**
+     * Refuel the car to the specified percentage (clamped 0..100).
+     * @param percent new fuel level
+     */
+    public void refuel(double percent) {
+<span class="fc" id="L53">        this.fuelLevel = Math.max(0.0, Math.min(100.0, percent));</span>
+<span class="fc" id="L54">    }</span>
+
+    /**
+     * Provides the default Drivable start behaviour for cars.
+     * @return the Drivable default starting label.
+     */
+    @Override
+    public String start() {
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">        if (fuelLevel &lt;= 0) return &quot;cannot start (no fuel)&quot;;</span>
+<span class="fc" id="L63">        return Drivable.super.start();</span>
+    }
+
+    /**
+     * Static category used to demonstrate method hiding.
+     * @return the category label for cars.
+     */
+    public static String category() {
+<span class="fc" id="L71">        return &quot;Car&quot;;</span>
+    }
+
+    /**
+     * Covariant copy: returns a Car instance.
+     * @return a new Car with the same identifier.
+     */
+    @Override
+    public Car copy() {
+<span class="fc" id="L80">        Car c = new Car(this.id, this.make, this.model, this.year);</span>
+<span class="fc" id="L81">        c.fuelLevel = this.fuelLevel;</span>
+<span class="fc" id="L82">        return c;</span>
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getPowerSource() {
+<span class="nc" id="L88">        return &quot;Internal combustion engine (fuel)&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

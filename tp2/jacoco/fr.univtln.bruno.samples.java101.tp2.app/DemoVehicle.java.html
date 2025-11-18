@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DemoVehicle.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TP2 - Interfaces &amp; Polymorphism</a> &gt; <a href="index.source.html" class="el_package">fr.univtln.bruno.samples.java101.tp2.app</a> &gt; <span class="el_source">DemoVehicle.java</span></div><h1>DemoVehicle.java</h1><pre class="source lang-java linenums">package fr.univtln.bruno.samples.java101.tp2.app;
+
+import fr.univtln.bruno.samples.java101.tp2.impl.Car;
+import fr.univtln.bruno.samples.java101.tp2.impl.ElectricCar;
+import fr.univtln.bruno.samples.java101.tp2.impl.ServiceCar;
+import fr.univtln.bruno.samples.java101.tp2.model.Vehicle;
+import fr.univtln.bruno.samples.java101.tp2.service.Driver;
+import fr.univtln.bruno.samples.java101.tp2.service.Manufacturer;
+
+/**
+ * Small post-lecture demo showcasing:
+ * - inheritance (Vehicle -&gt; Car/Bike/ElectricCar)
+ * - abstract classes and partial implementations (Vehicle.description())
+ * - interfaces (+ default methods) and multiple inheritance (Drivable, Electric, Maintainable)
+ * - delegation (Driver -&gt; Drivable)
+ * - covariant returns (copy())
+ * - static method hiding (category())
+ */
+public final class DemoVehicle {
+    private DemoVehicle() {}
+
+    public static void main(String[] args) {
+<span class="nc" id="L23">        System.out.println(&quot;== Polymorphism ==&quot;);</span>
+<span class="nc" id="L24">        Vehicle v1 = new Car(&quot;C1&quot;);</span>
+<span class="nc" id="L25">        Vehicle v2 = new ElectricCar(&quot;E1&quot;);</span>
+<span class="nc" id="L26">        System.out.println(&quot;v1.move() =&gt; &quot; + v1.move());</span>
+<span class="nc" id="L27">        System.out.println(&quot;v2.description() =&gt; &quot; + v2.description());</span>
+
+<span class="nc" id="L29">        System.out.println(&quot;\n== Method hiding (static) ==&quot;);</span>
+<span class="nc" id="L30">        System.out.println(&quot;Vehicle.category() =&gt; &quot; + Vehicle.category());</span>
+<span class="nc" id="L31">        System.out.println(&quot;Car.category() =&gt; &quot; + Car.category());</span>
+<span class="nc" id="L32">        System.out.println(&quot;ElectricCar.category() =&gt; &quot; + ElectricCar.category());</span>
+
+<span class="nc" id="L34">        System.out.println(&quot;\n== Covariant returns (copy) ==&quot;);</span>
+<span class="nc" id="L35">        Car c = new Car(&quot;C2&quot;);</span>
+<span class="nc" id="L36">        Car cCopy = c.copy();</span>
+<span class="nc" id="L37">        System.out.println(&quot;Car.copy() =&gt; &quot; + cCopy);</span>
+<span class="nc" id="L38">        ElectricCar ec = new ElectricCar(&quot;E2&quot;);</span>
+<span class="nc" id="L39">        ElectricCar ecCopy = ec.copy();</span>
+<span class="nc" id="L40">        System.out.println(&quot;ElectricCar.copy() =&gt; &quot; + ecCopy);</span>
+
+<span class="nc" id="L42">        System.out.println(&quot;\n== Delegation ==&quot;);</span>
+<span class="nc" id="L43">        ServiceCar svc = new ServiceCar(&quot;SVC-1&quot;);</span>
+<span class="nc" id="L44">        Driver alice = new Driver(&quot;Alice&quot;, svc);</span>
+<span class="nc" id="L45">        System.out.println(&quot;Driver.startVehicle() =&gt; &quot; + alice.startVehicle());</span>
+<span class="nc" id="L46">        System.out.println(&quot;Driver.drive() =&gt; &quot; + alice.drive());</span>
+
+<span class="nc" id="L48">        System.out.println(&quot;\n== Composition (fabrication) ==&quot;);</span>
+<span class="nc" id="L49">        Manufacturer maker = new Manufacturer(&quot;Acme&quot;);</span>
+<span class="nc" id="L50">        Vehicle prod = maker.produce(&quot;AC-1&quot;);</span>
+<span class="nc" id="L51">        System.out.println(&quot;Manufacturer.produce =&gt; &quot; + prod);</span>
+
+<span class="nc" id="L53">        System.out.println(&quot;\n== instanceof / cast ==&quot;);</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        if (v2 instanceof ElectricCar ecar) {</span>
+<span class="nc" id="L55">            System.out.println(&quot;Downcast ok =&gt; charge() =&gt; &quot; + ecar.charge());</span>
+        }
+
+<span class="nc" id="L58">        System.out.println(&quot;\nDone.&quot;);</span>
+<span class="nc" id="L59">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

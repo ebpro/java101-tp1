@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="" lang="">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>ServiceCar xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../../../apidocs/fr/univtln/bruno/samples/java101/tp2/impl/ServiceCar.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <strong class="jxr_keyword">package</strong> fr.univtln.bruno.samples.java101.tp2.impl;
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> fr.univtln.bruno.samples.java101.tp2.api.Maintainable;
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> * Service car combining Car's drivable features with maintenance checks.</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> * Demonstrates resolving default-method conflicts by explicitly selecting</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> * both sequences and composing them.</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="ServiceCar" href="../../../../../../../fr/univtln/bruno/samples/java101/tp2/impl/ServiceCar.html#ServiceCar">ServiceCar</a> <strong class="jxr_keyword">extends</strong> <a name="Car" href="../../../../../../../fr/univtln/bruno/samples/java101/tp2/impl/Car.html#Car">Car</a> <strong class="jxr_keyword">implements</strong> <a name="Maintainable" href="../../../../../../../fr/univtln/bruno/samples/java101/tp2/api/Maintainable.html#Maintainable">Maintainable</a> {
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>      <strong class="jxr_keyword">public</strong> <a name="ServiceCar" href="../../../../../../../fr/univtln/bruno/samples/java101/tp2/impl/ServiceCar.html#ServiceCar">ServiceCar</a>(String id) {
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>          <strong class="jxr_keyword">super</strong>(id);
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>      }
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_javadoccomment">     * Resolves the default-method conflict by composing Maintainable and Car</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment">     * behaviours in a defined order.</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment">     * @return the composed start sequence description.</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>      @Override
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>      <strong class="jxr_keyword">public</strong> String start() {
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>          <em class="jxr_comment">// call Maintainable default then Car's implementation (which delegates to Drivable)</em>
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>          String m = Maintainable.<strong class="jxr_keyword">super</strong>.start();
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>          String d = <strong class="jxr_keyword">super</strong>.start();
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>          <strong class="jxr_keyword">return</strong> m + <span class="jxr_string">" + "</span> + d;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>      }
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <em class="jxr_javadoccomment">     * Covariant copy: returns a ServiceCar instance.</em>
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <em class="jxr_javadoccomment">     * @return a new ServiceCar with the same identifier.</em>
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>      @Override
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>      <strong class="jxr_keyword">public</strong> <a name="ServiceCar" href="../../../../../../../fr/univtln/bruno/samples/java101/tp2/impl/ServiceCar.html#ServiceCar">ServiceCar</a> copy() {
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a name="ServiceCar" href="../../../../../../../fr/univtln/bruno/samples/java101/tp2/impl/ServiceCar.html#ServiceCar">ServiceCar</a>(getId());
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>      }
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  }
+</pre>
+<hr/>
+<div id="footer">© 2025</div>
+</body>
+</html>

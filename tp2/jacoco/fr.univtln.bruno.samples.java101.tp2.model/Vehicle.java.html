@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Vehicle.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TP2 - Interfaces &amp; Polymorphism</a> &gt; <a href="index.source.html" class="el_package">fr.univtln.bruno.samples.java101.tp2.model</a> &gt; <span class="el_source">Vehicle.java</span></div><h1>Vehicle.java</h1><pre class="source lang-java linenums">package fr.univtln.bruno.samples.java101.tp2.model;
+
+/**
+ * Abstract domain type for TP2 examples.
+ * Encapsulates a common identity and provides a partial implementation
+ * while leaving core behaviour to subclasses.
+ */
+public abstract class Vehicle {
+    protected String id;
+    protected String make; // optional manufacturer name
+    protected String model; // optional model name
+    protected int year; // optional year (0 if unknown)
+
+    protected Vehicle(String id) {
+<span class="fc" id="L15">        this(id, null, null, 0);</span>
+<span class="fc" id="L16">    }</span>
+
+<span class="fc" id="L18">    protected Vehicle(String id, String make, String model, int year) {</span>
+<span class="fc" id="L19">        this.id = id;</span>
+<span class="fc" id="L20">        this.make = make;</span>
+<span class="fc" id="L21">        this.model = model;</span>
+<span class="fc" id="L22">        this.year = year;</span>
+<span class="fc" id="L23">    }</span>
+
+    /**
+     * Describes the main motion behaviour of the vehicle.
+     * Implementations must provide a concrete action (e.g., &quot;drives&quot;).
+     * @return an action verb describing the motion.
+     */
+    public abstract String move();
+
+    /**
+     * Final accessor to illustrate that subclasses cannot override it.
+     * @return the immutable identifier of this vehicle.
+     */
+    public final String getId() {
+<span class="fc" id="L37">        return id;</span>
+    }
+
+    /**
+     * Static method used to demonstrate method hiding in subclasses.
+     * @return the base category label.
+     */
+    public static String category() {
+<span class="fc" id="L45">        return &quot;Vehicle&quot;;</span>
+    }
+
+    /**
+     * Abstract factory-like copy that subclasses implement with covariant
+     * return types (returning their own concrete type).
+     * @return a new instance logically equivalent to this vehicle.
+     */
+    public abstract Vehicle copy();
+
+    /**
+     * Concrete method in the abstract base: shows dynamic dispatch by
+     * calling the abstract move() from a shared template.
+     * @return a human-readable description line.
+     */
+    public String description() {
+<span class="fc" id="L61">        StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L62">        sb.append(getClass().getSimpleName()).append(&quot;#&quot;).append(getId());</span>
+<span class="pc bpc" id="L63" title="3 of 6 branches missed.">        if (make != null || model != null || year != 0) {</span>
+<span class="nc" id="L64">            sb.append(&quot; [&quot;);</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">            if (make != null) sb.append(make);</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">            if (model != null) sb.append(&quot; &quot;).append(model);</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">            if (year != 0) sb.append(&quot; &quot;).append(year);</span>
+<span class="nc" id="L68">            sb.append(&quot;]&quot;);</span>
+        }
+<span class="fc" id="L70">        sb.append(&quot; moves: &quot;).append(move());</span>
+<span class="fc" id="L71">        return sb.toString();</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="pc bpc" id="L76" title="2 of 4 branches missed.">        if (make != null || model != null) {</span>
+<span class="nc bnc" id="L77" title="All 4 branches missed.">            return getClass().getSimpleName() + &quot;(&quot; + id + &quot; - &quot; + (make == null ? &quot;&quot; : make) + (model == null ? &quot;&quot; : &quot; &quot; + model) + &quot;)&quot;;</span>
+        }
+<span class="fc" id="L79">        return getClass().getSimpleName() + &quot;(&quot; + id + &quot;)&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

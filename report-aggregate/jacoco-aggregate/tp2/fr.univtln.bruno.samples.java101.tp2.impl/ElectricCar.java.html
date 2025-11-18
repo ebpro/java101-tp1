@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>ElectricCar.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Aggregated Reports</a> &gt; <a href="../index.html" class="el_bundle">tp2</a> &gt; <a href="index.source.html" class="el_package">fr.univtln.bruno.samples.java101.tp2.impl</a> &gt; <span class="el_source">ElectricCar.java</span></div><h1>ElectricCar.java</h1><pre class="source lang-java linenums">package fr.univtln.bruno.samples.java101.tp2.impl;
+
+import fr.univtln.bruno.samples.java101.tp2.api.Electric;
+import fr.univtln.bruno.samples.java101.tp2.api.Drivable;
+import fr.univtln.bruno.samples.java101.tp2.api.Rechargeable;
+import fr.univtln.bruno.samples.java101.tp2.model.MotorVehicle;
+
+/**
+ * Concrete Vehicle representing an electric car.
+ * Uses battery instead of fuel - demonstrates separation of concerns via ISP.
+ */
+public class ElectricCar extends MotorVehicle implements Drivable, Electric, Rechargeable {
+    private double batteryLevel; // percentage 0..100
+
+    public ElectricCar(String id) {
+<span class="fc" id="L16">        super(id);</span>
+<span class="fc" id="L17">        this.batteryLevel = 100.0;</span>
+<span class="fc" id="L18">    }</span>
+
+    public ElectricCar(String id, String make, String model, int year) {
+<span class="fc" id="L21">        super(id, make, model, year);</span>
+<span class="fc" id="L22">        this.batteryLevel = 100.0;</span>
+<span class="fc" id="L23">    }</span>
+
+    /** {@inheritDoc} */
+    @Override
+    public String charge() {
+<span class="fc" id="L28">        this.batteryLevel = 100.0;</span>
+<span class="fc" id="L29">        return &quot;charging&quot;;</span>
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String move() {
+<span class="pc bpc" id="L35" title="1 of 2 branches missed.">        if (batteryLevel &lt;= 0) return &quot;cannot move (no battery)&quot;;</span>
+<span class="fc" id="L36">        batteryLevel = Math.max(0.0, batteryLevel - 8.0);</span>
+<span class="fc" id="L37">        return &quot;silently drives&quot;;</span>
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String drive() {
+<span class="nc" id="L43">        return move();</span>
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String start() {
+<span class="nc bnc" id="L49" title="All 2 branches missed.">        if (batteryLevel &lt;= 0) return &quot;cannot start (no battery)&quot;;</span>
+<span class="nc" id="L50">        return &quot;electric system ready&quot;;</span>
+    }
+
+    /**
+     * Returns current battery level as a percentage.
+     * @return battery level percent
+     */
+    public double getBatteryLevel() {
+<span class="fc" id="L58">        return batteryLevel;</span>
+    }
+
+    /**
+     * Static category used to demonstrate method hiding.
+     * @return the category label for electric cars.
+     */
+    public static String category() {
+<span class="fc" id="L66">        return &quot;ElectricCar&quot;;</span>
+    }
+
+    /**
+     * Covariant copy: returns an ElectricCar instance.
+     * @return a new ElectricCar with the same identifier.
+     */
+    @Override
+    public ElectricCar copy() {
+<span class="fc" id="L75">        ElectricCar ec = new ElectricCar(this.getId(), this.make, this.model, this.year);</span>
+<span class="fc" id="L76">        ec.batteryLevel = this.batteryLevel;</span>
+<span class="fc" id="L77">        return ec;</span>
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getPowerSource() {
+<span class="nc" id="L83">        return &quot;Electric motor (battery)&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

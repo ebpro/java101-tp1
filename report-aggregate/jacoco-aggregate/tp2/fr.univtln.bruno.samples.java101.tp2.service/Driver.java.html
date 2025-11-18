@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>Driver.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Aggregated Reports</a> &gt; <a href="../index.html" class="el_bundle">tp2</a> &gt; <a href="index.source.html" class="el_package">fr.univtln.bruno.samples.java101.tp2.service</a> &gt; <span class="el_source">Driver.java</span></div><h1>Driver.java</h1><pre class="source lang-java linenums">package fr.univtln.bruno.samples.java101.tp2.service;
+
+import fr.univtln.bruno.samples.java101.tp2.api.Drivable;
+
+/**
+ * Simple service object illustrating delegation: the driver delegates
+ * driving operations to a Drivable vehicle it holds.
+ */
+public class Driver {
+    private final Drivable vehicle;
+    private final String name;
+
+<span class="fc" id="L13">    public Driver(String name, Drivable vehicle) {</span>
+<span class="fc" id="L14">        this.name = name;</span>
+<span class="fc" id="L15">        this.vehicle = vehicle;</span>
+<span class="fc" id="L16">    }</span>
+
+    /**
+     * Delegates the drive call to the underlying Drivable vehicle.
+     * @return the action verb from the vehicle's implementation.
+     */
+    public String drive() {
+<span class="fc" id="L23">        return vehicle.drive();</span>
+    }
+
+    /**
+     * Delegates the start call to the underlying Drivable vehicle.
+     * @return the default or overridden start label from the vehicle.
+     */
+    public String startVehicle() {
+<span class="fc" id="L31">        return vehicle.start();</span>
+    }
+
+    /**
+     * @return the driver's name.
+     */
+    public String getName() {
+<span class="fc" id="L38">        return name;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

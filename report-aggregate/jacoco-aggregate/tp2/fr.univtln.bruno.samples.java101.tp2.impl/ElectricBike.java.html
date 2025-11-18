@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>ElectricBike.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Aggregated Reports</a> &gt; <a href="../index.html" class="el_bundle">tp2</a> &gt; <a href="index.source.html" class="el_package">fr.univtln.bruno.samples.java101.tp2.impl</a> &gt; <span class="el_source">ElectricBike.java</span></div><h1>ElectricBike.java</h1><pre class="source lang-java linenums">package fr.univtln.bruno.samples.java101.tp2.impl;
+
+import fr.univtln.bruno.samples.java101.tp2.api.Drivable;
+import fr.univtln.bruno.samples.java101.tp2.api.Electric;
+import fr.univtln.bruno.samples.java101.tp2.api.Rechargeable;
+import fr.univtln.bruno.samples.java101.tp2.model.Vehicle;
+
+/**
+ * Electric bike: lightweight electric vehicle.
+ * Demonstrates that electric vehicles don't need to be motor vehicles
+ * (no inheritance from MotorVehicle, directly from Vehicle).
+ */
+public class ElectricBike extends Vehicle implements Drivable, Electric, Rechargeable {
+    private double batteryLevel; // percentage 0..100
+
+    public ElectricBike(String id) {
+<span class="fc" id="L17">        super(id);</span>
+<span class="fc" id="L18">        this.batteryLevel = 100.0;</span>
+<span class="fc" id="L19">    }</span>
+
+    public ElectricBike(String id, String make, String model, int year) {
+<span class="nc" id="L22">        super(id, make, model, year);</span>
+<span class="nc" id="L23">        this.batteryLevel = 100.0;</span>
+<span class="nc" id="L24">    }</span>
+
+    /** {@inheritDoc} */
+    @Override
+    public String move() {
+<span class="pc bpc" id="L29" title="1 of 2 branches missed.">        if (batteryLevel &lt;= 0) return &quot;pedals manually (no battery)&quot;;</span>
+<span class="fc" id="L30">        batteryLevel = Math.max(0.0, batteryLevel - 3.0);</span>
+<span class="fc" id="L31">        return &quot;pedals with electric assist&quot;;</span>
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String drive() {
+<span class="nc" id="L37">        return move();</span>
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String start() {
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        if (batteryLevel &lt;= 0) return &quot;battery empty, manual mode&quot;;</span>
+<span class="nc" id="L44">        return &quot;electric assist activated&quot;;</span>
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String charge() {
+<span class="fc" id="L50">        this.batteryLevel = 100.0;</span>
+<span class="fc" id="L51">        return &quot;charging&quot;;</span>
+    }
+
+    /**
+     * Returns current battery level as a percentage.
+     * @return battery level percent
+     */
+    public double getBatteryLevel() {
+<span class="fc" id="L59">        return batteryLevel;</span>
+    }
+
+    /**
+     * Static category used to demonstrate method hiding.
+     * @return the category label for electric bikes.
+     */
+    public static String category() {
+<span class="nc" id="L67">        return &quot;ElectricBike&quot;;</span>
+    }
+
+    /**
+     * Covariant copy: returns an ElectricBike instance.
+     * @return a new ElectricBike with the same identifier.
+     */
+    @Override
+    public ElectricBike copy() {
+<span class="nc" id="L76">        ElectricBike eb = new ElectricBike(this.getId(), this.make, this.model, this.year);</span>
+<span class="nc" id="L77">        eb.batteryLevel = this.batteryLevel;</span>
+<span class="nc" id="L78">        return eb;</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

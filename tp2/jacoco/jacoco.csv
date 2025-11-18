@@ -1,0 +1,13 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+TP2 - Interfaces & Polymorphism,fr.univtln.bruno.samples.java101.tp2.app,DemoVehicle,126,0,2,0,30,0,2,0,1,0
+TP2 - Interfaces & Polymorphism,fr.univtln.bruno.samples.java101.tp2.service,Driver,0,20,0,0,0,7,0,4,0,4
+TP2 - Interfaces & Polymorphism,fr.univtln.bruno.samples.java101.tp2.service,Manufacturer,0,11,0,0,0,4,0,2,0,2
+TP2 - Interfaces & Polymorphism,fr.univtln.bruno.samples.java101.tp2.impl,ServiceCar,6,14,0,0,1,5,1,2,1,2
+TP2 - Interfaces & Polymorphism,fr.univtln.bruno.samples.java101.tp2.impl,ElectricCar,16,60,3,1,4,16,5,7,3,7
+TP2 - Interfaces & Polymorphism,fr.univtln.bruno.samples.java101.tp2.impl,Bike,11,6,0,0,3,3,3,2,3,2
+TP2 - Interfaces & Polymorphism,fr.univtln.bruno.samples.java101.tp2.impl,ElectricBike,44,30,3,1,10,9,7,4,5,4
+TP2 - Interfaces & Polymorphism,fr.univtln.bruno.samples.java101.tp2.impl,Car,6,74,2,2,1,19,3,9,1,9
+TP2 - Interfaces & Polymorphism,fr.univtln.bruno.samples.java101.tp2.model,Vehicle,58,74,15,5,6,17,10,6,0,6
+TP2 - Interfaces & Polymorphism,fr.univtln.bruno.samples.java101.tp2.model,MotorVehicle,0,11,0,0,0,4,0,2,0,2
+TP2 - Interfaces & Polymorphism,fr.univtln.bruno.samples.java101.tp2.api,Drivable,0,2,0,0,0,1,0,1,0,1
+TP2 - Interfaces & Polymorphism,fr.univtln.bruno.samples.java101.tp2.api,Maintainable,0,2,0,0,0,1,0,1,0,1

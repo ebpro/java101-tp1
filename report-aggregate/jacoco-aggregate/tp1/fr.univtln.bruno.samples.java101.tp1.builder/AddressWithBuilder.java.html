@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>AddressWithBuilder.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">Aggregated Reports</a> &gt; <a href="../index.html" class="el_bundle">tp1</a> &gt; <a href="index.source.html" class="el_package">fr.univtln.bruno.samples.java101.tp1.builder</a> &gt; <span class="el_source">AddressWithBuilder.java</span></div><h1>AddressWithBuilder.java</h1><pre class="source lang-java linenums">package fr.univtln.bruno.samples.java101.tp1.builder;
+
+import java.util.Objects;
+
+/**
+ * Builder-based immutable Address variant.
+ *
+ * &lt;p&gt;This class demonstrates the classical Builder pattern: the target type is
+ * immutable and constructed from a mutable Builder object, which allows
+ * readable, named construction of complex objects.&lt;/p&gt;
+ */
+public final class AddressWithBuilder {
+    private final String street;
+    private final String city;
+    private final String zipCode;
+
+    /**
+     * Private constructor used by the Builder.
+     * @param b the builder
+     */
+<span class="fc" id="L21">    private AddressWithBuilder(Builder b) {</span>
+<span class="fc" id="L22">        this.street = b.street;</span>
+<span class="fc" id="L23">        this.city = b.city;</span>
+<span class="fc" id="L24">        this.zipCode = b.zipCode;</span>
+<span class="fc" id="L25">    }</span>
+
+    // Getters used to access fields. Note that no setters are provided: the class is immutable.
+    /**
+     * Returns the street name.
+     *
+     * @return the street (never null)
+     */
+<span class="nc" id="L33">    public String street() { return street; }</span>
+
+    /**
+     * Returns the city name.
+     *
+     * @return the city (never null)
+     */
+<span class="fc" id="L40">    public String city() { return city; }</span>
+
+    /**
+     * Returns the zip code.
+     *
+     * @return the zip code (never null)
+     */
+<span class="fc" id="L47">    public String zipCode() { return zipCode; }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L51">        return street + &quot;, &quot; + zipCode + &quot; &quot; + city;</span>
+    }
+
+    /**
+     * Creates a new Builder instance for AddressWithBuilder.
+     * @return a new Builder
+     */
+<span class="fc" id="L58">    public static Builder builder() { return new Builder(); }</span>
+
+    /**
+     * Builder class for AddressWithBuilder.
+     * &lt;p&gt;The Builder allows setting individual attributes via
+     * named methods and then constructing the immutable AddressWithBuilder
+     * instance via the {@link #build()} method.&lt;/p&gt;
+     */
+    public static final class Builder {
+<span class="fc" id="L67">        private String street = &quot;&quot;;</span>
+<span class="fc" id="L68">        private String city = &quot;&quot;;</span>
+<span class="fc" id="L69">        private String zipCode = &quot;&quot;;</span>
+
+        /**
+         * Public no-arg constructor for the builder; documented to satisfy Javadoc.
+         */
+<span class="fc" id="L74">        public Builder() {</span>
+            // intentionally empty; builder fields are initialized with defaults above
+<span class="fc" id="L76">        }</span>
+
+        /**
+         * Sets the street for the Address being built.
+         * @param s the street
+         * @return this builder for chaining
+         */
+<span class="fc" id="L83">        public Builder street(String s) { this.street = s; return this; }</span>
+
+        /**
+         * Sets the city for the Address being built.
+         * @param c the city
+         * @return this builder for chaining
+         */
+<span class="fc" id="L90">        public Builder city(String c) { this.city = c; return this; }</span>
+
+        /**
+         * Sets the zip code for the Address being built.
+         * @param z the zip code
+         * @return this builder for chaining
+         */
+<span class="fc" id="L97">        public Builder zipCode(String z) { this.zipCode = z; return this; }</span>
+
+        /**
+         * Builds the AddressWithBuilder instance.
+         * @return the constructed AddressWithBuilder
+         * @throws NullPointerException if any required attribute (street, city, zipCode) is null
+         */
+        public AddressWithBuilder build() {
+<span class="fc" id="L105">            Objects.requireNonNull(street, &quot;street required&quot;);</span>
+<span class="fc" id="L106">            Objects.requireNonNull(city, &quot;city required&quot;);</span>
+<span class="fc" id="L107">            Objects.requireNonNull(zipCode, &quot;zipCode required&quot;);</span>
+
+<span class="fc" id="L109">            return new AddressWithBuilder(this);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"fr.univtln.bruno.samples.java101.tp1"},{"l":"fr.univtln.bruno.samples.java101.tp1.builder"},{"l":"fr.univtln.bruno.samples.java101.tp1.factory"},{"l":"fr.univtln.bruno.samples.java101.tp1.immutable"},{"l":"fr.univtln.bruno.samples.java101.tp1.lombok"}];updateSearchResults();
