@@ -1,0 +1,78 @@
+name: Cleanup Netlify Preview Site
+
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: write
+
+# Prevent overlapping cleanups on the same ref
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  cleanup-preview:
+    # Only run if PR is merged (not just closed) and branch ref exists; skip bot actions
+    if: github.actor != 'github-actions[bot]' && github.event.pull_request.merged == true && github.event.pull_request.head.ref != ''
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Derive site name from branch
+        id: derive
+        run: |
+          BRANCH="${{ github.event.pull_request.head.ref }}"
+          REPO_NAME="${{ github.repository }}"
+          REPO_PART="${REPO_NAME#*/}"
+          SANITIZED_REPO=$(echo "$REPO_PART" | tr 'A-Z' 'a-z' | sed 's/[^a-z0-9-]/-/g')
+          SANITIZED_BRANCH=$(echo "$BRANCH" | tr 'A-Z' 'a-z' | sed 's/[^a-z0-9-]/-/g')
+          SITE_NAME="${SANITIZED_REPO}-${SANITIZED_BRANCH}-preview"
+          PREFIX="${SANITIZED_REPO}-"
+          echo "site_name=$SITE_NAME" >> $GITHUB_OUTPUT
+          echo "prefix=$PREFIX" >> $GITHUB_OUTPUT
+
+      - name: Fetch Netlify site list and delete site
+        env:
+          NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+          SITE_NAME: ${{ steps.derive.outputs.site_name }}
+        run: |
+          if [ -z "$NETLIFY_TOKEN" ]; then
+            echo "NETLIFY_TOKEN missing; skipping cleanup."; exit 0; fi
+          sudo apt-get update >/dev/null 2>&1 || true
+          sudo apt-get install -y jq curl >/dev/null 2>&1 || true
+          SITES=$(curl -s -H "Authorization: Bearer $NETLIFY_TOKEN" https://api.netlify.com/api/v1/sites)
+          SITE_ID=$(echo "$SITES" | jq -r '.[] | select(.name=="'$SITE_NAME'") | .id')
+          if [ -z "$SITE_ID" ] || [ "$SITE_ID" = "null" ]; then
+            echo "Site $SITE_NAME not found; nothing to delete."; exit 0; fi
+          echo "Deleting Netlify preview site $SITE_NAME ($SITE_ID)";
+          curl -s -X DELETE -H "Authorization: Bearer $NETLIFY_TOKEN" https://api.netlify.com/api/v1/sites/$SITE_ID >/dev/null || {
+            echo "Failed to delete site"; exit 1; }
+          echo "Site deleted."
+
+      - name: Rebuild preview index on gh-pages
+        env:
+          NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
+          PREFIX: ${{ steps.derive.outputs.prefix }}
+        run: |
+          if [ -z "$NETLIFY_TOKEN" ]; then echo "No token, skip index rebuild"; exit 0; fi
+          sudo apt-get update >/dev/null 2>&1 || true
+          sudo apt-get install -y jq curl git >/dev/null 2>&1 || true
+
+          # Use local checked-out script for index regeneration
+          chmod +x .github/scripts/regenerate_preview_index.sh || true
+          NETLIFY_TOKEN=${NETLIFY_TOKEN} GITHUB_REPO=${GITHUB_REPO} PREFIX=${PREFIX} ./.github/scripts/regenerate_preview_index.sh preview-site
+
+      - name: Publish preview index to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: preview-site
+          keep_files: true
+          commit_message: "ci(cleanup): rebuild preview indexes after PR merge"
+

@@ -1,0 +1,160 @@
+name: Cleanup stale Netlify preview sites
+
+# Runs daily and can be triggered manually
+on:
+  schedule:
+    - cron: '0 3 * * *'  # daily at 03:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+env:
+  # Default retention in days for stale previews (can be changed in workflow file or via repository variables)
+  RETENTION_DAYS: '30'
+  # Set to 'true' for initial dry-run testing (no actual deletions or pushes)
+  DRY_RUN: 'false'
+
+jobs:
+  cleanup-stale:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Prepare environment
+        env:
+          NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          if [ -z "${NETLIFY_TOKEN:-}" ]; then
+            echo "NETLIFY_TOKEN not set; aborting."; exit 0; fi
+          if [ -z "${GITHUB_TOKEN:-}" ]; then
+            echo "GITHUB_TOKEN not set; aborting."; exit 0; fi
+          sudo apt-get update >/dev/null 2>&1 || true
+          sudo apt-get install -y jq curl git >/dev/null 2>&1 || true
+
+      - name: Derive repo prefix & compute threshold
+        id: vars
+        env:
+          GITHUB_REPO: ${{ github.repository }}
+          RETENTION_DAYS: ${{ env.RETENTION_DAYS }}
+        run: |
+          REPO_NAME="${GITHUB_REPO#*/}"
+          SANITIZED_REPO=$(echo "$REPO_NAME" | tr 'A-Z' 'a-z' | sed 's/[^a-z0-9-]/-/g')
+          PREFIX="${SANITIZED_REPO}-"
+          THRESHOLD_TS=$(date -d "-${RETENTION_DAYS} days" +%s)
+          echo "prefix=$PREFIX" >> $GITHUB_OUTPUT
+          echo "threshold_ts=$THRESHOLD_TS" >> $GITHUB_OUTPUT
+          echo "retention_days=$RETENTION_DAYS" >> $GITHUB_OUTPUT
+          echo "derived_repo=$REPO_NAME" >> $GITHUB_OUTPUT
+
+      - name: List Netlify sites and Git branches
+        id: lists
+        env:
+          NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          PREFIX=${{ steps.vars.outputs.prefix }}
+          echo "Fetching Netlify sites..."
+          SITES_JSON=$(curl -s -H "Authorization: Bearer ${NETLIFY_TOKEN}" "https://api.netlify.com/api/v1/sites")
+          echo "$SITES_JSON" > /tmp/all_sites.json
+
+          echo "Fetching repo branches..."
+          # fetch first 500 branches (should be enough); paging could be added
+          BRANCHES_JSON=$(curl -s -H "Authorization: token ${GITHUB_TOKEN}" "https://api.github.com/repos/${GITHUB_REPO}/branches?per_page=500")
+          echo "$BRANCHES_JSON" > /tmp/branches.json
+
+          echo "prefix=$PREFIX" > /tmp/cleanup_vars
+
+      - name: Evaluate and delete stale sites
+        env:
+          NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
+          PREFIX: ${{ steps.vars.outputs.prefix }}
+          THRESHOLD_TS: ${{ steps.vars.outputs.threshold_ts }}
+        run: |
+          set -euo pipefail
+          PREFIX=${PREFIX}
+          THRESHOLD=${THRESHOLD_TS}
+
+          echo "Threshold epoch: $THRESHOLD (older => delete)"
+
+          SITES_JSON=$(cat /tmp/all_sites.json)
+          BRANCHES_JSON=$(cat /tmp/branches.json)
+
+          # build an array of sanitized branch names for quick lookup
+          declare -A SANITIZED_BRANCHES
+          echo "$BRANCHES_JSON" | jq -r '.[].name' | while read -r b; do
+            sb=$(echo "$b" | tr 'A-Z' 'a-z' | sed 's/[^a-z0-9-]/-/g')
+            SANITIZED_BRANCHES["$sb"]=1
+          done
+
+          # iterate sites matching prefix
+          echo "$SITES_JSON" | jq -c '.[] | select(.name | test("^'${PREFIX//"/\"}'"))' | while read -r SITE; do
+            NAME=$(echo "$SITE" | jq -r '.name')
+            ID=$(echo "$SITE" | jq -r '.id')
+            CREATED_AT=$(echo "$SITE" | jq -r '.created_at')
+            UPDATED_AT=$(echo "$SITE" | jq -r '.updated_at')
+
+            # derive sanitized branch from site name
+            BRANCH_PART=${NAME#${PREFIX}}
+            SANITIZED_BRANCH=${BRANCH_PART%-preview}
+
+            # check branch existence by sanitized match
+            if [[ -n "${SANITIZED_BRANCHES[$SANITIZED_BRANCH]:-}" ]]; then
+              echo "Site $NAME -> branch present (sanitized: $SANITIZED_BRANCH). Skipping."
+              continue
+            fi
+
+            # get last deploy time (try deploys API)
+            LAST_DEPLOY=$(curl -s -H "Authorization: Bearer ${NETLIFY_TOKEN}" "https://api.netlify.com/api/v1/sites/${ID}/deploys?limit=1" | jq -r '.[0].created_at // empty') || true
+            if [ -z "$LAST_DEPLOY" ] || [ "$LAST_DEPLOY" = "null" ]; then
+              LAST_DEPLOY=$UPDATED_AT
+            fi
+
+            # epoch compare
+            LAST_TS=$(date -d "$LAST_DEPLOY" +%s)
+            if [ "$LAST_TS" -lt "$THRESHOLD" ]; then
+              echo "Deleting stale site $NAME (last activity: $LAST_DEPLOY)"
+              curl -s -X DELETE -H "Authorization: Bearer ${NETLIFY_TOKEN}" "https://api.netlify.com/api/v1/sites/${ID}" >/dev/null || echo "Delete failed for $ID"
+            else
+              echo "Site $NAME is not old enough (last: $LAST_DEPLOY)"
+            fi
+          done
+
+      - name: Rebuild preview index and publish
+        env:
+          NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
+          PREFIX: ${{ steps.vars.outputs.prefix }}
+          DRY_RUN: ${{ env.DRY_RUN }}
+        run: |
+          set -euo pipefail
+          sudo apt-get update >/dev/null 2>&1 || true
+          sudo apt-get install -y jq curl git >/dev/null 2>&1 || true
+
+          # Use local checked-out script to generate preview-site content
+          chmod +x .github/scripts/regenerate_preview_index.sh || true
+          NETLIFY_TOKEN=${NETLIFY_TOKEN} GITHUB_REPO=${GITHUB_REPO} PREFIX=${PREFIX} DRY_RUN=${DRY_RUN} ./.github/scripts/regenerate_preview_index.sh preview-site
+
+      - name: Publish preview index to gh-pages
+        if: env.DRY_RUN != 'true'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: preview-site
+          keep_files: true
+          commit_message: "ci(stale-cleanup): regenerate preview indexes"
+
+      - name: Summary
+        run: |
+          echo "Cleanup run completed."

@@ -1,203 +1,165 @@
-# Java 101 — TP1 (Teaching Examples)
+# Java 101 — Teaching Examples
 
-This repository contains compact Java examples used for teaching Java fundamentals.
-The code is arranged to guide students from simple concepts to slightly more advanced
-patterns. The aim is practical learning: run the code, read the short examples,
-and modify them to explore behaviour.
+[![CI](https://github.com/ebpro/java101-tp1/actions/workflows/ci.yml/badge.svg)](https://github.com/ebpro/java101-tp1/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/ebpro/java101-tp1/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/ebpro/java101-tp1/actions/workflows/codeql-analysis.yml)
+[![Pages](https://github.com/ebpro/java101-tp1/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/ebpro/java101-tp1/actions/workflows/deploy-pages.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?logo=mit&logoColor=white)](https://opensource.org/licenses/MIT)
+[![Java](https://img.shields.io/badge/Java-21%2B-orange?logo=openjdk&logoColor=white)](https://openjdk.org/)
+[![Maven](https://img.shields.io/badge/Maven-3.9%2B-blue?logo=apachemaven&logoColor=white)](https://maven.apache.org/)
 
-This README is written for students and instructors. It is intentionally concise
-and ordered from easiest to more advanced topics.
+> 🚀 **Most important — first step for students**
+>
+> Start by visiting the course website for all pedagogical material, module pages and exercises:
+>
+> 🔗 https://ebpro.github.io/java101-tp1/
 
----
+> **To browse and test the project locally**
+> You can open it directly inside your IDE (JetBrains IntelliJ or VS Code):
+>
+> - Clone the repository using Git CLI or your IDE's Git integration (File → Open or Clone):
+>
+> ```bash
+> git clone https://github.com/ebpro/java101-tp1.git
+> # open the cloned folder in IntelliJ or VS Code
+> ```
+>
 
-## Learning path (easy → harder)
+This project is multi-module Maven project with teaching examples to learn Java fundamentals, common design patterns and modern tooling (testing, static analysis, reporting).
 
-1. Mutable objects (POJO)
-   - File: `src/main/java/.../Person.java`
-   - Concepts: fields, getters/setters, simple validation, mutability trade-offs.
+> **Quick minimal commands (students)**
+>
+> ```bash
+> # clone the repository (if needed)
+> # git clone https://github.com/ebpro/java101-tp1.git
+> cd java101-tp1
+>
+> # Build the project and run tests (recommended)
+> ./mvnw verify
+>
+> # Run tests for a single module for example tp1 (fast feedback)
+> ./mvnw -pl tp1 -am test
+> ```
+>
+> What `./mvnw verify` does (short):
+> - Runs Maven lifecycle up to `verify`: compile, run unit tests, package artifacts and run verification steps (integration tests if any).
+> - It is the recommended local command to check that your changes pass tests and basic verification.
 
-2. Simple factories and named constructors
-   - File: `src/main/java/.../factory/PersonWithFactory.java`
-   - Concepts: static factory methods (`of`, `defaultPerson`, `teenager`) that
-     improve readability and centralise construction logic.
+<!-- Optional / Maintainers technical details -->
 
-3. Immutable value objects
-   - File: `src/main/java/.../Address.java` and `immutable/PersonImmutable.java`
-   - Concepts: final fields, private constructors, thread-safety and why immutability helps.
+## Optional: Technical & Maintainers (skip if you are a student)
+This section contains build details, site generation, CI, previews and maintainers' guides.
 
-   - New: `PersonValueObject` (record)
-     - File: `src/main/java/fr/univtln/bruno/samples/java101/tp1/immutable/PersonValueObject.java`
-     - Concepts for students:
-       - Java `record` as a lightweight immutable data carrier.
-       - Compact canonical constructor to validate invariants (null checks, non-negative age).
-       - Static factory `of(...)` as a convenient named constructor.
-       - Non-mutating update helpers (`withName`, `withEmail`, `withAge`, `incrementAge`) that return new instances.
-       - `merge(...)` pattern: merging non-null fields from another instance to produce a combined result.
-       - Why value objects make reasoning, testing and concurrency simpler than mutable POJOs.
+### Project layout (for maintainers)
+- `tp1/`, `tp2/` — teaching modules with sources and tests
+- `report-aggregate/` — aggregates JaCoCo execution data from modules to produce an aggregated coverage report
+- `config/` — shared configuration and resources (e.g. `config/src/main/resources/logback.xml`)
 
-4. Builder pattern
-   - File: `src/main/java/.../builder/AddressWithBuilder.java`
-   - Concepts: fluent API for building complex/optional configurations, `build()` validation.
+### Quick start (maintainers / devs)
+Requirements:
+- Java 21+, Git, optional Docker for specific reproductions.
 
-5. Lombok-powered examples
-   - Package: `src/main/java/.../lombok`
-   - Concepts: reduce boilerplate with annotations (`@Getter`, `@Builder`, `@ToString`).
-     Note: enable annotation processing in your IDE to avoid warnings.
-
-6. Packaging, testing and site generation
-   - Packaging: Maven Shade profile `shadedjar` for a fat JAR.
-   - Testing: JUnit + AssertJ in `src/test/java`.
-   - Site: `mvnw site` generates project reports and javadoc under `target/site`.
-
----
-
-## Quick start (students)
-
-1. Ensure you have a JDK (21 is the target). Set `JAVA_HOME` accordingly.
-
-2. **Install Git hooks** (recommended for quality checks):
-
+Commands (maintainers):
 ```bash
-./install-hooks.sh
+# Build everything and run tests
+./mvnw -v
+./mvnw clean verify
+
+# Build modules and package
+./mvnw -T 1C -DskipTests=false clean package
 ```
 
-This installs hooks that:
-- ✅ Compile code and run tests before each commit
-- 📝 Validate commit message format (Conventional Commits)
-- 🚀 Run full verification before pushing
-
-See `.githooks/README.md` for details.
-
-3. Use the Maven wrapper included in the project to run builds reproducibly:
-
+### Build site and aggregated reports
+Use the helper script:
 ```bash
-# Unix / macOS
-./mvnw clean package
+# faster (skip tests)
+./build-site.sh --skip-tests
 
-# Run the demo
-java -cp target/tp1-0.0.1-SNAPSHOT.jar fr.univtln.bruno.samples.java101.tp1.Demo
+# full with tests (for JaCoCo aggregation)
+./build-site.sh --with-tests
 ```
 
-4. Produce a site (reports + javadoc):
+Generated files are staged under `target/staging/` and the aggregated site entry point is `target/staging/index.html`.
 
+### CI, previews and Netlify
+- CI is configured to run tests, static analysis and publish preview sites to Netlify for PRs.
+- Previews follow the deterministic name: `<repo>-<sanitized-branch>-preview`.
+- Central index is published to `gh-pages` and regenerated by workflows in `.github/workflows/`.
+
+### Reproducible builds
+To help reproducible artifacts, the build can be parameterized with a timestamp:
 ```bash
-./mvnw -DskipTests site
-# Open site report locally
-open target/site/index.html
+BUILD_TS=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+./mvnw -Dproject.build.outputTimestamp=$BUILD_TS clean verify
 ```
 
-5. Build a shaded (fat) JAR for distribution:
+### Contributing (maintainers detail)
+- Use Conventional Commits (pre-commit hooks installed by `./install-hooks.sh`).
+- Branch naming: `feature/*`, `fix/*`, `chore/*`.
+- Site generation and Netlify token usage are handled by workflows; ensure `NETLIFY_TOKEN` and other secrets are stored in repository settings.
 
+### Clean local build artifacts (if needed)
+To remove ignored generated files locally:
 ```bash
-./mvnw -Pshadedjar -DskipTests clean package
-java -jar target/tp1-0.0.1-SNAPSHOT.jar
+# checks what will be removed
+git clean -ndX
+# remove ignored files
+git clean -fdX
 ```
 
 ---
 
-## Notes about Maven and the wrapper
-
-- This repo includes the Maven Wrapper (`mvnw`) to ensure the same Maven
-  version is used by all students. The wrapper downloads the configured
-  Maven distribution automatically.
-- If you have Maven locally and prefer to use it, ensure it is recent (3.x).
-- If you see classfile or compilation errors, verify your `JAVA_HOME` and the
-  `maven.compiler.release` configuration in `pom.xml`.
+## Troubleshooting (students & maintainers)
+- JDK mismatch: use `java -version` to confirm JDK 21.
+- Missing artifacts in CI: ensure workflows use `**/target/**` globs and that artifacts are produced in the build.
+- If previews are missing, check Actions logs and the central preview index on `gh-pages`.
 
 ---
 
-## Continuous Integration & GitHub
-
-This project includes GitHub Actions workflows that:
-- Build and test the project on multiple Java versions (CI workflow).
-- Run CodeQL security analysis (CodeQL workflow).
-- Build and deploy the Maven site to GitHub Pages (deploy-pages workflow).
-
-Notes for instructors:
-- CI runs on GitHub-hosted runners and uses the Maven wrapper; no additional
-  setup is required in most cases.
-- The GitHub Pages workflow publishes the generated site artifacts; see the
-  workflow YAML in `.github/workflows/deploy-pages.yml`.
+## License
+MIT — see `LICENSE` for details.
 
 ---
 
-## Note about class names and conventions
+If you'd like, I will add a short exercise list (`tp1/EXERCISES.md` and `tp2/EXERCISES.md`) and/or a 15-minute starter lab for students. Which do you want next?
 
-In this teaching repository some class names intentionally include the pattern
-or style in their name (for example: `PersonWithFactory`, `PersonImmutable`,
-`PersonValueObject`, `PersonWithBuilder`, `PersonSingleton`). This is done to
-make the educational intent explicit and to help beginners quickly see which
-pattern is illustrated by each class.
+## Advanced technical topics (optional, for maintainers)
+This project also demonstrates several advanced topics used by maintainers and CI:
 
-Important: these pedagogical names are NOT recommended for production code.
-In real projects prefer clean, domain-driven names and rely on packages or
-suffixes to indicate roles or patterns. Suggested mappings and guidelines:
+- Maven multi-module site: we use `maven-site-plugin` with a parent site descriptor to aggregate module sites into a single staged site (`target/staging`). Site content lives under `src/site` and each module contains a `src/site` for local documentation.
+- Aggregated JaCoCo coverage: modules produce `jacoco.exec` during tests; the `report-aggregate` module collects per-module execution files and generates the combined coverage report.
+- CI & previews: GitHub Actions run tests, static analysis and create Netlify preview sites for PRs. Previews use a deterministic name including a sanitized branch name and a central index is published to `gh-pages`.
+- Artifacts and uploads: CI uploads surefire/failsafe reports, jacoco exec files and site artifacts to help debug failures.
+- Pre-commit hooks and Conventional Commits: repository includes hooks to enforce commit style and basic checks (install with `./install-hooks.sh`).
+- Reproducible builds: we support a timestamped build (`-Dproject.build.outputTimestamp`) to make archives deterministic in CI.
 
-- Production naming examples:
-  - Entity: `Person` or `PersonEntity`
-  - DTO (transfer object): `PersonDto` or `PersonDTO`
-  - Factory: `PersonFactory` (not `PersonWithFactory`)
-  - Builder: `PersonBuilder` or `AddressBuilder`
-  - Immutable/value object: `PersonValue` or use a `record` named `Person` in an `immutable` package
-  - Singleton/test utility: `PersonSingleton` only when explicitly demonstrating the pattern; prefer dependency injection or `enum` singletons in real systems
-
-- Guidelines:
-  - Use nouns for domain objects (Person, Address, Order).
-  - Use verbs or -er suffix for services that perform actions (PersonService,
-    OrderProcessor).
-  - Use packages to group patterns: `..factory`, `..builder`, `..immutable`, `..lombok`.
-  - Avoid the `With` infix in production names (it is only used here for clarity).
-
-If you adapt these examples into your own project, apply production naming
-conventions and regroup pattern examples into dedicated packages so code
-remains clear and idiomatic.
-
----
-
-## Git Hooks for Code Quality
-
-This project includes Git hooks to help maintain code quality and consistent
-practices:
-
-### Available Hooks
-
-- **pre-commit**: Compiles code and runs tests before each commit
-- **commit-msg**: Validates commit messages follow Conventional Commits format
-- **pre-push**: Runs full verification (`mvn clean verify`) before pushing
-
-### Installation
-
-```bash
-./install-hooks.sh
-```
-
-### Benefits for Students
-
-- Learn professional development practices early
-- Avoid committing broken code
-- Practice meaningful commit messages
-- Build confidence through automated checks
-
-### Skipping Hooks (when needed)
-
-```bash
-git commit --no-verify -m "message"   # Skip pre-commit
-git push --no-verify                   # Skip pre-push
-```
-
-For complete documentation, see `.githooks/README.md`.
-
----
-
-## For Instructors
-
-This teaching repository demonstrates multiple Java patterns in a compact way.
-Students are encouraged to:
-- Read the code and understand why each pattern is used
-- Run tests to see the behaviour
-- Modify examples and observe the effects
-- Compare mutable vs immutable approaches
-- Learn when factories, builders or records are appropriate
-
-The Maven site generation (with Javadoc and test reports) helps students
-see the documentation and coverage in a professional format.
+> ## Key concepts (at-a-glance)
+>
+> Below are the major concepts used across TP1 and TP2. Each entry is a very short definition you can use as a quick reference.
+>
+> ### TP1 — Fundamentals & Patterns
+>
+> > 🧩 POJO — Plain Old Java Object: a simple class with fields, getters/setters and no framework dependencies; used to model data.
+> >
+> > 🔒 Immutability: objects whose state cannot change after construction; safer for concurrency and easier to reason about.
+> >
+> > 🏭 Factory: a small API that creates instances for you, centralizing construction logic and simplifying tests.
+> >
+> > 🧱 Builder: a fluent helper to construct complex objects step-by-step, improving readability and avoiding telescoping constructors.
+> >
+> > 💎 Value object: an object defined by its data (equals/hashCode) rather than identity; typically immutable.
+> >
+> > ✂️ Lombok: a code-generation tool that removes boilerplate (getters, builders, equals/hashCode) via annotations.
+>
+> ### TP2 — Interfaces & Polymorphism
+>
+> > 📐 Interface: a contract of methods a type must implement; enables loose coupling and multiple implementations.
+> >
+> > 🔀 Polymorphism: the ability to treat different concrete types through the same interface; behavior is chosen at runtime.
+> >
+> > 🤝 Delegation: an object hands work to another object (delegate) instead of inheriting behavior; favors composition.
+> >
+> > 🧩 Composition: building complex behavior by combining simple objects; preferred over deep inheritance hierarchies.
+> >
+> > ⚙️ Default methods (in interfaces): provide a method body in an interface to share common behavior without a superclass.
+>
+> Use these callouts as a quick cheat-sheet; the course website contains extended explanations and examples.

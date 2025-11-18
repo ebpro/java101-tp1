@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- This file is used by the Versions Maven Plugin to define which versions should be ignored when checking for updates
+    we want to avoid being notified about non-stable versions such as alpha, beta, release candidates, and milestones -->
 <ruleset xmlns="http://mojo.codehaus.org/versions-maven-plugin/rule/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" comparisonMethod="maven" xsi:schemaLocation="http://mojo.codehaus.org/versions-maven-plugin/rule/2.0.0 https://www.mojohaus.org/versions-maven-plugin/xsd/rule-2.0.0.xsd">
     <ignoreVersions>
         <!-- Ignore Alpha's, Beta's, release candidates and milestones -->

@@ -11,6 +11,7 @@ on:
 jobs:
   codeql:
     name: Analyze (CodeQL)
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
 
     permissions:
@@ -37,7 +38,8 @@ jobs:
     - name: Build (explicit) — use Maven to produce artifacts for CodeQL
       run: |
         chmod +x mvnw || true
-        ./mvnw -B -DskipTests clean package
+        BUILD_TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+        ./mvnw -B -DskipTests -Dproject.build.outputTimestamp=$BUILD_TIMESTAMP clean package
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3

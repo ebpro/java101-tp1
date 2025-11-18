@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+  <skin>
+    <groupId>org.apache.maven.skins</groupId>
+    <artifactId>maven-fluido-skin</artifactId>
+    <version>2.1.0</version>
+  </skin>
+
+  <body>
+    <menu name="Aggregated Reports">
+      <item name="Overview" href="index.html"/>
+      <item name="Back to Main" href="../index.html"/>
+    </menu>
+
+    <menu name="Coverage">
+      <item name="JaCoCo Aggregated" href="jacoco-aggregate/index.html"/>
+    </menu>
+
+    <menu name="Module Reports">
+      <item name="TP1 Reports" href="../tp1/project-reports.html"/>
+      <item name="TP2 Reports" href="../tp2/project-reports.html"/>
+    </menu>
+
+    <menu name="Project Info">
+      <item name="Dependencies" href="dependencies.html"/>
+      <item name="Summary" href="summary.html"/>
+      <item name="Licenses" href="licenses.html"/>
+    </menu>
+  </body>
+</site>
+

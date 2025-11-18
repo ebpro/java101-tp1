@@ -1,0 +1,30 @@
+/* Minimal site styling to improve menu readability and spacing */
+/* This file augments the default fluido skin with small UX improvements */
+
+/* Increase left menu width and improve spacing */
+#leftColumn .well.sidebar-nav {
+  padding: 12px;
+}
+
+ul.nav.nav-list li.nav-header {
+  font-weight: 700;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+/* Make active links clearer */
+ul.nav.nav-list li.active > a {
+  background-color: #aaaaaa;
+  font-weight: 700;
+}
+
+/* Submenu spacing */
+ul.nav.nav-list li ul {
+  margin-left: 8px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  #leftColumn { display: none; }
+}
+

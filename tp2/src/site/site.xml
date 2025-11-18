@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+  <skin>
+    <groupId>org.apache.maven.skins</groupId>
+    <artifactId>maven-fluido-skin</artifactId>
+    <version>2.1.0</version>
+  </skin>
+
+  <body>
+    <menu name="TP2 — Interfaces">
+      <item name="Overview" href="index.html"/>
+      <item name="Back to Main" href="../index.html"/>
+    </menu>
+
+    <menu name="Documentation">
+      <item name="Javadoc API" href="apidocs/index.html"/>
+      <item name="Source Xref" href="xref/index.html"/>
+      <item name="Test Xref" href="xref-test/index.html"/>
+    </menu>
+
+    <menu name="Quality Reports">
+      <item name="All Reports" href="project-reports.html"/>
+      <item name="Test Results" href="surefire-report.html"/>
+      <item name="Code Coverage" href="jacoco/index.html"/>
+      <item name="Checkstyle" href="checkstyle.html"/>
+      <item name="PMD" href="pmd.html"/>
+      <item name="CPD" href="cpd.html"/>
+      <item name="SpotBugs" href="spotbugs.html"/>
+    </menu>
+
+    <menu name="Project Info">
+      <item name="Summary" href="summary.html"/>
+      <item name="Dependencies" href="dependencies.html"/>
+      <item name="Plugins" href="plugins.html"/>
+      <item name="Licenses" href="licenses.html"/>
+    </menu>
+  </body>
+</site>
+
