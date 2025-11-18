@@ -29,8 +29,11 @@ jobs:
       - name: Ensure mvnw is executable
         run: chmod +x mvnw || true
 
+      - name: Set reproducible build timestamp
+        run: echo "BUILD_TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_ENV
+
       - name: Run unit tests and generate coverage
-        run: ./mvnw -B test jacoco:report
+        run: ./mvnw -B -Dproject.build.outputTimestamp=${{ env.BUILD_TIMESTAMP }} test jacoco:report
 
       - name: Upload test reports and coverage
         if: ${{ matrix.java != 21 }}
@@ -64,8 +67,11 @@ jobs:
       - name: Ensure mvnw is executable
         run: chmod +x mvnw || true
 
+      - name: Set reproducible build timestamp
+        run: echo "BUILD_TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_ENV
+
       - name: Run unit tests and generate coverage (Java 21)
-        run: ./mvnw -B test jacoco:report
+        run: ./mvnw -B -Dproject.build.outputTimestamp=${{ env.BUILD_TIMESTAMP }} test jacoco:report
 
       - name: Upload Java21 test reports and coverage
         uses: actions/upload-artifact@v4
@@ -102,14 +108,17 @@ jobs:
       - name: Ensure mvnw is executable
         run: chmod +x mvnw || true
 
+      - name: Set reproducible build timestamp
+        run: echo "BUILD_TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_ENV
+
       - name: Download Java 21 test artifacts (jacoco)
         uses: actions/download-artifact@v4
         with:
           name: reports-java-21-${{ github.run_id }}
           path: target
 
-      - name: Build shaded JAR
-        run: ./mvnw -B -Pshadedjar -DskipTests clean package
+      - name: Build shaded JAR with reproducible timestamp
+        run: ./mvnw -B -Pshadedjar -DskipTests -Dproject.build.outputTimestamp=${{ env.BUILD_TIMESTAMP }} clean package
 
       - name: Upload shaded JAR
         uses: actions/upload-artifact@v4

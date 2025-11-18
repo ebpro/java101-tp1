@@ -25,18 +25,25 @@ jobs:
           java-version: '21'
           cache: maven
 
-      - name: Ensure mvnw is executable
-        run: chmod +x mvnw || true
-
-      - name: Build site (tests + jacoco + site)
+      - name: Ensure mvnw and build-site.sh are executable
         run: |
-          ./mvnw -B -Pshadedjar clean test jacoco:report site
+          chmod +x mvnw || true
+          chmod +x build-site.sh || true
+
+      - name: Set reproducible build timestamp
+        run: echo "BUILD_TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_ENV
+
+      - name: Build aggregated Maven site with all reports
+        run: |
+          ./build-site.sh --with-tests
+        env:
+          MAVEN_OPTS: "-Dproject.build.outputTimestamp=${{ env.BUILD_TIMESTAMP }}"
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./target/site
+          publish_dir: ./target/staging
           publish_branch: gh-pages
           user_name: github-actions[bot]
           user_email: github-actions[bot]@users.noreply.github.com

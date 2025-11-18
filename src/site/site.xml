@@ -1,22 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/DECORATION/2.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/DECORATION/2.0.0 https://maven.apache.org/xsd/decoration-2.0.0.xsd"
-         name="Java 101 - TP1">
-
-  <!-- Left banner (title + optional logo + link) -->
-  <bannerLeft>
-    <name>Java 101 — TP1</name>
-    <src>https://raw.githubusercontent.com/ebpro/java101-tp1/main/logo.png</src>
-    <href>https://github.com/ebpro/java101-tp1</href>
-  </bannerLeft>
-
-  <!-- Right banner (small image) -->
-  <bannerRight>
-    <src>https://www.apache.org/images/feather-small.png</src>
-  </bannerRight>
-
-  <!-- Explicit skin declaration to ensure the site plugin finds a skin -->
+<site>
   <skin>
     <groupId>org.apache.maven.skins</groupId>
     <artifactId>maven-fluido-skin</artifactId>
@@ -24,28 +7,63 @@
   </skin>
 
   <body>
-    <!-- Top-level links (helpful references) -->
-    <links>
-      <item name="Project README" href="index.html" />
-      <item name="Repository" href="https://github.com/ebpro/java101-tp1"/>
-      <item name="Maven Guide" href="https://maven.apache.org/guides/index.html"/>
-    </links>
-
-    <!-- Primary menu: local pages + a reference to the standard reports block -->
-    <menu name="Main">
-      <item name="Home" href="index.html"/>
-      <item name="Project Info" href="project-info.html"/>
-      <item name="API Javadoc" href="apidocs/index.html"/>
-      <item name="Tests &amp; Reports">
-        <item name="Unit Tests" href="surefire-report.html"/>
-        <item name="Code Coverage" href="jacoco/index.html"/>
-      </item>
-      <item name="Dependencies" href="dependency-info.html"/>
+    <!-- Main navigation -->
+    <menu name="Overview">
+      <item name="Home" href="./index.html"/>
+      <item name="GitHub Repository" href="https://github.com/ebpro/java101-tp1"/>
     </menu>
 
-    <!-- Insert the standard reports menu provided by the project-info-reports plugin -->
-    <menu ref="reports" />
+    <!-- Learning modules -->
+    <menu name="Learning Modules">
+      <item name="TP1 — Fundamentals &amp; Patterns" href="./tp1/index.html">
+        <item name="TP1 Home" href="./tp1/index.html"/>
+        <item name="TP1 Source Xref (Javadoc)" href="./tp1/xref/index.html"/>
+      </item>
+      <item name="TP2 — Interfaces &amp; Polymorphism" href="./tp2/index.html">
+        <item name="TP2 Home" href="./tp2/index.html"/>
+        <item name="TP2 Source Xref (Javadoc)" href="./tp2/xref/index.html"/>
+      </item>
+    </menu>
 
+    <!-- Quality reports - aggregated -->
+    <menu name="Aggregated Reports">
+      <item name="All Reports" href="./report-aggregate/index.html"/>
+      <item name="Coverage (Aggregated)" href="./report-aggregate/jacoco-aggregate/index.html"/>
+    </menu>
+
+    <!-- TP1 specific reports -->
+    <menu name="TP1 Reports">
+      <item name="All TP1 Reports" href="./tp1/project-reports.html"/>
+      <item name="Test Results" href="./tp1/surefire-report.html"/>
+      <item name="Coverage" href="./tp1/jacoco/index.html"/>
+      <item name="Checkstyle" href="./tp1/checkstyle.html"/>
+      <item name="PMD" href="./tp1/pmd.html"/>
+      <item name="CPD (Duplicates)" href="./tp1/cpd.html"/>
+      <item name="SpotBugs" href="./tp1/spotbugs.html"/>
+      <item name="Dependencies" href="./tp1/dependencies.html"/>
+    </menu>
+
+    <!-- TP2 specific reports -->
+    <menu name="TP2 Reports">
+      <item name="All TP2 Reports" href="./tp2/project-reports.html"/>
+      <item name="Test Results" href="./tp2/surefire-report.html"/>
+      <item name="Coverage" href="./tp2/jacoco/index.html"/>
+      <item name="Checkstyle" href="./tp2/checkstyle.html"/>
+      <item name="PMD" href="./tp2/pmd.html"/>
+      <item name="CPD (Duplicates)" href="./tp2/cpd.html"/>
+      <item name="SpotBugs" href="./tp2/spotbugs.html"/>
+      <item name="Dependencies" href="./tp2/dependencies.html"/>
+    </menu>
+
+    <!-- Project information -->
+    <menu name="Project Information">
+      <item name="About" href="./index.html"/>
+      <item name="Modules" href="./modules.html"/>
+      <item name="Licenses" href="./licenses.html"/>
+      <item name="Team" href="./team.html"/>
+      <item name="SCM" href="./scm.html"/>
+      <item name="Dependency Convergence" href="./dependency-convergence.html"/>
+      <item name="Plugin Management" href="./plugin-management.html"/>
+    </menu>
   </body>
-
-</project>
+</site>

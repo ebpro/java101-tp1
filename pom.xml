@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <!-- Parent agrégateur multi-modules -->
   <groupId>fr.univtln.bruno.samples.java101</groupId>
-  <artifactId>tp1</artifactId>
+  <artifactId>java101-parent</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
 
-  <name>tp1</name>
-  <description>Simple Java 101 TP1 Classes</description>
+  <name>java101-parent</name>
+  <description>Parent multi-modules pour TP Java 101</description>
   <url>https://github.com/ebpro/java101-tp1</url>
 
-  <!-- Project metadata useful for publication and clarity -->
   <licenses>
     <license>
       <name>MIT License</name>
@@ -28,6 +28,14 @@
     <developerConnection>scm:git:ssh://git@github.com:ebpro/java101-tp1.git</developerConnection>
   </scm>
 
+  <!-- distributionManagement nécessaire pour site:stage multimodule -->
+  <distributionManagement>
+    <site>
+      <id>local-staging</id>
+      <url>file://${project.build.directory}/staging</url>
+    </site>
+  </distributionManagement>
+
   <developers>
     <developer>
       <id>bruno</id>
@@ -36,44 +44,50 @@
     </developer>
   </developers>
 
+  <modules>
+    <module>config</module>
+    <module>tp1</module>
+    <module>tp2</module>
+    <module>report-aggregate</module>
+  </modules>
+
   <properties>
-
-    <!-- Student notes:
-         - app.main.class: the fully qualified class name used as Main-Class in shaded jars.
-         - maven.compiler.release: sets the Java language level for compilation and the classfile compatibility.
-         - Plugin versions are pinned below to ensure reproducible builds across machines.
-         - If you update Java, update the <maven.compiler.release> and test the build on CI.
-    -->
-
-    <app.main.class>fr.univtln.bruno.samples.java101.tp1.Demo</app.main.class>
-
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.release>21</maven.compiler.release>
+    <!-- default main class (can be overridden in modules) -->
+    <app.main.class>fr.univtln.bruno.samples.java101.tp1.Demo</app.main.class>
 
+    <!-- Reproducible build timestamp (can be overridden in CI with -Dproject.build.outputTimestamp=... ) -->
+    <!-- Use ISO 8601 UTC e.g. 2025-11-18T00:00:00Z as a safe default for local builds -->
+    <project.build.outputTimestamp>2025-11-18T00:00:00Z</project.build.outputTimestamp>
+
+    <!-- Versions centralisées -->
     <maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
     <maven-site-plugin.version>3.21.0</maven-site-plugin.version>
     <maven-project-info-reports-plugin.version>3.9.0</maven-project-info-reports-plugin.version>
     <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
     <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
     <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
-    <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+    <maven-jar-plugin.version>3.5.0</maven-jar-plugin.version>
     <maven-install-plugin.version>3.1.4</maven-install-plugin.version>
     <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
-    <mavenversions.version>2.17.1</mavenversions.version>
     <maven-failsafe-plugin.version>3.5.4</maven-failsafe-plugin.version>
     <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
-
-    <junit-jupiter.version>6.0.1</junit-jupiter.version>
-    <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
-    <logback-classic.version>1.5.21</logback-classic.version>
-    <lombok.version>1.18.42</lombok.version>
+    <maven-shade-plugin.version>3.6.1</maven-shade-plugin.version>
     <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
     <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
     <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
     <maven-surefire-report-plugin.version>3.5.4</maven-surefire-report-plugin.version>
-    <maven-enforcer-plugin.version>3.1.0</maven-enforcer-plugin.version>
-    <versions-maven-plugin.version>2.17.1</versions-maven-plugin.version>
-    <assertj-core.version>3.26.3</assertj-core.version>
+    <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
+    <versions-maven-plugin.version>2.19.1</versions-maven-plugin.version>
+    <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
+    <maven-pmd-plugin.version>3.28.0</maven-pmd-plugin.version>
+    <spotbugs-maven-plugin.version>4.9.8.1</spotbugs-maven-plugin.version>
+    <assertj-core.version>3.27.6</assertj-core.version>
+    <junit-jupiter.version>6.0.1</junit-jupiter.version>
+    <logback-classic.version>1.5.21</logback-classic.version>
+    <lombok.version>1.18.42</lombok.version>
+    <maven-jxr-plugin.version>3.6.0</maven-jxr-plugin.version>
   </properties>
 
   <dependencyManagement>
@@ -85,43 +99,29 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <!-- Centralise versions courantes pour les modules -->
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>${assertj-core.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback-classic.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${lombok.version}</version>
+        <scope>provided</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
-  <dependencies>
-    <!-- AssertJ for fluent assertions in tests -->
-    <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <version>${assertj-core.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <version>${logback-classic.version}</version>
-    </dependency>
-
-    <!-- Lombok: tools to reduce POJO boilerplate (annotations @Data/@Builder/etc.) -->
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>${lombok.version}</version>
-      <scope>provided</scope>
-    </dependency>
-
-  </dependencies>
-
+  <!-- Gestion des plugins (héritage enfants) -->
   <build>
-
-    <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+    <pluginManagement>
       <plugins>
         <plugin>
           <artifactId>maven-clean-plugin</artifactId>
@@ -130,12 +130,14 @@
         <plugin>
           <artifactId>maven-site-plugin</artifactId>
           <version>${maven-site-plugin.version}</version>
+          <configuration>
+            <skipDeploy>true</skipDeploy>
+          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>${maven-project-info-reports-plugin.version}</version>
         </plugin>
-        <!-- see http://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
         <plugin>
           <artifactId>maven-resources-plugin</artifactId>
           <version>${maven-resources-plugin.version}</version>
@@ -143,6 +145,19 @@
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>${maven-compiler-plugin.version}</version>
+          <configuration>
+            <annotationProcessorPaths>
+              <path>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+              </path>
+            </annotationProcessorPaths>
+            <compilerArgs>
+              <arg>-parameters</arg>
+            </compilerArgs>
+            <release>${maven.compiler.release}</release>
+          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
@@ -151,6 +166,17 @@
         <plugin>
           <artifactId>maven-jar-plugin</artifactId>
           <version>${maven-jar-plugin.version}</version>
+          <configuration>
+            <archive>
+              <!-- Avoid injecting user/system-specific entries into MANIFEST.MF -->
+              <addMavenDescriptor>false</addMavenDescriptor>
+              <manifest>
+                <addDefaultImplementationEntries>false</addDefaultImplementationEntries>
+                <addDefaultSpecificationEntries>false</addDefaultSpecificationEntries>
+              </manifest>
+              <!-- Note: do not set outputTimestamp here because some plugin versions don't support this element; use property project.build.outputTimestamp instead. -->
+            </archive>
+          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
@@ -160,72 +186,93 @@
           <artifactId>maven-deploy-plugin</artifactId>
           <version>${maven-deploy-plugin.version}</version>
         </plugin>
-
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>versions-maven-plugin</artifactId>
           <version>${versions-maven-plugin.version}</version>
           <configuration>
-            <rulesUri>file:////Users/bruno/Documents/GitHub/java/poms/maven-archetypes/maven-archetype-simple/rules.xml</rulesUri>
+            <rulesUri>https://bruno.univ-tln.fr/rules.xml</rulesUri>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>${maven-failsafe-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>${maven-source-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>${maven-javadoc-plugin.version}</version>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jxr-plugin</artifactId>
+          <version>${maven-jxr-plugin.version}</version>
+          <executions>
+            <execution>
+              <id>generate-xref</id>
+              <phase>site</phase>
+              <goals>
+                <goal>jxr</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>${maven-shade-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>${maven-checkstyle-plugin.version}</version>
+          <configuration>
+            <configLocation>checkstyle.xml</configLocation>
+            <includeTestSourceDirectory>true</includeTestSourceDirectory>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-pmd-plugin</artifactId>
+          <version>${maven-pmd-plugin.version}</version>
+          <configuration>
+            <rulesets>
+              <ruleset>pmd-ruleset.xml</ruleset>
+            </rulesets>
+            <includeTests>true</includeTests>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-maven-plugin</artifactId>
+          <version>${spotbugs-maven-plugin.version}</version>
+          <configuration>
+            <effort>Max</effort>
+            <threshold>Low</threshold>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>${jacoco-maven-plugin.version}</version>
+          <configuration>
+            <!-- default config inherited by modules -->
+          </configuration>
+        </plugin>
+        <!-- enforcer is configured in <build><plugins> so it's executed for modules -->
       </plugins>
     </pluginManagement>
-
+    <!-- Plugins exécutés (hérités par les modules) -->
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-failsafe-plugin</artifactId>
-        <version>${maven-failsafe-plugin.version}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>integration-test</goal>
-              <goal>verify</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- Ensure site generation is available and reproducible for students -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-        <version>${maven-site-plugin.version}</version>
-      </plugin>
-
-      <!-- Student note: the compiler plugin is configured here to allow annotation
-           processing (required for Lombok). The <release> setting compiles to the
-           specified Java version. When teaching, explain why 'provided' scope
-           is set for Lombok (it is needed at compile-time but not at runtime).
-      -->
-
-      <!-- Configure the maven-compiler-plugin for annotation processing (Lombok) -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven-compiler-plugin.version}</version>
-        <configuration>
-          <annotationProcessorPaths>
-            <path>
-              <groupId>org.projectlombok</groupId>
-              <artifactId>lombok</artifactId>
-              <version>${lombok.version}</version>
-            </path>
-          </annotationProcessorPaths>
-          <compilerArgs>
-            <arg>-parameters</arg>
-          </compilerArgs>
-          <release>${maven.compiler.release}</release>
-        </configuration>
-      </plugin>
-
-      <!-- Student note: the Enforcer plugin helps avoid subtle issues when different
-           developers use different Java versions. It's a safety net in CI to fail
-           early with a clear message.
-      -->
-
-      <!-- Enforcer plugin: ensures consistent Java version in dev/CI -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
@@ -247,38 +294,22 @@
           </execution>
         </executions>
       </plugin>
-
-      <!-- Attach sources jar for IDEs and consumers -->
+      <!-- Generate source XRef (jxr) during site phase for all modules -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>${maven-source-plugin.version}</version>
+        <artifactId>maven-jxr-plugin</artifactId>
+        <version>${maven-jxr-plugin.version}</version>
         <executions>
           <execution>
-            <id>attach-sources</id>
+            <id>generate-xref</id>
+            <phase>site</phase>
             <goals>
-              <goal>jar</goal>
+              <goal>jxr</goal>
             </goals>
           </execution>
         </executions>
       </plugin>
-
-      <!-- Attach javadoc jar for publication -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>${maven-javadoc-plugin.version}</version>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- JaCoCo for coverage reporting (prepare-agent + report) -->
+      <!-- Centralized JaCoCo plugin: prepare agent for tests and per-module report -->
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
@@ -289,36 +320,44 @@
             <goals>
               <goal>prepare-agent</goal>
             </goals>
+            <phase>initialize</phase>
           </execution>
           <execution>
             <id>report</id>
+            <goals>
+              <goal>report</goal>
+            </goals>
             <phase>verify</phase>
-            <goals>
-              <goal>report</goal>
-            </goals>
-          </execution>
-          <!-- Ensure site generation can include the JaCoCo report when execution data is present -->
-          <execution>
-            <id>report-for-site</id>
-            <phase>site</phase>
-            <goals>
-              <goal>report</goal>
-            </goals>
           </execution>
         </executions>
       </plugin>
-
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>3.5.1</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <inherited>false</inherited>
         <configuration>
-          <mainClass>fr.univtln.bruno.samples.java101.tp2.app.DemoVehicle</mainClass>
+          <stagingDirectory>${project.build.directory}/staging</stagingDirectory>
         </configuration>
+        <executions>
+          <execution>
+            <id>attach-descriptor</id>
+            <goals>
+              <goal>attach-descriptor</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>stage-for-scm-publish</id>
+            <phase>post-site</phase>
+            <goals>
+              <goal>stage</goal>
+            </goals>
+            <configuration>
+              <skipDeploy>false</skipDeploy>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
-
     </plugins>
-
   </build>
 
   <reporting>
@@ -327,125 +366,136 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
       </plugin>
-      <!-- Surefire report: shows unit test results and trends on the site -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
         <version>${maven-surefire-report-plugin.version}</version>
         <configuration>
-          <!-- Ensure reports are generated for the site; surefire must have run -->
-          <linkXRef>false</linkXRef>
+          <linkXRef>true</linkXRef>
         </configuration>
       </plugin>
-
-      <!-- Javadoc report: includes API documentation in the site -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>${maven-javadoc-plugin.version}</version>
         <configuration>
-          <!-- Do not fail the site if doc warnings exist; for teaching, we prefer warnings over broken builds -->
-          <failOnError>false</failOnError>
+          <skip>true</skip>
         </configuration>
         <reportSets>
           <reportSet>
             <reports>
-              <!-- Only generate the main API javadoc report; skip test-javadoc which can fail when tests are package-private -->
               <report>javadoc</report>
             </reports>
           </reportSet>
         </reportSets>
       </plugin>
-
-      <!-- Dependency reports are supplied by maven-project-info-reports-plugin (Dependencies, Dependency Tree) -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jxr-plugin</artifactId>
+        <version>${maven-jxr-plugin.version}</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>jxr</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>${maven-checkstyle-plugin.version}</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>checkstyle</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+        <configuration>
+          <linkXRef>true</linkXRef>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>${maven-pmd-plugin.version}</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>pmd</report>
+              <report>cpd</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>${spotbugs-maven-plugin.version}</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>spotbugs</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
     </plugins>
   </reporting>
 
   <profiles>
     <profile>
       <id>shadedjar</id>
+      <activation>
+        <property>
+          <name>shadedjar</name>
+        </property>
+      </activation>
       <build>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-shade-plugin</artifactId>
-            <version>${maven-shade-plugin.version}</version>
-            <configuration>
-              <!-- Student notes about the shaded (uber) jar profile:
-                   - createDependencyReducedPom: generates a POM with dependencies
-                     removed that are now embedded. Inspect it before publishing.
-                   - minimizeJar: when true the plugin removes unused classes but
-                     this can break code that relies on reflection; keep it false
-                     for learning or enable only on release builds after testing.
-                   - shadedArtifactAttached + shadedClassifierName: produces a
-                     second artifact with a classifier (e.g. -withdependencies)
-                     leaving the main artifact unchanged; useful for distribution.
-                   - transformers: merge Service Provider Interface files and
-                     inject a Main-Class in the manifest so the jar is executable.
-                   - filters: exclude signatures and module descriptors (module-info.class)
-                     to avoid JPMS-related issues when shading.
-              -->
-
-              <createDependencyReducedPom>true</createDependencyReducedPom>
-              <!-- Do not minimize by default: minimization can drop classes used reflectively. Enable only when you understand the consequences. -->
-              <minimizeJar>false</minimizeJar>
-              <!-- When building with this profile we attach the shaded artifact with a classifier
-                   instead of replacing the main artifact. This keeps the original artifact available. -->
-              <shadedArtifactAttached>true</shadedArtifactAttached>
-              <shadedClassifierName>withdependencies</shadedClassifierName>
-
-              <!-- Exclude test & provided-only dependencies from the fat jar (e.g. lombok, junit). Adjust as needed. -->
-              <artifactSet>
-                <excludes>
-                  <exclude>org.projectlombok:lombok</exclude>
-                  <exclude>org.junit.jupiter:junit-jupiter</exclude>
-                  <exclude>org.assertj:assertj-core</exclude>
-                </excludes>
-              </artifactSet>
-
-              <transformers>
-                <!-- merge services resource for SPI -->
-                <transformer
-                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-
-                <!-- makes a default entry point in the shaded jar -->
-                <transformer
-                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <manifestEntries>
-                    <Main-Class>${app.main.class}</Main-Class>
-                    <X-Compiler-Release-JDK>${maven.compiler.release}</X-Compiler-Release-JDK>
-                  </manifestEntries>
-                </transformer>
-
-                <!-- keep a default config file -->
-                <transformer
-                        implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                  <resource>config.properties</resource>
-                  <resource>log4j.properties</resource>
-                </transformer>
-              </transformers>
-
-              <!-- removes signatures in uberjar -->
-              <filters>
-                <filter>
-                  <artifact>*:*</artifact>
-                  <excludes>
-                    <exclude>META-INF/*.SF</exclude>
-                    <exclude>META-INF/*.DSA</exclude>
-                    <exclude>META-INF/*.RSA</exclude>
-                    <!-- avoid shading module descriptors which break JPMS strong encapsulation -->
-                    <exclude>module-info.class</exclude>
-                  </excludes>
-                </filter>
-              </filters>
-
-            </configuration>
             <executions>
               <execution>
                 <phase>package</phase>
                 <goals>
                   <goal>shade</goal>
                 </goals>
+                <configuration>
+                  <createDependencyReducedPom>true</createDependencyReducedPom>
+                  <minimizeJar>false</minimizeJar>
+                  <shadedArtifactAttached>true</shadedArtifactAttached>
+                  <shadedClassifierName>withdependencies</shadedClassifierName>
+                  <artifactSet>
+                    <excludes>
+                      <exclude>org.projectlombok:lombok</exclude>
+                      <exclude>org.junit.jupiter:junit-jupiter</exclude>
+                      <exclude>org.assertj:assertj-core</exclude>
+                    </excludes>
+                  </artifactSet>
+                  <transformers>
+                    <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                      <manifestEntries>
+                        <Main-Class>${app.main.class}</Main-Class>
+                        <X-Compiler-Release-JDK>${maven.compiler.release}</X-Compiler-Release-JDK>
+                      </manifestEntries>
+                    </transformer>
+                  </transformers>
+                  <filters>
+                    <filter>
+                      <artifact>*:*</artifact>
+                      <excludes>
+                        <exclude>META-INF/*.SF</exclude>
+                        <exclude>META-INF/*.DSA</exclude>
+                        <exclude>META-INF/*.RSA</exclude>
+                        <exclude>module-info.class</exclude>
+                      </excludes>
+                    </filter>
+                  </filters>
+                </configuration>
               </execution>
             </executions>
           </plugin>
@@ -453,5 +503,4 @@
       </build>
     </profile>
   </profiles>
-
 </project>
