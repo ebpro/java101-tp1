@@ -1,16 +1,27 @@
 name: Deploy Preview to Netlify
 
+# Prevent concurrent runs on the same ref; cancel older runs when a new one starts
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   pull_request:
     types: [opened, synchronize, reopened]
   push:
     branches:
       - 'feature/**'
+      - 'develop'
   workflow_dispatch: {}
 
 jobs:
   deploy-preview:
     name: Deploy site preview to Netlify
+    # Skip full job if triggered by the GitHub Actions bot (prevents redeploy loops on the auto-update push)
+    if: github.actor != 'github-actions[bot]'
+    # allow the job to push back changes to the repo (used to update README)
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -31,25 +42,146 @@ jobs:
       - name: Set reproducible build timestamp
         run: echo "BUILD_TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_ENV
 
-      - name: Build aggregated Maven site (skip tests for faster preview)
+      # Export NETLIFY_SITE_ID from secret if explicitly provided
+      - name: Export NETLIFY_SITE_ID from secret (if set)
         run: |
-          ./build-site.sh --skip-tests
+          if [ -n "${{ secrets.NETLIFY_SITE_ID }}" ]; then
+            echo "NETLIFY_SITE_ID=${{ secrets.NETLIFY_SITE_ID }}" >> $GITHUB_ENV
+          fi
+
+      # Derive deterministic site name INCLUDING branch
+      - name: Derive deterministic Netlify site name
+        env:
+          GITHUB_REPO: ${{ github.repository }}
+          BRANCH_NAME: ${{ github.ref_name }}
+          NETLIFY_SITE_NAME_OVERRIDE: ${{ vars.NETLIFY_SITE_NAME }}
+        run: |
+          if [ -n "$NETLIFY_SITE_NAME_OVERRIDE" ]; then
+            SITE_NAME="$NETLIFY_SITE_NAME_OVERRIDE"
+            echo "Using override NETLIFY_SITE_NAME=$SITE_NAME"
+          else
+            REPO_PART="${GITHUB_REPO#*/}"  # drop owner
+            # sanitize repo and branch (lowercase, replace invalid chars with '-')
+            SANITIZED_REPO=$(echo "$REPO_PART" | tr 'A-Z' 'a-z' | sed 's/[^a-z0-9-]/-/g')
+            SANITIZED_BRANCH=$(echo "$BRANCH_NAME" | tr 'A-Z' 'a-z' | sed 's/[^a-z0-9-]/-/g')
+            SITE_NAME="${SANITIZED_REPO}-${SANITIZED_BRANCH}-preview"
+            # trim length to 58 chars (Netlify limit ~63 minus suffix safety)
+            if [ ${#SITE_NAME} -gt 58 ]; then
+              SITE_NAME="${SITE_NAME:0:58}"
+            fi
+            echo "Derived site name: $SITE_NAME"
+          fi
+          echo "DETERMINISTIC_NETLIFY_SITE_NAME=$SITE_NAME" >> $GITHUB_ENV
+
+      # Resolve or create site via API using deterministic name (if NETLIFY_SITE_ID not already known)
+      - name: Resolve or create Netlify site
+        if: env.NETLIFY_SITE_ID == ''
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+          SITE_NAME: ${{ env.DETERMINISTIC_NETLIFY_SITE_NAME }}
+        run: |
+          echo "Resolving Netlify site id for name: ${SITE_NAME}"
+          sudo apt-get update >/dev/null 2>&1 || true
+          sudo apt-get install -y jq >/dev/null 2>&1
+          JSON=$(curl -s -H "Authorization: Bearer ${NETLIFY_AUTH_TOKEN}" "https://api.netlify.com/api/v1/sites")
+          RESOLVED_ID=$(echo "$JSON" | jq -r ".[] | select(.name==\"${SITE_NAME}\") | .id" | head -n1)
+          if [ -z "$RESOLVED_ID" ] || [ "$RESOLVED_ID" = "null" ]; then
+            echo "Site '${SITE_NAME}' not found. Creating it...";
+            CREATE_JSON=$(curl -s -X POST \
+              -H "Authorization: Bearer ${NETLIFY_AUTH_TOKEN}" \
+              -H "Content-Type: application/json" \
+              -d "{\"name\":\"${SITE_NAME}\"}" \
+              "https://api.netlify.com/api/v1/sites")
+            RESOLVED_ID=$(echo "$CREATE_JSON" | jq -r '.id')
+            if [ -z "$RESOLVED_ID" ] || [ "$RESOLVED_ID" = "null" ]; then
+              echo "Failed to create site. Response: $CREATE_JSON" >&2
+              exit 1
+            fi
+            echo "Created site '${SITE_NAME}' with id: $RESOLVED_ID"
+          else
+            echo "Found existing site '${SITE_NAME}' with id: $RESOLVED_ID"
+          fi
+          echo "NETLIFY_SITE_ID=$RESOLVED_ID" >> $GITHUB_ENV
+
+      # Optional: purge older deploys for this branch-specific site to avoid accumulation
+      - name: Cleanup old deploys (optional)
+        if: env.NETLIFY_SITE_ID != ''
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+          NETLIFY_SITE_ID: ${{ env.NETLIFY_SITE_ID }}
+          RETENTION: ${{ vars.NETLIFY_DEPLOY_RETENTION }}
+        run: |
+          sudo apt-get update >/dev/null 2>&1 || true
+          sudo apt-get install -y jq >/dev/null 2>&1
+          KEEP=${RETENTION:-5}
+          echo "Retention policy: keep latest $KEEP deploys for site $NETLIFY_SITE_ID"
+          DEPLOYS=$(curl -s -H "Authorization: Bearer ${NETLIFY_AUTH_TOKEN}" "https://api.netlify.com/api/v1/sites/${NETLIFY_SITE_ID}/deploys")
+          COUNT=$(echo "$DEPLOYS" | jq 'length')
+          echo "Current deploy count: $COUNT"
+          if [ "$COUNT" -le "$KEEP" ]; then
+            echo "Nothing to clean."
+            exit 0
+          fi
+          # Select deploy IDs beyond retention (skip first KEEP entries)
+          OLD_IDS=$(echo "$DEPLOYS" | jq -r ".[${KEEP}:] | .[].id")
+          if [ -z "$OLD_IDS" ]; then
+            echo "No old deploys to remove."
+            exit 0
+          fi
+          echo "Deleting old deploys:"
+          for ID in $OLD_IDS; do
+            echo " - $ID"
+            curl -s -X DELETE -H "Authorization: Bearer ${NETLIFY_AUTH_TOKEN}" "https://api.netlify.com/api/v1/deploys/${ID}" >/dev/null || echo "Failed to delete $ID" >&2
+          done
+          echo "Cleanup completed."
+
+      - name: Build aggregated Maven site (skip tests for faster preview)
+        run: ./build-site.sh --skip-tests
         env:
           MAVEN_OPTS: "-Dproject.build.outputTimestamp=${{ env.BUILD_TIMESTAMP }}"
 
-      - name: Deploy to Netlify
+      - name: Deploy to Netlify (Preview per branch)
         uses: nwtgck/actions-netlify@v3.0
         with:
           publish-dir: './target/staging'
           production-deploy: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: "Deploy preview for ${{ github.ref_name }} @ ${{ github.sha }}"
+          deploy-message: "Preview deploy for ${{ github.ref_name }} @ ${{ github.sha }}"
           enable-pull-request-comment: true
           enable-commit-comment: false
           overwrites-pull-request-comment: true
-          alias: ${{ github.event.pull_request.number || github.ref_name }}
+          alias: ${{ github.ref_name }}
         env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+          NETLIFY_SITE_ID: ${{ env.NETLIFY_SITE_ID }}
         timeout-minutes: 5
 
+      # Generate centralized previews index and publish to gh-pages (avoids changing feature branches)
+      - name: Generate previews index and publish to gh-pages
+        env:
+          NETLIFY_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          sudo apt-get update >/dev/null 2>&1 || true
+          sudo apt-get install -y jq curl >/dev/null 2>&1 || true
+
+          REPO_NAME="${GITHUB_REPO#*/}"
+          SANITIZED_REPO=$(echo "$REPO_NAME" | tr 'A-Z' 'a-z' | sed 's/[^a-z0-9-]/-/g')
+          PREFIX="${SANITIZED_REPO}-"
+
+          echo "Generating Netlify previews list for repo prefix: $PREFIX"
+
+          # Use local script (checked out from repo) to produce both markdown and html
+          chmod +x .github/scripts/regenerate_preview_index.sh || true
+          NETLIFY_TOKEN=${NETLIFY_TOKEN} GITHUB_REPO=${GITHUB_REPO} PREFIX=${PREFIX} ./.github/scripts/regenerate_preview_index.sh preview-site
+
+      - name: Publish previews index to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: preview-site
+          keep_files: true
+          commit_message: "ci(preview): update preview sites index"

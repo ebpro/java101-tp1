@@ -11,6 +11,7 @@ on:
 jobs:
   codeql:
     name: Analyze (CodeQL)
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
 
     permissions:
