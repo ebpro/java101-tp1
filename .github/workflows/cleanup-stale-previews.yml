@@ -12,6 +12,8 @@ permissions:
 env:
   # Default retention in days for stale previews (can be changed in workflow file or via repository variables)
   RETENTION_DAYS: '30'
+  # Set to 'true' for initial dry-run testing (no actual deletions or pushes)
+  DRY_RUN: 'false'
 
 jobs:
   cleanup-stale:
