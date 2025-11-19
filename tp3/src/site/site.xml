@@ -20,6 +20,11 @@
 
     <menu name="Documentation">
       <item name="Source Xref (Javadoc)" href="xref/index.html"/>
+      <item name="Run commands (quick)" href="index.html#run-commands"/>
+      <item name="Run Demo (default)" href="index.html#run-demo"/>
+      <item name="Guava example" href="index.html#run-guava"/>
+      <item name="Eclipse Collections example" href="index.html#run-eclipse"/>
+      <item name="Streams &amp; Parallel examples" href="index.html#run-parallel"/>
     </menu>
 
     <menu name="Reports">

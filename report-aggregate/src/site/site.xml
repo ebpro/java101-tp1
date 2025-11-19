@@ -7,18 +7,19 @@
   </skin>
 
   <body>
-    <menu name="Aggregated Reports">
+    <menu name="Overview">
       <item name="Overview" href="index.html"/>
       <item name="Back to Main" href="../index.html"/>
     </menu>
 
-    <menu name="Coverage">
-      <item name="JaCoCo Aggregated" href="jacoco-aggregate/index.html"/>
+    <menu name="Learning Modules">
+      <item name="TP1 — Fundamentals &amp; Patterns" href="../tp1/index.html"/>
+      <item name="TP2 — Interfaces &amp; Polymorphism" href="../tp2/index.html"/>
+      <item name="TP3 — Collections &amp; Streams" href="../tp3/index.html"/>
     </menu>
 
-    <menu name="Module Reports">
-      <item name="TP1 Reports" href="../tp1/project-reports.html"/>
-      <item name="TP2 Reports" href="../tp2/project-reports.html"/>
+    <menu name="Coverage">
+      <item name="JaCoCo Aggregated" href="jacoco-aggregate/index.html"/>
     </menu>
 
     <menu name="Project Info">
@@ -28,4 +29,3 @@
     </menu>
   </body>
 </site>
-

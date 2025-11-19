@@ -20,6 +20,13 @@ Master advanced OOP concepts:
 - Composition and delegation
 - Interface segregation principle
 
+### [TP3 — Collections & Streams](./tp3/index.html)
+Explore Java Collections and Streams with best practices and examples:
+- Lists, Sets, Maps, Queues
+- Iteration vs functional operations
+- Stream pipelines, collectors, and grouping
+- Parallel streams and thread-safety considerations
+
 ## 📊 Reports & Documentation
 
 ### Consolidated Reports
@@ -28,12 +35,14 @@ Master advanced OOP concepts:
 - Combined quality analysis
 
 ### Module Reports
-- **[TP1 Reports](./tp1/project-reports.html)** — Tests, coverage, quality metrics
-- **[TP2 Reports](./tp2/project-reports.html)** — Tests, coverage, quality metrics
+For detailed module-level reports (tests, coverage, quality metrics), open the page of the module you want (e.g. navigate to TP1, TP2 or TP3). This homepage shows only aggregated reports:
+
+- **[Aggregated Reports](./report-aggregate/index.html)** — consolidated metrics across all modules
 
 ### API Documentation
-- [TP1 Javadoc](./tp1/apidocs/index.html)
-- [TP2 Javadoc](./tp2/apidocs/index.html)
+- [TP1 Javadoc](./tp1/xref/index.html)
+- [TP2 Javadoc](./tp2/xref/index.html)
+- [TP3 Javadoc](./tp3/xref/index.html)
 
 ## 🚀 Quick Start
 
@@ -61,8 +70,9 @@ cd java101-tp1
 ### Recommended Learning Path:
 1. Start with **[TP1](./tp1/index.html)** to learn fundamental patterns
 2. Progress to **[TP2](./tp2/index.html)** for advanced OOP concepts
-3. Explore the **tests** to see patterns in action
-4. Review **[quality reports](./report-aggregate/index.html)** to understand code metrics
+3. Explore **[TP3](./tp3/index.html)** for collections & streams
+4. Explore the **tests** to see patterns in action
+5. Review **[quality reports](./report-aggregate/index.html)** to understand code metrics
 
 ### Key Concepts Covered:
 - **Design Patterns**: Factory, Builder, Singleton, Value Object
