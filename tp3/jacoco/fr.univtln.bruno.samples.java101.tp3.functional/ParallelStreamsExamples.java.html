@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ParallelStreamsExamples.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TP3 - Collections &amp; Streams</a> &gt; <a href="index.source.html" class="el_package">fr.univtln.bruno.samples.java101.tp3.functional</a> &gt; <span class="el_source">ParallelStreamsExamples.java</span></div><h1>ParallelStreamsExamples.java</h1><pre class="source lang-java linenums">package fr.univtln.bruno.samples.java101.tp3.functional;
+
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+/**
+ * Examples demonstrating parallel streams usage and common pitfalls.
+ *
+ * &lt;p&gt;Shows performance measurement and the dangers of shared mutable state when using
+ * parallel streams; recommends reduction operations as the correct pattern.&lt;/p&gt;
+ */
+<span class="nc" id="L16">@Slf4j</span>
+<span class="nc" id="L17">public class ParallelStreamsExamples {</span>
+  /**
+   * Compare sequential vs parallel stream performance for a simple summation.
+   * This is illustrative only — real benchmarking requires JMH and controlling for warmup.
+   */
+  public static void parallelSumExample() {
+<span class="nc" id="L23">    log.info(&quot;=== Parallel sum example (measure) ===&quot;);</span>
+<span class="nc" id="L24">    List&lt;Integer&gt; data = IntStream.rangeClosed(1, 1_000_000).boxed().toList();</span>
+
+<span class="nc" id="L26">    long t0 = System.currentTimeMillis();</span>
+<span class="nc" id="L27">    long sumSeq = data.stream().mapToLong(Integer::longValue).sum();</span>
+<span class="nc" id="L28">    long t1 = System.currentTimeMillis();</span>
+
+<span class="nc" id="L30">    log.debug(&quot;Sequential sum took {} ms&quot;, (t1 - t0));</span>
+
+<span class="nc" id="L32">    long sumParStart = System.currentTimeMillis();</span>
+<span class="nc" id="L33">    long sumPar = data.parallelStream().mapToLong(Integer::longValue).sum();</span>
+<span class="nc" id="L34">    long sumParEnd = System.currentTimeMillis();</span>
+
+<span class="nc" id="L36">    log.info(&quot;seq sum={} time={}ms&quot;, sumSeq, (t1 - t0));</span>
+<span class="nc" id="L37">    log.info(&quot;par sum={} time={}ms&quot;, sumPar, (sumParEnd - sumParStart));</span>
+<span class="nc" id="L38">    log.debug(&quot;Parallel sum took {} ms&quot;, (sumParEnd - sumParStart));</span>
+<span class="nc" id="L39">  }</span>
+
+  /**
+   * Demonstrates the pitfall of mutating shared state (AtomicInteger used here still risks
+   * producing confusing results and should be avoided). Shows the correct pattern using reduction.
+   */
+  public static void sharedMutablePitfall() {
+<span class="nc" id="L46">    log.info(&quot;=== Shared mutable state pitfall ===&quot;);</span>
+<span class="nc" id="L47">    List&lt;Integer&gt; data = IntStream.rangeClosed(1, 1000).boxed().toList();</span>
+
+<span class="nc" id="L49">    AtomicInteger counter = new AtomicInteger(0);</span>
+    // WRONG: side-effect in parallel stream leads to race / unpredictable result
+<span class="nc" id="L51">    data.parallelStream().forEach(counter::addAndGet);</span>
+<span class="nc" id="L52">    log.info(&quot;Counter (with parallel forEach) = {} (should be {})&quot;, counter.get(), data.stream().mapToInt(Integer::intValue).sum());</span>
+
+<span class="nc" id="L54">    int reduced = data.parallelStream().mapToInt(Integer::intValue).reduce(0, Integer::sum);</span>
+<span class="nc" id="L55">    log.info(&quot;Reduced (parallel) = {}&quot;, reduced);</span>
+
+    // Student note: prefer stateless reduction or collectors. For example, using a thread-safe collector:
+    // int sum = data.parallelStream().mapToInt(Integer::intValue).sum(); // built-in is safe
+    // Or: data.parallelStream().collect(Collectors.summingInt(Integer::intValue));
+<span class="nc" id="L60">  }</span>
+
+  /**
+   * Runner for parallel streams examples.
+   *
+   * @param args ignored
+   */
+  public static void main(String[] args) {
+<span class="nc" id="L68">    parallelSumExample();</span>
+<span class="nc" id="L69">    sharedMutablePitfall();</span>
+<span class="nc" id="L70">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

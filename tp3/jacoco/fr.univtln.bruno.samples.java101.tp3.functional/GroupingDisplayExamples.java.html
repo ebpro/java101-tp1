@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GroupingDisplayExamples.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TP3 - Collections &amp; Streams</a> &gt; <a href="index.source.html" class="el_package">fr.univtln.bruno.samples.java101.tp3.functional</a> &gt; <span class="el_source">GroupingDisplayExamples.java</span></div><h1>GroupingDisplayExamples.java</h1><pre class="source lang-java linenums">package fr.univtln.bruno.samples.java101.tp3.functional;
+
+import fr.univtln.bruno.samples.java101.tp3.Person;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+/**
+ * Examples demonstrating groupingBy / partitioningBy and how to display grouped results.
+ */
+<span class="nc" id="L13">@Slf4j</span>
+public class GroupingDisplayExamples {
+  /**
+   * Private constructor to prevent instantiation.
+   */
+  private GroupingDisplayExamples() {
+  }
+
+  /**
+   * Display grouping by last name.
+   *
+   * @param people list of persons to group
+   */
+  public static void showGroupingByLastName(List&lt;Person&gt; people) {
+<span class="nc" id="L27">    Map&lt;String, List&lt;Person&gt;&gt; byLast = people.stream().collect(Collectors.groupingBy(Person::lastName));</span>
+<span class="nc" id="L28">    byLast.forEach((ln, ps) -&gt; log.info(&quot;[functional] {} -&gt; {}&quot;, ln, ps.stream().map(Person::getFullName).toList()));</span>
+<span class="nc" id="L29">  }</span>
+
+  /**
+   * Display partitioning of persons by age threshold.
+   *
+   * @param people    list of persons to partition
+   * @param threshold inclusive age threshold for the partition
+   */
+  public static void showPartitionByAge(List&lt;Person&gt; people, int threshold) {
+<span class="nc bnc" id="L38" title="All 2 branches missed.">    var part = people.stream().collect(Collectors.partitioningBy(p -&gt; p.age() &gt;= threshold));</span>
+<span class="nc" id="L39">    log.info(&quot;[functional] &gt;={} {} &lt;{} {}&quot;, threshold, part.get(true).stream().map(Person::getFullName).toList(), threshold, part.get(false).stream().map(Person::getFullName).toList());</span>
+<span class="nc" id="L40">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

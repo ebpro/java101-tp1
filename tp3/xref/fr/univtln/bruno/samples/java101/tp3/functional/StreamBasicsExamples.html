@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="" lang="">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>StreamBasicsExamples xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../../../apidocs/fr/univtln/bruno/samples/java101/tp3/functional/StreamBasicsExamples.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <strong class="jxr_keyword">package</strong> fr.univtln.bruno.samples.java101.tp3.functional;
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> fr.univtln.bruno.samples.java101.tp3.Person;
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> lombok.extern.slf4j.Slf4j;
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">import</strong> java.util.Arrays;
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">import</strong> java.util.Collection;
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> java.util.Comparator;
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> java.util.List;
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> java.util.stream.IntStream;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> java.util.stream.Stream;
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_javadoccomment"> * Basic Stream API examples focused on collections: creation, intermediate operations and common idioms.</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  @Slf4j
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="StreamBasicsExamples" href="../../../../../../../fr/univtln/bruno/samples/java101/tp3/functional/StreamBasicsExamples.html#StreamBasicsExamples">StreamBasicsExamples</a> {
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment">   * Private constructor to prevent instantiation.</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>    <strong class="jxr_keyword">private</strong> <a name="StreamBasicsExamples" href="../../../../../../../fr/univtln/bruno/samples/java101/tp3/functional/StreamBasicsExamples.html#StreamBasicsExamples">StreamBasicsExamples</a>() {
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>    }
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment">   * Demonstrates various ways to create streams from collections and primitives.</em>
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> streamCreationExample() {
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>      log.info(<span class="jxr_string">"=== Stream Creation ==="</span>);
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>      List&lt;String&gt; fromList = List.of(<span class="jxr_string">"A"</span>, <span class="jxr_string">"B"</span>, <span class="jxr_string">"C"</span>);
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>      log.debug(<span class="jxr_string">"fromList snapshot: {}"</span>, fromList);
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>      log.info(<span class="jxr_string">"From list: {}"</span>, fromList.stream().toList());
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>      log.info(<span class="jxr_string">"From array: {}"</span>, Arrays.stream(<strong class="jxr_keyword">new</strong> String[]{<span class="jxr_string">"X"</span>, <span class="jxr_string">"Y"</span>}).toList());
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>      log.info(<span class="jxr_string">"From values: {}"</span>, Stream.of(<span class="jxr_string">"1"</span>, <span class="jxr_string">"2"</span>, <span class="jxr_string">"3"</span>).toList());
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>      log.info(<span class="jxr_string">"Empty count: {}"</span>, Stream.empty().count());
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>      log.info(<span class="jxr_string">"Iterate limit: {}"</span>, Stream.iterate(0, n -&gt; n + 1).limit(5).toList());
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>      log.info(<span class="jxr_string">"Generate random: {}"</span>, Stream.generate(Math::random).limit(3).toList());
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>      log.info(<span class="jxr_string">"Range: {}"</span>, IntStream.range(1, 5).boxed().toList());
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>      log.info(<span class="jxr_string">"RangeClosed: {}"</span>, IntStream.rangeClosed(1, 5).boxed().toList());
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>      <em class="jxr_comment">// Student note: infinite streams (Stream.generate / Stream.iterate without limit) can exhaust memory</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>      <em class="jxr_comment">// or run indefinitely if not limited. Always apply limit() or takeWhile() when experimenting.</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>    }
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment">   * Demonstrates filtering a collection using stream filters.</em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> filterExample() {
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      log.info(<span class="jxr_string">"=== Filter Example ==="</span>);
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      List&lt;Person&gt; people = List.of(
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>        Person.of(<span class="jxr_string">"Alice"</span>, <span class="jxr_string">"Smith"</span>, 30),
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>        Person.of(<span class="jxr_string">"Bob"</span>, <span class="jxr_string">"Jones"</span>, 25),
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>        Person.of(<span class="jxr_string">"Charlie"</span>, <span class="jxr_string">"Brown"</span>, 35),
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>        Person.of(<span class="jxr_string">"David"</span>, <span class="jxr_string">"Wilson"</span>, 28)
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>      );
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>      log.debug(<span class="jxr_string">"people snapshot: {}"</span>, people);
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>      List&lt;String&gt; age30 = people.stream().filter(p -&gt; p.age() &gt;= 30).map(Person::getFullName).toList();
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>      log.debug(<span class="jxr_string">"Filtered age&gt;=30 count: {}"</span>, age30.size());
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>      log.info(<span class="jxr_string">"Age &gt;=30: {}"</span>, age30);
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>      List&lt;String&gt; complex = people.stream().filter(p -&gt; p.age() &gt;= 25).filter(p -&gt; p.lastName().length() &gt; 5).map(Person::getFullName).toList();
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>      log.debug(<span class="jxr_string">"Filtered complex pipeline count: {}"</span>, complex.size());
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>      log.info(<span class="jxr_string">"Age&gt;=25 &amp; long lastName: {}"</span>, complex);
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>    }
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment">   * Demonstrates mapping operations on streams (map, method references).</em>
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> mapExample() {
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>      log.info(<span class="jxr_string">"=== Map Example ==="</span>);
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>      List&lt;Person&gt; people = List.of(Person.of(<span class="jxr_string">"Alice"</span>, <span class="jxr_string">"Smith"</span>, 30), Person.of(<span class="jxr_string">"Bob"</span>, <span class="jxr_string">"Jones"</span>, 25));
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>      log.info(<span class="jxr_string">"Full names: {}"</span>, people.stream().map(Person::getFullName).toList());
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>      log.info(<span class="jxr_string">"Ages: {}"</span>, people.stream().map(Person::age).toList());
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>      log.info(<span class="jxr_string">"Upper: {}"</span>, people.stream().map(Person::getFullName).map(String::toUpperCase).toList());
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>    }
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_javadoccomment">   * Demonstrates flatMap for nested collections and splitting strings.</em>
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> flatMapExample() {
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>      log.info(<span class="jxr_string">"=== FlatMap Example ==="</span>);
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>      List&lt;List&lt;String&gt;&gt; nested = List.of(List.of(<span class="jxr_string">"A"</span>, <span class="jxr_string">"B"</span>), List.of(<span class="jxr_string">"C"</span>));
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>      log.info(<span class="jxr_string">"Flatten: {}"</span>, nested.stream().flatMap(Collection::stream).toList());
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>      List&lt;String&gt; sentences = List.of(<span class="jxr_string">"Hello World"</span>, <span class="jxr_string">"Java Streams"</span>);
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      log.info(<span class="jxr_string">"Words: {}"</span>, sentences.stream().flatMap(s -&gt; Arrays.stream(s.split(<span class="jxr_string">" "</span>))).toList());
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>    }
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  <em class="jxr_javadoccomment">   * Demonstrates distinct/sorted/limit/skip stream terminal operations.</em>
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> distinctSortedLimitExample() {
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>      log.info(<span class="jxr_string">"=== Distinct/Sorted/Limit ==="</span>);
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      List&lt;Integer&gt; nums = List.of(5, 2, 8, 2, 9, 1, 5);
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>      log.info(<span class="jxr_string">"Distinct: {}"</span>, nums.stream().distinct().toList());
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>      log.info(<span class="jxr_string">"Sorted: {}"</span>, nums.stream().sorted().toList());
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>      log.info(<span class="jxr_string">"Top3 desc distinct: {}"</span>, nums.stream().distinct().sorted(Comparator.reverseOrder()).limit(3).toList());
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>      log.info(<span class="jxr_string">"Skip first 2 sorted: {}"</span>, nums.stream().sorted().skip(2).toList());
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>    }
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  <em class="jxr_javadoccomment">   * Demonstrates use of peek for debugging intermediate pipeline state.</em>
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> peekExample() {
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>     log.info(<span class="jxr_string">"=== Peek Example ==="</span>);
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>     List&lt;Integer&gt; nums = List.of(1, 2, 3, 4, 5);
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>     log.debug(<span class="jxr_string">"nums initial: {}"</span>, nums);
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>     List&lt;Integer&gt; result = nums.stream()
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>       .peek(n -&gt; log.debug(<span class="jxr_string">"Original {}"</span>, n))
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>       .filter(n -&gt; n % 2 == 0)
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>       .peek(n -&gt; log.debug(<span class="jxr_string">"Filtered {}"</span>, n))
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>       .map(n -&gt; n * 2)
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>       .peek(n -&gt; log.debug(<span class="jxr_string">"Mapped {}"</span>, n))
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>       .toList();
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>     log.info(<span class="jxr_string">"Result {}"</span>, result);
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> 
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>     <em class="jxr_comment">// Student note: Stream.toList() (since Java 16) may return an unmodifiable list; Collectors.toList()</em>
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>     <em class="jxr_comment">// historically returned a mutable list. If code expects mutability, use new ArrayList&lt;&gt;(stream.toList())</em>
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>     <em class="jxr_comment">// or Collectors.toCollection(ArrayList::new).</em>
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>   }
+<a class="jxr_linenumber" name="L118" href="#L118">118</a> 
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> <em class="jxr_javadoccomment">   * Demonstrates different sorting idioms using streams and comparators.</em>
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> sortingExample() {
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>     log.info(<span class="jxr_string">"=== Sorting Example ==="</span>);
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>     List&lt;Person&gt; people = List.of(Person.of(<span class="jxr_string">"Charlie"</span>, <span class="jxr_string">"Brown"</span>, 35), Person.of(<span class="jxr_string">"Alice"</span>, <span class="jxr_string">"Smith"</span>, 30), Person.of(<span class="jxr_string">"Bob"</span>, <span class="jxr_string">"Jones"</span>, 25));
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>     log.info(<span class="jxr_string">"Natural: {}"</span>, people.stream().sorted().map(Person::getFullName).toList());
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>     log.info(<span class="jxr_string">"By age: {}"</span>, people.stream().sorted(Comparator.comparing(Person::age)).map(p -&gt; p.getFullName() + <span class="jxr_string">"("</span> + p.age() + <span class="jxr_string">")"</span>).toList());
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>   }
+<a class="jxr_linenumber" name="L128" href="#L128">128</a> 
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L130" href="#L130">130</a> <em class="jxr_javadoccomment">   * Demonstrates takeWhile and dropWhile on ordered streams.</em>
+<a class="jxr_linenumber" name="L131" href="#L131">131</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> takeWhileDropWhileExample() {
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>     log.info(<span class="jxr_string">"=== takeWhile/dropWhile ==="</span>);
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>     List&lt;Integer&gt; numbers = List.of(1, 2, 3, 4, 5, 6, 7);
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>     log.info(<span class="jxr_string">"takeWhile &lt;4: {}"</span>, numbers.stream().takeWhile(n -&gt; n &lt; 4).toList());
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>     log.info(<span class="jxr_string">"dropWhile &lt;4: {}"</span>, numbers.stream().dropWhile(n -&gt; n &lt; 4).toList());
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>   }
+<a class="jxr_linenumber" name="L138" href="#L138">138</a> 
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L140" href="#L140">140</a> <em class="jxr_javadoccomment">   * Simple runner for the Stream examples.</em>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> main(String[] args) {
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>     streamCreationExample();
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>     filterExample();
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>     mapExample();
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>     flatMapExample();
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>     distinctSortedLimitExample();
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>     peekExample();
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>     sortingExample();
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>     takeWhileDropWhileExample();
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>   }
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> }
+</pre>
+<hr/>
+<div id="footer">© 2025</div>
+</body>
+</html>

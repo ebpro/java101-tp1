@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ListExamples.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TP3 - Collections &amp; Streams</a> &gt; <a href="index.source.html" class="el_package">fr.univtln.bruno.samples.java101.tp3.list</a> &gt; <span class="el_source">ListExamples.java</span></div><h1>ListExamples.java</h1><pre class="source lang-java linenums">package fr.univtln.bruno.samples.java101.tp3.list;
+
+import fr.univtln.bruno.samples.java101.tp3.Person;
+import fr.univtln.bruno.samples.java101.tp3.functional.MappingAndSortingExamples;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.*;
+
+/**
+ * Examples demonstrating common List implementations and idioms.
+ *
+ * &lt;p&gt;Each static method illustrates characteristics, complexity or pitfalls of a
+ * specific List usage (ArrayList, LinkedList, subList, immutability...).&lt;/p&gt;
+ */
+<span class="nc" id="L15">@Slf4j</span>
+public class ListExamples {
+  /**
+   * Private constructor to prevent instantiation.
+   */
+  private ListExamples() {
+  }
+
+  /**
+   * ArrayList: access O(1) index, append amortized O(1), remove middle O(n).
+   */
+  public static void arrayListExample() {
+<span class="nc" id="L27">    log.info(&quot;=== ArrayList Example ===&quot;);</span>
+<span class="nc" id="L28">    List&lt;Person&gt; people = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L29">    people.add(Person.of(&quot;Alice&quot;, &quot;Smith&quot;, 30));</span>
+<span class="nc" id="L30">    people.add(Person.of(&quot;Bob&quot;, &quot;Jones&quot;, 25));</span>
+<span class="nc" id="L31">    people.add(Person.of(&quot;Charlie&quot;, &quot;Brown&quot;, 35));</span>
+<span class="nc" id="L32">    log.debug(&quot;Initial people list: {}&quot;, people);</span>
+<span class="nc" id="L33">    log.info(&quot;Size: {}&quot;, people.size());</span>
+    // safe access because we just added elements above
+<span class="nc" id="L35">    log.info(&quot;First: {}&quot;, people.get(0).getFullName());</span>
+<span class="nc" id="L36">    log.info(&quot;Contains Alice? {}&quot;, people.contains(Person.of(&quot;Alice&quot;, &quot;Smith&quot;, 30)));</span>
+<span class="nc" id="L37">    people.remove(1); // remove Bob</span>
+<span class="nc" id="L38">    log.debug(&quot;After remove index=1 list: {}&quot;, people);</span>
+<span class="nc" id="L39">    log.info(&quot;After remove index=1 size: {}&quot;, people.size());</span>
+<span class="nc" id="L40">    people.remove(Person.of(&quot;Alice&quot;, &quot;Smith&quot;, 30));</span>
+<span class="nc" id="L41">    log.debug(&quot;After remove Alice list: {}&quot;, people);</span>
+<span class="nc" id="L42">    log.info(&quot;After remove Alice size: {}&quot;, people.size());</span>
+<span class="nc" id="L43">  }</span>
+
+  /**
+   * LinkedList: insert/remove head/tail O(1), index access O(n).
+   */
+  public static void linkedListExample() {
+<span class="nc" id="L49">    log.info(&quot;=== LinkedList Example ===&quot;);</span>
+<span class="nc" id="L50">    LinkedList&lt;Person&gt; people = new LinkedList&lt;&gt;();</span>
+<span class="nc" id="L51">    people.addLast(Person.of(&quot;Alice&quot;, &quot;Smith&quot;, 30));</span>
+<span class="nc" id="L52">    people.addLast(Person.of(&quot;Bob&quot;, &quot;Jones&quot;, 25));</span>
+<span class="nc" id="L53">    people.addFirst(Person.of(&quot;Charlie&quot;, &quot;Brown&quot;, 35));</span>
+<span class="nc" id="L54">    log.info(&quot;First: {} Last: {} Size: {}&quot;, people.getFirst().getFullName(), people.getLast().getFullName(), people.size());</span>
+<span class="nc" id="L55">    people.offer(Person.of(&quot;David&quot;, &quot;Wilson&quot;, 40));</span>
+<span class="nc" id="L56">    Person polled = people.poll();</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">    if (polled != null) log.info(&quot;Poll (FIFO): {}&quot;, polled.getFullName());</span>
+<span class="nc" id="L58">    people.push(Person.of(&quot;Eve&quot;, &quot;Davis&quot;, 28));</span>
+<span class="nc" id="L59">    Person popped = people.pop();</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">    if (popped != null) log.info(&quot;Pop (LIFO): {}&quot;, popped.getFullName());</span>
+<span class="nc" id="L61">  }</span>
+
+  /**
+   * Immutability vs unmodifiable view.
+   */
+  public static void immutableListExample() {
+<span class="nc" id="L67">    log.info(&quot;=== Immutable Lists Example ===&quot;);</span>
+<span class="nc" id="L68">    List&lt;String&gt; immutable = List.of(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;);</span>
+<span class="nc" id="L69">    log.info(&quot;Immutable: {}&quot;, immutable);</span>
+    // don't attempt to modify List.of() result; demonstrate safe usage instead
+<span class="nc" id="L71">    List&lt;String&gt; backing = new ArrayList&lt;&gt;(List.of(&quot;X&quot;, &quot;Y&quot;, &quot;Z&quot;));</span>
+<span class="nc" id="L72">    List&lt;String&gt; unmodifiable = Collections.unmodifiableList(backing);</span>
+<span class="nc" id="L73">    backing.add(&quot;W&quot;);</span>
+<span class="nc" id="L74">    log.info(&quot;Backing modified reflected in view: {}&quot;, unmodifiable);</span>
+<span class="nc" id="L75">  }</span>
+
+  /**
+   * SubList: a view backed by the original list.
+   */
+  public static void subListExample() {
+<span class="nc" id="L81">    log.info(&quot;=== SubList Example ===&quot;);</span>
+<span class="nc" id="L82">    List&lt;Integer&gt; numbers = new ArrayList&lt;&gt;(List.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9));</span>
+<span class="nc" id="L83">    List&lt;Integer&gt; slice = numbers.subList(3, 7);</span>
+<span class="nc" id="L84">    log.info(&quot;Slice [3,7): {}&quot;, slice);</span>
+<span class="nc" id="L85">    slice.set(0, 99);</span>
+<span class="nc" id="L86">    log.info(&quot;After set in slice original: {}&quot;, numbers);</span>
+<span class="nc" id="L87">    slice.clear();</span>
+<span class="nc" id="L88">    log.info(&quot;After clear slice original: {}&quot;, numbers);</span>
+
+    // Student note: subList is a view. If you need a detached copy, do:
+    // List&lt;Integer&gt; detached = new ArrayList&lt;&gt;(numbers.subList(3,7));
+<span class="nc" id="L92">  }</span>
+
+  /**
+   * Sorting with Comparable then Comparator.
+   */
+  public static void sortingExample() {
+<span class="nc" id="L98">    log.info(&quot;=== Sorting Example ===&quot;);</span>
+<span class="nc" id="L99">    List&lt;Person&gt; people = new ArrayList&lt;&gt;(List.of(</span>
+<span class="nc" id="L100">      Person.of(&quot;Charlie&quot;, &quot;Brown&quot;, 35),</span>
+<span class="nc" id="L101">      Person.of(&quot;Alice&quot;, &quot;Smith&quot;, 30),</span>
+<span class="nc" id="L102">      Person.of(&quot;Bob&quot;, &quot;Jones&quot;, 25)</span>
+    ));
+<span class="nc" id="L104">    log.debug(&quot;Before sort: {}&quot;, people);</span>
+<span class="nc" id="L105">    MappingAndSortingExamples.printFullNames(people);</span>
+<span class="nc" id="L106">    Collections.sort(people);</span>
+<span class="nc" id="L107">    log.debug(&quot;After natural sort: {}&quot;, people);</span>
+<span class="nc" id="L108">    MappingAndSortingExamples.printFullNames(people);</span>
+<span class="nc" id="L109">    people.sort(Comparator.comparing(Person::age).reversed());</span>
+<span class="nc" id="L110">    log.debug(&quot;After age-desc sort: {}&quot;, people);</span>
+<span class="nc" id="L111">    MappingAndSortingExamples.printNamesWithAges(people);</span>
+<span class="nc" id="L112">  }</span>
+
+  /**
+   * Iteration: foreach, removeIf, ListIterator (bidirectional).
+   */
+  public static void iterationExample() {
+<span class="nc" id="L118">    log.info(&quot;=== Iteration Example ===&quot;);</span>
+<span class="nc" id="L119">    List&lt;String&gt; items = new ArrayList&lt;&gt;(List.of(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;));</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">    for (String i : items) {</span>
+<span class="nc" id="L121">      log.info(&quot;Foreach: {}&quot;, i);</span>
+<span class="nc" id="L122">    }</span>
+    // remove 'B' using removeIf instead of iterator.remove()
+    // Uses a lambda expression (functional style)
+<span class="nc" id="L125">    items.removeIf(s -&gt; &quot;B&quot;.equals(s));</span>
+<span class="nc" id="L126">    log.info(&quot;After removeIf remove B: {}&quot;, items);</span>
+<span class="nc" id="L127">    ListIterator&lt;String&gt; listIt = items.listIterator(items.size());</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">    while (listIt.hasPrevious()) {</span>
+<span class="nc" id="L129">      log.info(&quot;Backward: {}&quot;, listIt.previous());</span>
+    }
+
+    // Student note: if you need to remove while iterating, don't use for-each; use Iterator explicitly:
+    // Iterator&lt;String&gt; it = items.iterator();
+    // while (it.hasNext()) {
+    //   if (shouldRemove(it.next())) it.remove();
+    // }
+<span class="nc" id="L137">  }</span>
+
+  public static void main(String[] args) {
+<span class="nc" id="L140">    arrayListExample();</span>
+<span class="nc" id="L141">    linkedListExample();</span>
+<span class="nc" id="L142">    immutableListExample();</span>
+<span class="nc" id="L143">    subListExample();</span>
+<span class="nc" id="L144">    sortingExample();</span>
+<span class="nc" id="L145">    iterationExample();</span>
+<span class="nc" id="L146">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

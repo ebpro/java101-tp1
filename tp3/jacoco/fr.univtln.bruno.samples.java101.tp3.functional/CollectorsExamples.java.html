@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CollectorsExamples.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TP3 - Collections &amp; Streams</a> &gt; <a href="index.source.html" class="el_package">fr.univtln.bruno.samples.java101.tp3.functional</a> &gt; <span class="el_source">CollectorsExamples.java</span></div><h1>CollectorsExamples.java</h1><pre class="source lang-java linenums">package fr.univtln.bruno.samples.java101.tp3.functional;
+
+import fr.univtln.bruno.samples.java101.tp3.Book;
+import fr.univtln.bruno.samples.java101.tp3.Person;
+import lombok.extern.slf4j.Slf4j;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+/**
+ * Collector-focused examples: grouping, partitioning, joining, summarizing and reduction.
+ */
+<span class="nc" id="L16">@Slf4j</span>
+public class CollectorsExamples {
+  /**
+   * Private constructor to prevent instantiation.
+   */
+  private CollectorsExamples() {
+  }
+
+  /**
+   * Showcases terminal stream operations like count/any/all/none/findFirst.
+   */
+  public static void terminalOperationsExample() {
+<span class="nc" id="L28">    log.info(&quot;[functional] Terminal operations: count/any/all/none/findFirst&quot;);</span>
+<span class="nc" id="L29">    List&lt;Integer&gt; nums = List.of(1, 2, 3, 4, 5, 6);</span>
+<span class="nc bnc" id="L30" title="All 2 branches missed.">    long evenCount = nums.stream().filter(n -&gt; n % 2 == 0).count();</span>
+<span class="nc bnc" id="L31" title="All 2 branches missed.">    boolean anyGt4 = nums.stream().anyMatch(n -&gt; n &gt; 4);</span>
+<span class="nc bnc" id="L32" title="All 2 branches missed.">    boolean allPositive = nums.stream().allMatch(n -&gt; n &gt; 0);</span>
+<span class="nc bnc" id="L33" title="All 2 branches missed.">    boolean noneNegative = nums.stream().noneMatch(n -&gt; n &lt; 0);</span>
+<span class="nc bnc" id="L34" title="All 2 branches missed.">    Optional&lt;Integer&gt; firstGt3 = nums.stream().filter(n -&gt; n &gt; 3).findFirst();</span>
+<span class="nc" id="L35">    log.debug(&quot;nums: {}&quot;, nums);</span>
+<span class="nc" id="L36">    log.info(&quot;evenCount={} anyGt4={} allPositive={} noneNegative={} firstGt3={}&quot;, evenCount, anyGt4, allPositive, noneNegative, firstGt3.orElse(-1));</span>
+<span class="nc" id="L37">  }</span>
+
+  /**
+   * Demonstrates groupingBy and counting collectors on Person collections.
+   */
+  public static void groupingAndCountingExample() {
+<span class="nc" id="L43">    log.info(&quot;[functional] groupingBy and counting&quot;);</span>
+<span class="nc" id="L44">    List&lt;Person&gt; people = List.of(Person.of(&quot;Alice&quot;, &quot;Smith&quot;, 30), Person.of(&quot;Bob&quot;, &quot;Jones&quot;, 25), Person.of(&quot;Charlie&quot;, &quot;Brown&quot;, 35), Person.of(&quot;David&quot;, &quot;Smith&quot;, 28));</span>
+<span class="nc" id="L45">    log.debug(&quot;people for grouping: {}&quot;, people);</span>
+<span class="nc" id="L46">    Map&lt;String, List&lt;Person&gt;&gt; byLast = people.stream().collect(Collectors.groupingBy(Person::lastName));</span>
+<span class="nc" id="L47">    byLast.forEach((ln, ps) -&gt; log.info(&quot;{} -&gt; {}&quot;, ln, ps.stream().map(Person::getFullName).toList()));</span>
+<span class="nc" id="L48">    Map&lt;String, Long&gt; counts = people.stream().collect(Collectors.groupingBy(Person::lastName, Collectors.counting()));</span>
+<span class="nc" id="L49">    log.debug(&quot;group counts: {}&quot;, counts);</span>
+<span class="nc" id="L50">    log.info(&quot;counts: {}&quot;, counts);</span>
+<span class="nc" id="L51">  }</span>
+
+  /**
+   * Demonstrates complex collectors (mapping + grouping) using Book examples.
+   */
+  public static void complexCollectorsBooksExample() {
+<span class="nc" id="L57">    log.info(&quot;[functional] complex collectors for Book examples&quot;);</span>
+<span class="nc" id="L58">    List&lt;Book&gt; books = List.of(</span>
+<span class="nc" id="L59">      Book.of(&quot;978-0134685991&quot;, &quot;Effective Java&quot;, &quot;Joshua Bloch&quot;, LocalDate.of(2018, 1, 6), 45.99),</span>
+<span class="nc" id="L60">      Book.of(&quot;978-0596009205&quot;, &quot;Head First Java&quot;, &quot;Kathy Sierra&quot;, LocalDate.of(2005, 2, 9), 39.99),</span>
+<span class="nc" id="L61">      Book.of(&quot;978-0134685992&quot;, &quot;Java Concurrency&quot;, &quot;Brian Goetz&quot;, LocalDate.of(2006, 5, 19), 42.99)</span>
+    );
+<span class="nc" id="L63">    log.debug(&quot;books: {}&quot;, books);</span>
+<span class="nc" id="L64">    Map&lt;String, List&lt;String&gt;&gt; titlesByAuthor = books.stream().collect(Collectors.groupingBy(Book::author, Collectors.mapping(Book::title, Collectors.toList())));</span>
+<span class="nc" id="L65">    log.debug(&quot;titlesByAuthor: {}&quot;, titlesByAuthor);</span>
+<span class="nc" id="L66">    titlesByAuthor.forEach((a, t) -&gt; log.info(&quot;{} -&gt; {}&quot;, a, t));</span>
+
+    // Student note: beware of Collectors.toMap when keys might collide. The 2-arg toMap throws
+    // IllegalStateException on duplicate keys. Use the 3-arg version to resolve duplicates, for example:
+    // Map&lt;String, Book&gt; byIsbn = books.stream().collect(Collectors.toMap(Book::isbn, b -&gt; b, (a,b) -&gt; a)); // keep first
+    // Or groupingBy when keys are not unique.
+<span class="nc" id="L72">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

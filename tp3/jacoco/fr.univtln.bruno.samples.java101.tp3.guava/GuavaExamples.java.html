@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GuavaExamples.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TP3 - Collections &amp; Streams</a> &gt; <a href="index.source.html" class="el_package">fr.univtln.bruno.samples.java101.tp3.guava</a> &gt; <span class="el_source">GuavaExamples.java</span></div><h1>GuavaExamples.java</h1><pre class="source lang-java linenums">package fr.univtln.bruno.samples.java101.tp3.guava;
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * Small Guava Multimap example used for demonstration in TP3.
+ * A multimap allows multiple values per key.
+ *
+ * Student notes:
+ * - Guava Multimap is convenient when you need multiple values per key without managing lists yourself.
+ * - Compared to Map&lt;K, List&lt;V&gt;&gt; it provides cleaner semantics and utility methods.
+ * - If Guava isn't available, consider using Map&lt;K, List&lt;V&gt;&gt; with computeIfAbsent.
+ */
+<span class="nc" id="L16">@Slf4j</span>
+public class GuavaExamples {
+  /**
+   * Private constructor to prevent instantiation.
+   */
+  private GuavaExamples() {
+  }
+
+  /**
+   * Small Guava Multimap example used for demonstration in TP3.
+   *
+   * @param args ignored
+   */
+  public static void main(String[] args) {
+<span class="nc" id="L30">    Multimap&lt;String, String&gt; mm = ArrayListMultimap.create();</span>
+<span class="nc" id="L31">    mm.put(&quot;key1&quot;, &quot;v1&quot;);</span>
+<span class="nc" id="L32">    mm.put(&quot;key1&quot;, &quot;v2&quot;);</span>
+<span class="nc" id="L33">    mm.put(&quot;key2&quot;, &quot;v3&quot;);</span>
+
+<span class="nc bnc" id="L35" title="All 2 branches missed.">    for (String k : mm.keySet()) {</span>
+<span class="nc" id="L36">      log.info(&quot;{} -&gt; {}&quot;, k, mm.get(k));</span>
+<span class="nc" id="L37">    }</span>
+
+    // Student note (commented): equivalent using Map&lt;K, List&lt;V&gt; &gt; with computeIfAbsent
+    // Map&lt;String, List&lt;String&gt;&gt; map = new HashMap&lt;&gt;();
+    // map.computeIfAbsent(&quot;key1&quot;, k -&gt; new ArrayList&lt;&gt;()).add(&quot;v1&quot;);
+    // map.computeIfAbsent(&quot;key1&quot;, k -&gt; new ArrayList&lt;&gt;()).add(&quot;v2&quot;);
+<span class="nc" id="L43">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

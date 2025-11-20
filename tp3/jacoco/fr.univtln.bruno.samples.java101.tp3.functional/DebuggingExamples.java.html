@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DebuggingExamples.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TP3 - Collections &amp; Streams</a> &gt; <a href="index.source.html" class="el_package">fr.univtln.bruno.samples.java101.tp3.functional</a> &gt; <span class="el_source">DebuggingExamples.java</span></div><h1>DebuggingExamples.java</h1><pre class="source lang-java linenums">package fr.univtln.bruno.samples.java101.tp3.functional;
+
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+
+/**
+ * Small helpers showing how to debug stream pipelines: peek, sampling and safe terminal operations.
+ */
+<span class="nc" id="L10">@Slf4j</span>
+public class DebuggingExamples {
+  /**
+   * Private constructor to prevent instantiation.
+   */
+  private DebuggingExamples() {
+  }
+
+  /**
+   * Demonstrate using peek() to inspect intermediate pipeline values.
+   */
+  public static void peekPipelineExample() {
+<span class="nc" id="L22">    log.info(&quot;[functional] peek example&quot;);</span>
+<span class="nc" id="L23">    List&lt;Integer&gt; nums = List.of(1, 2, 3, 4, 5);</span>
+<span class="nc" id="L24">    List&lt;Integer&gt; result = nums.stream()</span>
+<span class="nc" id="L25">      .peek(n -&gt; log.info(&quot;orig {}&quot;, n))</span>
+<span class="nc bnc" id="L26" title="All 2 branches missed.">      .filter(n -&gt; n % 2 == 0)</span>
+<span class="nc" id="L27">      .peek(n -&gt; log.info(&quot;filtered {}&quot;, n))</span>
+<span class="nc" id="L28">      .map(n -&gt; n * 2)</span>
+<span class="nc" id="L29">      .peek(n -&gt; log.info(&quot;mapped {}&quot;, n))</span>
+<span class="nc" id="L30">      .toList();</span>
+<span class="nc" id="L31">    log.info(&quot;[functional] final result {}&quot;, result);</span>
+<span class="nc" id="L32">  }</span>
+
+  /**
+   * Demonstrate safe usage of findFirst with ifPresentOrElse.
+   */
+  public static void safeFirstExample() {
+<span class="nc" id="L38">    log.info(&quot;[functional] safe first example&quot;);</span>
+<span class="nc" id="L39">    List&lt;Integer&gt; empty = List.of();</span>
+<span class="nc" id="L40">    empty.stream().findFirst().ifPresentOrElse(</span>
+<span class="nc" id="L41">      v -&gt; log.info(&quot;first {}&quot;, v),</span>
+<span class="nc" id="L42">      () -&gt; log.info(&quot;no elements&quot;)</span>
+    );
+<span class="nc" id="L44">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

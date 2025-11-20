@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MappingAndSortingExamples.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TP3 - Collections &amp; Streams</a> &gt; <a href="index.source.html" class="el_package">fr.univtln.bruno.samples.java101.tp3.functional</a> &gt; <span class="el_source">MappingAndSortingExamples.java</span></div><h1>MappingAndSortingExamples.java</h1><pre class="source lang-java linenums">package fr.univtln.bruno.samples.java101.tp3.functional;
+
+import fr.univtln.bruno.samples.java101.tp3.Book;
+import fr.univtln.bruno.samples.java101.tp3.Person;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.Comparator;
+import java.util.List;
+
+/**
+ * Combined mapping and sorting examples for stream pipelines applied to collections.
+ */
+<span class="nc" id="L13">@Slf4j</span>
+public class MappingAndSortingExamples {
+  /** Print full names from a list of persons using stream map. */
+  /**
+   * Private constructor to prevent instantiation.
+   */
+  private MappingAndSortingExamples() {
+  }
+
+  /** Print names together with ages using stream mapping. */
+
+  /**
+   * Print full names from the provided list of people.
+   *
+   * @param people source list of Person
+   */
+  public static void printFullNames(List&lt;Person&gt; people) {
+<span class="nc" id="L30">    log.debug(&quot;printFullNames input: {}&quot;, people);</span>
+<span class="nc" id="L31">    log.info(&quot;[functional] Full names: {}&quot;, people.stream().map(Person::getFullName).toList());</span>
+<span class="nc" id="L32">  }</span>
+
+  /** Print book descriptions from a list of books. */
+
+  /**
+   * Print annotated names (name(age)) for each person.
+   *
+   * @param people source list of Person
+   */
+  public static void printNamesWithAges(List&lt;Person&gt; people) {
+<span class="nc" id="L42">    log.debug(&quot;printNamesWithAges input: {}&quot;, people);</span>
+<span class="nc" id="L43">    log.info(&quot;[functional] Names with ages: {}&quot;, people.stream().map(p -&gt; p.getFullName() + &quot;(&quot; + p.age() + &quot;)&quot;).toList());</span>
+<span class="nc" id="L44">  }</span>
+
+  /** Show min/max by age using streams. */
+
+  /**
+   * Print book descriptions from the given list.
+   *
+   * @param books source list of Book
+   */
+  public static void printBookDescriptions(List&lt;Book&gt; books) {
+<span class="nc" id="L54">    log.debug(&quot;printBookDescriptions input: {}&quot;, books);</span>
+<span class="nc" id="L55">    log.info(&quot;[functional] Books: {}&quot;, books.stream().map(Book::getDescription).toList());</span>
+<span class="nc" id="L56">  }</span>
+
+  /** Show book sort examples using stream sorted with comparators. */
+
+  /**
+   * Show the youngest and oldest person by age.
+   *
+   * @param people source list of Person
+   */
+  public static void showMinMaxByAge(List&lt;Person&gt; people) {
+<span class="nc" id="L66">    people.stream().min(Comparator.comparing(Person::age)).ifPresent(p -&gt; log.info(&quot;[functional] Youngest {}&quot;, p.getFullName()));</span>
+<span class="nc" id="L67">    people.stream().max(Comparator.comparing(Person::age)).ifPresent(p -&gt; log.info(&quot;[functional] Oldest {}&quot;, p.getFullName()));</span>
+<span class="nc" id="L68">  }</span>
+
+  /**
+   * Demonstrate different sorting strategies for books.
+   *
+   * @param books source list of Book
+   */
+  public static void showBookSortExamples(List&lt;Book&gt; books) {
+<span class="nc" id="L76">    log.debug(&quot;showBookSortExamples input: {}&quot;, books);</span>
+<span class="nc" id="L77">    List&lt;Book&gt; byPrice = books.stream().sorted(Comparator.comparing(Book::price)).toList();</span>
+<span class="nc" id="L78">    List&lt;Book&gt; byDateDesc = books.stream().sorted(Comparator.comparing(Book::publishedDate).reversed()).toList();</span>
+<span class="nc" id="L79">    List&lt;Book&gt; byAuthorPrice = books.stream().sorted(Comparator.comparing(Book::author).thenComparing(Book::price)).toList();</span>
+<span class="nc" id="L80">    log.debug(&quot;ByPrice: {} ByDateDesc: {} ByAuthorPrice: {}&quot;, byPrice, byDateDesc, byAuthorPrice);</span>
+<span class="nc" id="L81">    log.info(&quot;[functional] ByPrice {}&quot;, byPrice.stream().map(Book::getDescription).toList());</span>
+<span class="nc" id="L82">    log.info(&quot;[functional] ByDateDesc {}&quot;, byDateDesc.stream().map(Book::getDescription).toList());</span>
+<span class="nc" id="L83">    log.info(&quot;[functional] ByAuthor+Price {}&quot;, byAuthorPrice.stream().map(Book::getDescription).toList());</span>
+<span class="nc" id="L84">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

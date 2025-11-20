@@ -1,0 +1,26 @@
+-classpath
+'/home/runner/.m2/repository/org/assertj/assertj-core/3.27.6/assertj-core-3.27.6.jar:/home/runner/.m2/repository/net/bytebuddy/byte-buddy/1.17.7/byte-buddy-1.17.7.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter/6.0.1/junit-jupiter-6.0.1.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter-api/6.0.1/junit-jupiter-api-6.0.1.jar:/home/runner/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/home/runner/.m2/repository/org/junit/platform/junit-platform-commons/6.0.1/junit-platform-commons-6.0.1.jar:/home/runner/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/runner/.m2/repository/org/jspecify/jspecify/1.0.0/jspecify-1.0.0.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter-params/6.0.1/junit-jupiter-params-6.0.1.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter-engine/6.0.1/junit-jupiter-engine-6.0.1.jar:/home/runner/.m2/repository/org/junit/platform/junit-platform-engine/6.0.1/junit-platform-engine-6.0.1.jar:/home/runner/.m2/repository/ch/qos/logback/logback-classic/1.5.21/logback-classic-1.5.21.jar:/home/runner/.m2/repository/ch/qos/logback/logback-core/1.5.21/logback-core-1.5.21.jar:/home/runner/.m2/repository/org/slf4j/slf4j-api/2.0.17/slf4j-api-2.0.17.jar:/home/runner/work/java101-tp1/java101-tp1/config/target/config-0.0.1-SNAPSHOT.jar:/home/runner/.m2/repository/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar:/home/runner/.m2/repository/com/google/guava/guava/32.1.2-jre/guava-32.1.2-jre.jar:/home/runner/.m2/repository/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar:/home/runner/.m2/repository/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/home/runner/.m2/repository/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:/home/runner/.m2/repository/org/checkerframework/checker-qual/3.33.0/checker-qual-3.33.0.jar:/home/runner/.m2/repository/com/google/errorprone/error_prone_annotations/2.18.0/error_prone_annotations-2.18.0.jar:/home/runner/.m2/repository/com/google/j2objc/j2objc-annotations/2.8/j2objc-annotations-2.8.jar:/home/runner/.m2/repository/org/eclipse/collections/eclipse-collections/11.0.0/eclipse-collections-11.0.0.jar:/home/runner/.m2/repository/org/eclipse/collections/eclipse-collections-api/11.0.0/eclipse-collections-api-11.0.0.jar'
+-encoding
+'UTF-8'
+-protected
+--release
+21
+-sourcepath
+'/home/runner/work/java101-tp1/java101-tp1/tp3/src/main/java:/home/runner/work/java101-tp1/java101-tp1/tp3/target/generated-sources/annotations'
+-author
+-bottom
+'Copyright &#169; 2025. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/home/runner/work/java101-tp1/java101-tp1/tp3/target/site/apidocs'
+-docencoding
+'UTF-8'
+-Xdoclint:all
+-doctitle
+'TP3 - Collections & Streams 0.0.1-SNAPSHOT API'
+-notimestamp
+-use
+-version
+-windowtitle
+'TP3 - Collections & Streams 0.0.1-SNAPSHOT API'

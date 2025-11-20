@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StreamBasicsExamples.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TP3 - Collections &amp; Streams</a> &gt; <a href="index.source.html" class="el_package">fr.univtln.bruno.samples.java101.tp3.functional</a> &gt; <span class="el_source">StreamBasicsExamples.java</span></div><h1>StreamBasicsExamples.java</h1><pre class="source lang-java linenums">package fr.univtln.bruno.samples.java101.tp3.functional;
+
+import fr.univtln.bruno.samples.java101.tp3.Person;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
+/**
+ * Basic Stream API examples focused on collections: creation, intermediate operations and common idioms.
+ */
+<span class="nc" id="L16">@Slf4j</span>
+public class StreamBasicsExamples {
+  /**
+   * Private constructor to prevent instantiation.
+   */
+  private StreamBasicsExamples() {
+  }
+
+  /**
+   * Demonstrates various ways to create streams from collections and primitives.
+   */
+  public static void streamCreationExample() {
+<span class="nc" id="L28">    log.info(&quot;=== Stream Creation ===&quot;);</span>
+<span class="nc" id="L29">    List&lt;String&gt; fromList = List.of(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;);</span>
+<span class="nc" id="L30">    log.debug(&quot;fromList snapshot: {}&quot;, fromList);</span>
+<span class="nc" id="L31">    log.info(&quot;From list: {}&quot;, fromList.stream().toList());</span>
+<span class="nc" id="L32">    log.info(&quot;From array: {}&quot;, Arrays.stream(new String[]{&quot;X&quot;, &quot;Y&quot;}).toList());</span>
+<span class="nc" id="L33">    log.info(&quot;From values: {}&quot;, Stream.of(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;).toList());</span>
+<span class="nc" id="L34">    log.info(&quot;Empty count: {}&quot;, Stream.empty().count());</span>
+<span class="nc" id="L35">    log.info(&quot;Iterate limit: {}&quot;, Stream.iterate(0, n -&gt; n + 1).limit(5).toList());</span>
+<span class="nc" id="L36">    log.info(&quot;Generate random: {}&quot;, Stream.generate(Math::random).limit(3).toList());</span>
+<span class="nc" id="L37">    log.info(&quot;Range: {}&quot;, IntStream.range(1, 5).boxed().toList());</span>
+<span class="nc" id="L38">    log.info(&quot;RangeClosed: {}&quot;, IntStream.rangeClosed(1, 5).boxed().toList());</span>
+
+    // Student note: infinite streams (Stream.generate / Stream.iterate without limit) can exhaust memory
+    // or run indefinitely if not limited. Always apply limit() or takeWhile() when experimenting.
+<span class="nc" id="L42">  }</span>
+
+  /**
+   * Demonstrates filtering a collection using stream filters.
+   */
+  public static void filterExample() {
+<span class="nc" id="L48">    log.info(&quot;=== Filter Example ===&quot;);</span>
+<span class="nc" id="L49">    List&lt;Person&gt; people = List.of(</span>
+<span class="nc" id="L50">      Person.of(&quot;Alice&quot;, &quot;Smith&quot;, 30),</span>
+<span class="nc" id="L51">      Person.of(&quot;Bob&quot;, &quot;Jones&quot;, 25),</span>
+<span class="nc" id="L52">      Person.of(&quot;Charlie&quot;, &quot;Brown&quot;, 35),</span>
+<span class="nc" id="L53">      Person.of(&quot;David&quot;, &quot;Wilson&quot;, 28)</span>
+    );
+<span class="nc" id="L55">    log.debug(&quot;people snapshot: {}&quot;, people);</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">    List&lt;String&gt; age30 = people.stream().filter(p -&gt; p.age() &gt;= 30).map(Person::getFullName).toList();</span>
+<span class="nc" id="L57">    log.debug(&quot;Filtered age&gt;=30 count: {}&quot;, age30.size());</span>
+<span class="nc" id="L58">    log.info(&quot;Age &gt;=30: {}&quot;, age30);</span>
+<span class="nc bnc" id="L59" title="All 4 branches missed.">    List&lt;String&gt; complex = people.stream().filter(p -&gt; p.age() &gt;= 25).filter(p -&gt; p.lastName().length() &gt; 5).map(Person::getFullName).toList();</span>
+<span class="nc" id="L60">    log.debug(&quot;Filtered complex pipeline count: {}&quot;, complex.size());</span>
+<span class="nc" id="L61">    log.info(&quot;Age&gt;=25 &amp; long lastName: {}&quot;, complex);</span>
+<span class="nc" id="L62">  }</span>
+
+  /**
+   * Demonstrates mapping operations on streams (map, method references).
+   */
+  public static void mapExample() {
+<span class="nc" id="L68">    log.info(&quot;=== Map Example ===&quot;);</span>
+<span class="nc" id="L69">    List&lt;Person&gt; people = List.of(Person.of(&quot;Alice&quot;, &quot;Smith&quot;, 30), Person.of(&quot;Bob&quot;, &quot;Jones&quot;, 25));</span>
+<span class="nc" id="L70">    log.info(&quot;Full names: {}&quot;, people.stream().map(Person::getFullName).toList());</span>
+<span class="nc" id="L71">    log.info(&quot;Ages: {}&quot;, people.stream().map(Person::age).toList());</span>
+<span class="nc" id="L72">    log.info(&quot;Upper: {}&quot;, people.stream().map(Person::getFullName).map(String::toUpperCase).toList());</span>
+<span class="nc" id="L73">  }</span>
+
+  /**
+   * Demonstrates flatMap for nested collections and splitting strings.
+   */
+  public static void flatMapExample() {
+<span class="nc" id="L79">    log.info(&quot;=== FlatMap Example ===&quot;);</span>
+<span class="nc" id="L80">    List&lt;List&lt;String&gt;&gt; nested = List.of(List.of(&quot;A&quot;, &quot;B&quot;), List.of(&quot;C&quot;));</span>
+<span class="nc" id="L81">    log.info(&quot;Flatten: {}&quot;, nested.stream().flatMap(Collection::stream).toList());</span>
+<span class="nc" id="L82">    List&lt;String&gt; sentences = List.of(&quot;Hello World&quot;, &quot;Java Streams&quot;);</span>
+<span class="nc" id="L83">    log.info(&quot;Words: {}&quot;, sentences.stream().flatMap(s -&gt; Arrays.stream(s.split(&quot; &quot;))).toList());</span>
+<span class="nc" id="L84">  }</span>
+
+  /**
+   * Demonstrates distinct/sorted/limit/skip stream terminal operations.
+   */
+  public static void distinctSortedLimitExample() {
+<span class="nc" id="L90">    log.info(&quot;=== Distinct/Sorted/Limit ===&quot;);</span>
+<span class="nc" id="L91">    List&lt;Integer&gt; nums = List.of(5, 2, 8, 2, 9, 1, 5);</span>
+<span class="nc" id="L92">    log.info(&quot;Distinct: {}&quot;, nums.stream().distinct().toList());</span>
+<span class="nc" id="L93">    log.info(&quot;Sorted: {}&quot;, nums.stream().sorted().toList());</span>
+<span class="nc" id="L94">    log.info(&quot;Top3 desc distinct: {}&quot;, nums.stream().distinct().sorted(Comparator.reverseOrder()).limit(3).toList());</span>
+<span class="nc" id="L95">    log.info(&quot;Skip first 2 sorted: {}&quot;, nums.stream().sorted().skip(2).toList());</span>
+<span class="nc" id="L96">  }</span>
+
+  /**
+   * Demonstrates use of peek for debugging intermediate pipeline state.
+   */
+  public static void peekExample() {
+<span class="nc" id="L102">    log.info(&quot;=== Peek Example ===&quot;);</span>
+<span class="nc" id="L103">    List&lt;Integer&gt; nums = List.of(1, 2, 3, 4, 5);</span>
+<span class="nc" id="L104">    log.debug(&quot;nums initial: {}&quot;, nums);</span>
+<span class="nc" id="L105">    List&lt;Integer&gt; result = nums.stream()</span>
+<span class="nc" id="L106">      .peek(n -&gt; log.debug(&quot;Original {}&quot;, n))</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">      .filter(n -&gt; n % 2 == 0)</span>
+<span class="nc" id="L108">      .peek(n -&gt; log.debug(&quot;Filtered {}&quot;, n))</span>
+<span class="nc" id="L109">      .map(n -&gt; n * 2)</span>
+<span class="nc" id="L110">      .peek(n -&gt; log.debug(&quot;Mapped {}&quot;, n))</span>
+<span class="nc" id="L111">      .toList();</span>
+<span class="nc" id="L112">    log.info(&quot;Result {}&quot;, result);</span>
+
+    // Student note: Stream.toList() (since Java 16) may return an unmodifiable list; Collectors.toList()
+    // historically returned a mutable list. If code expects mutability, use new ArrayList&lt;&gt;(stream.toList())
+    // or Collectors.toCollection(ArrayList::new).
+<span class="nc" id="L117">  }</span>
+
+  /**
+   * Demonstrates different sorting idioms using streams and comparators.
+   */
+  public static void sortingExample() {
+<span class="nc" id="L123">    log.info(&quot;=== Sorting Example ===&quot;);</span>
+<span class="nc" id="L124">    List&lt;Person&gt; people = List.of(Person.of(&quot;Charlie&quot;, &quot;Brown&quot;, 35), Person.of(&quot;Alice&quot;, &quot;Smith&quot;, 30), Person.of(&quot;Bob&quot;, &quot;Jones&quot;, 25));</span>
+<span class="nc" id="L125">    log.info(&quot;Natural: {}&quot;, people.stream().sorted().map(Person::getFullName).toList());</span>
+<span class="nc" id="L126">    log.info(&quot;By age: {}&quot;, people.stream().sorted(Comparator.comparing(Person::age)).map(p -&gt; p.getFullName() + &quot;(&quot; + p.age() + &quot;)&quot;).toList());</span>
+<span class="nc" id="L127">  }</span>
+
+  /**
+   * Demonstrates takeWhile and dropWhile on ordered streams.
+   */
+  public static void takeWhileDropWhileExample() {
+<span class="nc" id="L133">    log.info(&quot;=== takeWhile/dropWhile ===&quot;);</span>
+<span class="nc" id="L134">    List&lt;Integer&gt; numbers = List.of(1, 2, 3, 4, 5, 6, 7);</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">    log.info(&quot;takeWhile &lt;4: {}&quot;, numbers.stream().takeWhile(n -&gt; n &lt; 4).toList());</span>
+<span class="nc bnc" id="L136" title="All 2 branches missed.">    log.info(&quot;dropWhile &lt;4: {}&quot;, numbers.stream().dropWhile(n -&gt; n &lt; 4).toList());</span>
+<span class="nc" id="L137">  }</span>
+
+  /**
+   * Simple runner for the Stream examples.
+   */
+  public static void main(String[] args) {
+<span class="nc" id="L143">    streamCreationExample();</span>
+<span class="nc" id="L144">    filterExample();</span>
+<span class="nc" id="L145">    mapExample();</span>
+<span class="nc" id="L146">    flatMapExample();</span>
+<span class="nc" id="L147">    distinctSortedLimitExample();</span>
+<span class="nc" id="L148">    peekExample();</span>
+<span class="nc" id="L149">    sortingExample();</span>
+<span class="nc" id="L150">    takeWhileDropWhileExample();</span>
+<span class="nc" id="L151">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

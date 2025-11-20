@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AppliedFunctionnalExamples.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TP3 - Collections &amp; Streams</a> &gt; <a href="index.source.html" class="el_package">fr.univtln.bruno.samples.java101.tp3.functional</a> &gt; <span class="el_source">AppliedFunctionnalExamples.java</span></div><h1>AppliedFunctionnalExamples.java</h1><pre class="source lang-java linenums">package fr.univtln.bruno.samples.java101.tp3.functional;
+
+import fr.univtln.bruno.samples.java101.tp3.Person;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+/**
+ * Applied functional examples that operate on collections using the Stream API.
+ *
+ * &lt;p&gt;These examples were moved from other TP3 subpackages to centralize all
+ * functional idioms in the `functional` package.&lt;/p&gt;
+ */
+<span class="nc" id="L16">@Slf4j</span>
+public class AppliedFunctionnalExamples {
+
+  /**
+   * Private constructor to prevent instantiation.
+   */
+  private AppliedFunctionnalExamples() {
+    // utility class
+  }
+
+  /**
+   * Demonstrate mapping and collecting on a list of Person instances.
+   */
+  public static void listStreamsExample() {
+<span class="nc" id="L30">    log.info(&quot;=== List stream mapping example ===&quot;);</span>
+<span class="nc" id="L31">    List&lt;Person&gt; people = List.of(</span>
+<span class="nc" id="L32">      Person.of(&quot;Charlie&quot;, &quot;Brown&quot;, 35),</span>
+<span class="nc" id="L33">      Person.of(&quot;Alice&quot;, &quot;Smith&quot;, 30),</span>
+<span class="nc" id="L34">      Person.of(&quot;Bob&quot;, &quot;Jones&quot;, 25)</span>
+    );
+<span class="nc" id="L36">    log.info(&quot;Original names: {}&quot;, people.stream().map(Person::getFullName).toList());</span>
+<span class="nc" id="L37">    log.info(&quot;Names with ages: {}&quot;, people.stream().map(p -&gt; p.getFullName() + &quot;(&quot; + p.age() + &quot;)&quot;).toList());</span>
+<span class="nc" id="L38">  }</span>
+
+  /**
+   * Demonstrate streaming over grouped values (e.g. after a grouping operation) to extract names.
+   */
+  public static void mapStreamGroupingExample() {
+<span class="nc" id="L44">    log.info(&quot;=== Map grouping stream example ===&quot;);</span>
+<span class="nc" id="L45">    List&lt;Person&gt; people = List.of(</span>
+<span class="nc" id="L46">      Person.of(&quot;Alice&quot;, &quot;Smith&quot;, 30),</span>
+<span class="nc" id="L47">      Person.of(&quot;Bob&quot;, &quot;Jones&quot;, 25),</span>
+<span class="nc" id="L48">      Person.of(&quot;Charlie&quot;, &quot;Brown&quot;, 35),</span>
+<span class="nc" id="L49">      Person.of(&quot;David&quot;, &quot;Smith&quot;, 40)</span>
+    );
+<span class="nc" id="L51">    Map&lt;String, List&lt;Person&gt;&gt; byLast = people.stream().collect(Collectors.groupingBy(Person::lastName));</span>
+<span class="nc" id="L52">    byLast.forEach((ln, ps) -&gt; log.info(&quot;{} -&gt; {}&quot;, ln, ps.stream().map(Person::getFullName).toList()));</span>
+<span class="nc" id="L53">  }</span>
+
+  /**
+   * Runner for applied functional examples.
+   *
+   * @param args ignored
+   */
+  public static void main(String[] args) {
+<span class="nc" id="L61">    listStreamsExample();</span>
+<span class="nc" id="L62">    mapStreamGroupingExample();</span>
+<span class="nc" id="L63">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

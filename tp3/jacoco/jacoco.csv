@@ -1,0 +1,40 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.eclipse,EclipseCollectionsExamples,37,0,0,0,5,0,2,0,2,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.comparable,ComparatorExamples.new Comparator() {...},9,0,0,0,2,0,2,0,2,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.comparable,ComparatorExamples.new Comparator() {...},19,0,2,0,4,0,3,0,2,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.comparable,ComparatorExamples.new Comparator() {...},9,0,0,0,2,0,2,0,2,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.comparable,ComparatorExamples.new Comparator() {...},9,0,0,0,2,0,2,0,2,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.comparable,ComparatorExamples.new Comparator() {...},9,0,0,0,2,0,2,0,2,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.comparable,ComparatorExamples,563,0,0,0,121,0,15,0,15,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.comparable,ComparatorExamples.new Comparator() {...},9,0,0,0,2,0,2,0,2,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.comparable,ComparatorExamples.new Comparator() {...},18,0,2,0,4,0,3,0,2,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.comparable,ComparatorExamples.new Comparator() {...},9,0,0,0,2,0,2,0,2,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.comparable,ComparatorExamples.new Comparator() {...},9,0,0,0,2,0,2,0,2,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.comparable,ComparatorExamples.new Comparator() {...},9,0,0,0,2,0,2,0,2,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.comparable,ComparatorExamples.new Comparator() {...},9,0,0,0,2,0,2,0,2,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.comparable,ComparatorExamples.new Comparator() {...},9,0,0,0,2,0,2,0,2,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.comparable,ComparatorExamples.new Comparator() {...},9,0,0,0,2,0,2,0,2,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.comparable,ComparatorExamples.new Comparator() {...},9,0,0,0,2,0,2,0,2,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.bestpractices,CollectionBestPractices.new Object() {...},18,0,0,0,5,0,3,0,3,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.bestpractices,CollectionBestPractices.new Object() {...},11,0,0,0,3,0,2,0,2,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.bestpractices,CollectionBestPractices.new Object() {...},24,0,4,0,5,0,5,0,3,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.bestpractices,CollectionBestPractices,857,0,28,0,175,0,25,0,11,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.bestpractices,CollectionBestPractices.new Object() {...},6,0,0,0,3,0,1,0,1,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.set,DedupCollections,27,0,0,0,7,0,3,0,3,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.set,SetExamples,346,0,0,0,73,0,13,0,13,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.queue,QueueExamples.new Comparable() {...},15,0,0,0,2,0,2,0,2,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.queue,QueueExamples,370,0,14,0,85,0,16,0,9,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.guava,GuavaExamples,41,0,2,0,9,0,3,0,2,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.map,MapExamples,486,0,6,0,93,0,21,0,18,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.functional,DedupExamples,25,0,0,0,6,0,3,0,3,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.functional,CollectorsExamples,246,0,10,0,30,0,16,0,11,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.functional,MappingAndSortingExamples,146,0,0,0,22,0,9,0,9,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.functional,GroupingDisplayExamples,81,0,2,0,7,0,6,0,5,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.functional,StreamBasicsExamples,495,0,12,0,77,0,29,0,23,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.functional,AppliedFunctionnalExamples,89,0,0,0,21,0,6,0,6,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.functional,ParallelStreamsExamples,120,0,0,0,26,0,5,0,5,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.functional,DebuggingExamples,89,0,2,0,18,0,11,0,10,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3,Demo,51,0,0,0,28,0,2,0,2,0
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3,Person,39,74,1,7,8,16,2,7,1,4
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3,Book,62,97,4,14,9,15,6,8,2,3
+TP3 - Collections & Streams,fr.univtln.bruno.samples.java101.tp3.list,ListExamples,371,0,8,0,79,0,13,0,9,0

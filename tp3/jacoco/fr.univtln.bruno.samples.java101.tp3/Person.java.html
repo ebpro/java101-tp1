@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Person.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TP3 - Collections &amp; Streams</a> &gt; <a href="index.source.html" class="el_package">fr.univtln.bruno.samples.java101.tp3</a> &gt; <span class="el_source">Person.java</span></div><h1>Person.java</h1><pre class="source lang-java linenums">package fr.univtln.bruno.samples.java101.tp3;
+
+import lombok.With;
+import lombok.NonNull;
+
+import java.util.Comparator;
+import java.util.Objects;
+
+/**
+ * Immutable value object representing a person used in TP3 collection examples.
+ *
+ * &lt;p&gt;Instances are created via the static factory {@link #of(String, String, int)} which
+ * performs basic validation. The class implements {@link Comparable} to provide a
+ * natural ordering (lastName, firstName, age).&lt;/p&gt;
+ *
+ * &lt;p&gt;Pedagogical note on &lt;code&gt;@With&lt;/code&gt; and Java records:
+ * - Lombok's &lt;code&gt;@With&lt;/code&gt; is applied to record components to generate immutable
+ *   &quot;withX(...)&quot; methods that are convenient in exercises where you want to
+ *   create a slightly modified copy (for example &lt;code&gt;p.withAge(31)&lt;/code&gt;).
+ * - Java records already provide &lt;code&gt;equals&lt;/code&gt;, &lt;code&gt;hashCode&lt;/code&gt; and
+ *   &lt;code&gt;toString&lt;/code&gt;. Lombok is used only to generate helper methods such as
+ *   the &lt;code&gt;with&lt;/code&gt; methods. Ensure annotation processing is enabled in the IDE
+ *   or build so generated methods are visible.
+ *
+ * Important edge cases to illustrate in class:
+ * - Null handling: prefer factories (e.g. &lt;code&gt;of&lt;/code&gt;) that validate parameters
+ *   instead of silently accepting null fields.
+ * - equals / compareTo consistency: ensure that &lt;code&gt;compareTo(a,b)==0&lt;/code&gt;
+ *   implies &lt;code&gt;a.equals(b)&lt;/code&gt; to avoid surprising behavior in sorted
+ *   collections (e.g. &lt;code&gt;TreeSet&lt;/code&gt; / &lt;code&gt;TreeMap&lt;/code&gt;).
+ * - Concurrent modification: modifying a collection while iterating can throw
+ *   &lt;code&gt;ConcurrentModificationException&lt;/code&gt;. Demonstrate safe patterns such as
+ *   using an explicit &lt;code&gt;Iterator&lt;/code&gt; and &lt;code&gt;iterator.remove()&lt;/code&gt;, or
+ *   using concurrent collections like &lt;code&gt;CopyOnWriteArrayList&lt;/code&gt; when appropriate.
+ * &lt;/p&gt;
+ */
+<span class="fc" id="L37">public record Person(@With String firstName, @With String lastName, @With int age) implements Comparable&lt;Person&gt; {</span>
+  /**
+   * Create a new {@link Person} instance after validating arguments.
+   *
+   * @param firstName non-null, non-blank first name
+   * @param lastName  non-null, non-blank last name
+   * @param age       non-negative age
+   * @return a new immutable Person
+   * @throws IllegalArgumentException if any parameter is invalid
+   */
+  public static Person of(String firstName, String lastName, int age) {
+<span class="fc" id="L48">    Objects.requireNonNull(firstName, &quot;First name cannot be null&quot;);</span>
+<span class="fc" id="L49">    Objects.requireNonNull(lastName, &quot;Last name cannot be null&quot;);</span>
+<span class="fc" id="L50">    String fn = firstName.trim();</span>
+<span class="fc" id="L51">    String ln = lastName.trim();</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">    if (fn.isBlank()) throw new IllegalArgumentException(&quot;First name cannot be blank&quot;);</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">    if (ln.isBlank()) throw new IllegalArgumentException(&quot;Last name cannot be blank&quot;);</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">    if (age &lt; 0) throw new IllegalArgumentException(&quot;Age cannot be negative&quot;);</span>
+<span class="fc" id="L55">    return new Person(fn, ln, age);</span>
+  }
+
+  /**
+   * Natural ordering: by last name, then first name, then age.
+   *
+   * @param other the other person to compare with
+   * @return negative/zero/positive as this is less/equal/greater than other
+   */
+  @Override
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">  public int compareTo(@NonNull Person other) {</span>
+    // Comparable contract expects non-null argument; Lombok @NonNull documents and enforces this
+<span class="fc" id="L67">    return Comparator</span>
+<span class="fc" id="L68">      .comparing(Person::lastName)</span>
+<span class="fc" id="L69">      .thenComparing(Person::firstName)</span>
+<span class="fc" id="L70">      .thenComparingInt(Person::age)</span>
+<span class="fc" id="L71">      .compare(this, other);</span>
+  }
+
+  /**
+   * Return the human-friendly full name combining first and last name.
+   *
+   * @return full name (&quot;First Last&quot;)
+   */
+  public String getFullName() {
+<span class="fc" id="L80">    return firstName + &quot; &quot; + lastName;</span>
+  }
+
+  /**
+   * Small demo for students showing the Lombok-generated `with` methods on record components.
+   * This main method is intentionally minimal: it creates a Person, uses the generated
+   * withAge / withFirstName methods to create modified copies, and prints results so
+   * students can see the immutability behavior.
+   */
+  public static void main(String[] args) {
+<span class="nc" id="L90">    Person p = Person.of(&quot;Alice&quot;, &quot;Smith&quot;, 30);</span>
+<span class="nc" id="L91">    System.out.println(&quot;Original: &quot; + p);</span>
+
+    // Lombok generates withAge(int) and withFirstName(String) because of @With on components
+<span class="nc" id="L94">    Person older = p.withAge(31);</span>
+<span class="nc" id="L95">    System.out.println(&quot;After withAge(31): &quot; + older);</span>
+
+<span class="nc" id="L97">    Person renamed = p.withFirstName(&quot;Alicia&quot;);</span>
+<span class="nc" id="L98">    System.out.println(&quot;After withFirstName(\&quot;Alicia\&quot;): &quot; + renamed);</span>
+
+    // original instance remains unchanged (immutability)
+<span class="nc" id="L101">    System.out.println(&quot;Original still: &quot; + p);</span>
+<span class="nc" id="L102">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

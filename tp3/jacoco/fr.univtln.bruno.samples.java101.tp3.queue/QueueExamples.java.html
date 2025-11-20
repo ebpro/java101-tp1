@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>QueueExamples.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TP3 - Collections &amp; Streams</a> &gt; <a href="index.source.html" class="el_package">fr.univtln.bruno.samples.java101.tp3.queue</a> &gt; <span class="el_source">QueueExamples.java</span></div><h1>QueueExamples.java</h1><pre class="source lang-java linenums">package fr.univtln.bruno.samples.java101.tp3.queue;
+
+import fr.univtln.bruno.samples.java101.tp3.Person;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.*;
+
+/**
+ * Examples showing different Queue/Deque implementations and usage patterns.
+ */
+<span class="nc" id="L11">@Slf4j</span>
+public class QueueExamples {
+  /**
+   * Private constructor to prevent instantiation.
+   */
+  private QueueExamples() {
+  }
+
+  /**
+   * Simple FIFO queue demonstration using LinkedList.
+   */
+  public static void queueExample() {
+<span class="nc" id="L23">    log.info(&quot;=== Queue (LinkedList) ===&quot;);</span>
+<span class="nc" id="L24">    Queue&lt;String&gt; q = new LinkedList&lt;&gt;();</span>
+<span class="nc" id="L25">    q.offer(&quot;First&quot;);</span>
+<span class="nc" id="L26">    q.offer(&quot;Second&quot;);</span>
+<span class="nc" id="L27">    q.offer(&quot;Third&quot;);</span>
+<span class="nc" id="L28">    log.debug(&quot;Initial queue contents: {}&quot;, q);</span>
+<span class="nc" id="L29">    log.info(&quot;Peek: {}&quot;, q.peek());</span>
+<span class="nc" id="L30">    log.info(&quot;Poll: {}&quot;, q.poll());</span>
+<span class="nc" id="L31">    log.debug(&quot;After poll queue: {}&quot;, q);</span>
+<span class="nc" id="L32">    log.info(&quot;After poll: {}&quot;, q);</span>
+<span class="nc" id="L33">  }</span>
+
+  /**
+   * ArrayDeque as a performant double-ended queue implementation.
+   */
+  public static void arrayDequeExample() {
+<span class="nc" id="L39">    log.info(&quot;=== ArrayDeque ===&quot;);</span>
+<span class="nc" id="L40">    Deque&lt;String&gt; d = new ArrayDeque&lt;&gt;();</span>
+<span class="nc" id="L41">    d.addFirst(&quot;Middle&quot;);</span>
+<span class="nc" id="L42">    d.addFirst(&quot;First&quot;);</span>
+<span class="nc" id="L43">    d.addLast(&quot;Last&quot;);</span>
+<span class="nc" id="L44">    log.info(&quot;Deque: {}&quot;, d);</span>
+<span class="nc" id="L45">    log.info(&quot;RemoveFirst: {} RemoveLast: {}&quot;, d.removeFirst(), d.removeLast());</span>
+<span class="nc" id="L46">  }</span>
+
+  /**
+   * Using Deque as a stack replacement (avoid legacy Stack).
+   */
+  public static void stackExample() {
+<span class="nc" id="L52">    log.info(&quot;=== Stack via Deque ===&quot;);</span>
+<span class="nc" id="L53">    Deque&lt;String&gt; stack = new ArrayDeque&lt;&gt;();</span>
+<span class="nc" id="L54">    stack.push(&quot;Bottom&quot;);</span>
+<span class="nc" id="L55">    stack.push(&quot;Middle&quot;);</span>
+<span class="nc" id="L56">    stack.push(&quot;Top&quot;);</span>
+<span class="nc" id="L57">    log.info(&quot;Pop: {}&quot;, stack.pop());</span>
+<span class="nc" id="L58">  }</span>
+
+  /**
+   * PriorityQueue examples: natural and custom ordering.
+   */
+  public static void priorityQueueExample() {
+<span class="nc" id="L64">    log.info(&quot;=== PriorityQueue Natural (min-heap) ===&quot;);</span>
+<span class="nc" id="L65">    PriorityQueue&lt;Integer&gt; pq = new PriorityQueue&lt;&gt;();</span>
+<span class="nc" id="L66">    pq.offer(5);</span>
+<span class="nc" id="L67">    pq.offer(1);</span>
+<span class="nc" id="L68">    pq.offer(3);</span>
+<span class="nc" id="L69">    pq.offer(2);</span>
+<span class="nc" id="L70">    log.debug(&quot;PriorityQueue initial snapshot: {}&quot;, pq);</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">    while (!pq.isEmpty()) log.info(&quot;Poll: {}&quot;, pq.poll());</span>
+<span class="nc" id="L72">    log.info(&quot;=== PriorityQueue Reverse (max-heap) ===&quot;);</span>
+<span class="nc" id="L73">    PriorityQueue&lt;Integer&gt; max = new PriorityQueue&lt;&gt;(Comparator.reverseOrder());</span>
+<span class="nc" id="L74">    max.addAll(List.of(5, 1, 3, 2));</span>
+<span class="nc" id="L75">    log.debug(&quot;PriorityQueue(max) initial: {}&quot;, max);</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">    while (!max.isEmpty()) log.info(&quot;Poll: {}&quot;, max.poll());</span>
+<span class="nc" id="L77">  }</span>
+
+  /**
+   * PriorityQueue with complex objects using natural order or comparator.
+   */
+  public static void priorityQueueWithObjectsExample() {
+<span class="nc" id="L83">    log.info(&quot;=== PriorityQueue&lt;Person&gt; by natural order ===&quot;);</span>
+<span class="nc" id="L84">    PriorityQueue&lt;Person&gt; byName = new PriorityQueue&lt;&gt;();</span>
+<span class="nc" id="L85">    byName.offer(Person.of(&quot;Charlie&quot;, &quot;Brown&quot;, 35));</span>
+<span class="nc" id="L86">    byName.offer(Person.of(&quot;Alice&quot;, &quot;Smith&quot;, 30));</span>
+<span class="nc" id="L87">    byName.offer(Person.of(&quot;Bob&quot;, &quot;Jones&quot;, 25));</span>
+<span class="nc" id="L88">    log.debug(&quot;byName PQ snapshot: {}&quot;, byName);</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">    while (!byName.isEmpty()) log.info(&quot;Person: {}&quot;, byName.poll().getFullName());</span>
+<span class="nc" id="L90">    log.info(&quot;=== PriorityQueue&lt;Person&gt; by age ===&quot;);</span>
+<span class="nc" id="L91">    PriorityQueue&lt;Person&gt; byAge = new PriorityQueue&lt;&gt;(Comparator.comparing(Person::age));</span>
+<span class="nc" id="L92">    byAge.addAll(List.of(Person.of(&quot;Charlie&quot;, &quot;Brown&quot;, 35), Person.of(&quot;Alice&quot;, &quot;Smith&quot;, 30), Person.of(&quot;Bob&quot;, &quot;Jones&quot;, 25)));</span>
+<span class="nc" id="L93">    log.debug(&quot;byAge PQ snapshot: {}&quot;, byAge);</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">    while (!byAge.isEmpty()) {</span>
+<span class="nc" id="L95">      Person p = byAge.poll();</span>
+<span class="nc" id="L96">      log.info(&quot;{} age {}&quot;, p.getFullName(), p.age());</span>
+<span class="nc" id="L97">    }</span>
+<span class="nc" id="L98">  }</span>
+
+  /**
+   * Simple task scheduling example using a priority queue.
+   * Priority queue is useful when you need to process items based on priority rather than arrival order.
+   * The poll() method always retrieves the highest-priority item.
+   */
+  public static void taskSchedulingExample() {
+<span class="nc" id="L106">    log.info(&quot;=== Task Scheduling ===&quot;);</span>
+<span class="nc" id="L107">    record Task(String name, int priority) implements Comparable&lt;Task&gt; {</span>
+      public int compareTo(Task o) {
+<span class="nc" id="L109">        return Integer.compare(priority, o.priority);</span>
+      }
+    }
+<span class="nc" id="L112">    PriorityQueue&lt;Task&gt; tasks = new PriorityQueue&lt;&gt;();</span>
+<span class="nc" id="L113">    tasks.offer(new Task(&quot;Email&quot;, 3));</span>
+<span class="nc" id="L114">    tasks.offer(new Task(&quot;Critical Bug&quot;, 1));</span>
+<span class="nc" id="L115">    tasks.offer(new Task(&quot;Docs&quot;, 5));</span>
+<span class="nc" id="L116">    tasks.offer(new Task(&quot;Deploy&quot;, 2));</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">    while (!tasks.isEmpty()) {</span>
+<span class="nc" id="L118">      Task t = tasks.poll();</span>
+<span class="nc" id="L119">      log.info(&quot;[P{}] {}&quot;, t.priority(), t.name());</span>
+<span class="nc" id="L120">    }</span>
+<span class="nc" id="L121">  }</span>
+
+  /**
+   * Sliding window example implemented with ArrayDeque.
+   * Explanations: here we maintain a fixed-size window of the last N elements seen.
+   * A sliding window is useful in scenarios like moving averages, rate limiting, etc.
+   * The strategy is to add new elements to the end and remove from the front when the size exceeds the limit.
+   */
+  public static void slidingWindowExample() {
+<span class="nc" id="L130">    log.info(&quot;=== Sliding Window (ArrayDeque) ===&quot;);</span>
+<span class="nc" id="L131">    Deque&lt;Integer&gt; window = new ArrayDeque&lt;&gt;();</span>
+<span class="nc" id="L132">    int size = 3;</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">    for (int v : List.of(1, 2, 3, 4, 5)) {</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">      if (window.size() == size) window.removeFirst();</span>
+<span class="nc" id="L135">      window.addLast(v);</span>
+<span class="nc" id="L136">      log.info(&quot;Window: {}&quot;, window);</span>
+<span class="nc" id="L137">    }</span>
+<span class="nc" id="L138">  }</span>
+
+  /**
+   * Runner for queue examples.
+   *
+   * @param args ignored
+   */
+  public static void main(String[] args) {
+<span class="nc" id="L146">    queueExample();</span>
+<span class="nc" id="L147">    arrayDequeExample();</span>
+<span class="nc" id="L148">    stackExample();</span>
+<span class="nc" id="L149">    priorityQueueExample();</span>
+<span class="nc" id="L150">    priorityQueueWithObjectsExample();</span>
+<span class="nc" id="L151">    taskSchedulingExample();</span>
+<span class="nc" id="L152">    slidingWindowExample();</span>
+<span class="nc" id="L153">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

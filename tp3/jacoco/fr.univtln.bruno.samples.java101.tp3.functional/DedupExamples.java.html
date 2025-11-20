@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DedupExamples.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TP3 - Collections &amp; Streams</a> &gt; <a href="index.source.html" class="el_package">fr.univtln.bruno.samples.java101.tp3.functional</a> &gt; <span class="el_source">DedupExamples.java</span></div><h1>DedupExamples.java</h1><pre class="source lang-java linenums">package fr.univtln.bruno.samples.java101.tp3.functional;
+
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.LinkedHashSet;
+import java.util.List;
+
+/**
+ * Stream-based deduplication examples: utility class with static methods.
+ */
+<span class="nc" id="L11">@Slf4j</span>
+public final class DedupExamples {
+  // Prevent instantiation
+
+  /**
+   * Private constructor for utility class.
+   */
+  private DedupExamples() {
+  }
+
+  /**
+   * Show deduplication using stream distinct(). This is the preferred functional style when you already have a stream-based pipeline.
+   *
+   * @param withDup list containing duplicated elements
+   */
+  public static void dedupWithStreamDistinct(List&lt;String&gt; withDup) {
+<span class="nc" id="L27">    log.info(&quot;[functional] Unique (Stream.distinct): {}&quot;, withDup.stream().distinct().toList());</span>
+<span class="nc" id="L28">  }</span>
+
+  /**
+   * Show collecting into a LinkedHashSet via stream then LinkedHashSet constructor.
+   *
+   * @param withDup list containing duplicated elements
+   */
+  public static void collectToLinkedHashSet(List&lt;String&gt; withDup) {
+<span class="nc" id="L36">    var ordered = new LinkedHashSet&lt;&gt;(withDup.stream().distinct().toList());</span>
+<span class="nc" id="L37">    log.info(&quot;[functional] Collected LinkedHashSet (from stream): {}&quot;, ordered);</span>
+<span class="nc" id="L38">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DedupCollections.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TP3 - Collections &amp; Streams</a> &gt; <a href="index.source.html" class="el_package">fr.univtln.bruno.samples.java101.tp3.set</a> &gt; <span class="el_source">DedupCollections.java</span></div><h1>DedupCollections.java</h1><pre class="source lang-java linenums">package fr.univtln.bruno.samples.java101.tp3.set;
+
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+
+/**
+ * Collection-based deduplication examples: show how to remove duplicates while preserving insertion order
+ * using LinkedHashSet and why this is a collections solution (not a stream transform idiom).
+ *
+ * Student notes:
+ * - Deduplication with HashSet/LinkedHashSet relies on correct equals()/hashCode() implementations.
+ *   If equals/hashCode are inconsistent, deduplication will behave incorrectly.
+ * - HashCode collisions are possible; they degrade performance but do not by themselves break correctness
+ *   because equals() is used to disambiguate entries.
+ * - If you need identity-based semantics (object identity rather than equals), use IdentityHashMap or
+ *   another identity-based structure — but this is seldom desired for domain objects.
+ */
+<span class="nc" id="L21">@Slf4j</span>
+public class DedupCollections {
+
+  /**
+   * Private constructor to prevent instantiation of this utility/example class.
+   */
+  private DedupCollections() {
+  }
+
+  /**
+   * Remove duplicates while preserving order using a LinkedHashSet (collection-based approach).
+   * This method is intentionally placed in the `set` package because it uses a Set implementation.
+   *
+   * @param withDup list containing duplicate elements; may be null (handled by caller)
+   */
+  public static void removeDuplicatesPreserveOrder(List&lt;String&gt; withDup) {
+<span class="nc" id="L37">    List&lt;String&gt; uniqueOrder = new ArrayList&lt;&gt;(new LinkedHashSet&lt;&gt;(withDup));</span>
+<span class="nc" id="L38">    log.info(&quot;[collections] Unique (LinkedHashSet): {}&quot;, uniqueOrder);</span>
+<span class="nc" id="L39">  }</span>
+
+  /**
+   * Show LinkedHashSet insertion order behavior.
+   *
+   * @param values sample values to demonstrate insertion order
+   */
+  public static void linkedHashSetOrder(List&lt;String&gt; values) {
+<span class="nc" id="L47">    var ordered = new LinkedHashSet&lt;&gt;(values);</span>
+<span class="nc" id="L48">    log.info(&quot;[collections] LinkedHashSet order: {}&quot;, ordered);</span>
+<span class="nc" id="L49">  }</span>
+
+  // Student example (commented): identity vs equality
+  // IdentityHashMap uses reference equality (==) instead of equals(). This can surprise students
+  // who expect equals-based lookup. Uncomment and run separately to experiment.
+  //
+  // import java.util.IdentityHashMap;
+  // IdentityHashMap&lt;Object, String&gt; im = new IdentityHashMap&lt;&gt;();
+  // im.put(new String(&quot;a&quot;), &quot;first&quot;);
+  // // different String instance with same content is not considered equal by identity map
+  // log.info(&quot;Identity lookup returns null: {}&quot;, im.get(new String(&quot;a&quot;)));
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

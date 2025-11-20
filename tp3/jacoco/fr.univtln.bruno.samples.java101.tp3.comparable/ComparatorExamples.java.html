@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ComparatorExamples.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TP3 - Collections &amp; Streams</a> &gt; <a href="index.source.html" class="el_package">fr.univtln.bruno.samples.java101.tp3.comparable</a> &gt; <span class="el_source">ComparatorExamples.java</span></div><h1>ComparatorExamples.java</h1><pre class="source lang-java linenums">package fr.univtln.bruno.samples.java101.tp3.comparable;
+
+import fr.univtln.bruno.samples.java101.tp3.Book;
+import fr.univtln.bruno.samples.java101.tp3.Person;
+import fr.univtln.bruno.samples.java101.tp3.functional.MappingAndSortingExamples;
+import lombok.extern.slf4j.Slf4j;
+
+import java.time.LocalDate;
+import java.util.*;
+
+/**
+ * Examples illustrating Comparable/Comparator usage and common comparator idioms.
+ *
+ * &lt;p&gt;Note pédagogique : certains exemples utilisent volontairement des classes anonymes
+ * au lieu de lambdas ou de method-references. L'objectif est didactique :
+ * - montrer la structure complète d'un Comparator (méthode compare) pour les étudiants
+ *   qui découvrent l'interface et la logique de comparaison ;
+ * - permettre de discuter des différences entre les approches (verbosité vs concision).
+ *
+ * Chaque méthode comporte une alternative moderne (lambda / Comparator.comparing)
+ * sous forme de commentaire pour que l'enseignant puisse basculer facilement vers la
+ * version idiomatique une fois que les élèves ont compris les concepts.
+ */
+<span class="nc" id="L24">@Slf4j</span>
+<span class="nc" id="L25">public class ComparatorExamples {</span>
+  /**
+   * Demonstrate natural ordering via Comparable implementation.
+   */
+  public static void naturalOrderingExample() {
+<span class="nc" id="L30">    log.info(&quot;=== Natural Ordering ===&quot;);</span>
+<span class="nc" id="L31">    List&lt;Person&gt; people = new ArrayList&lt;&gt;(List.of(</span>
+<span class="nc" id="L32">      Person.of(&quot;Charlie&quot;, &quot;Brown&quot;, 35),</span>
+<span class="nc" id="L33">      Person.of(&quot;Alice&quot;, &quot;Smith&quot;, 30),</span>
+<span class="nc" id="L34">      Person.of(&quot;Bob&quot;, &quot;Jones&quot;, 25),</span>
+<span class="nc" id="L35">      Person.of(&quot;Alice&quot;, &quot;Brown&quot;, 28)</span>
+    ));
+<span class="nc" id="L37">    log.debug(&quot;Before natural sort: {}&quot;, people);</span>
+<span class="nc" id="L38">    Collections.sort(people);</span>
+<span class="nc" id="L39">    log.debug(&quot;After natural sort: {}&quot;, people);</span>
+<span class="nc" id="L40">    MappingAndSortingExamples.printFullNames(people);</span>
+<span class="nc" id="L41">  }</span>
+
+  /**
+   * Show simple comparators based on attributes.
+   */
+  public static void customComparatorExample() {
+<span class="nc" id="L47">    log.info(&quot;=== Custom Comparator ===&quot;);</span>
+<span class="nc" id="L48">    List&lt;Person&gt; people = new ArrayList&lt;&gt;(List.of(</span>
+<span class="nc" id="L49">      Person.of(&quot;Charlie&quot;, &quot;Brown&quot;, 35),</span>
+<span class="nc" id="L50">      Person.of(&quot;Alice&quot;, &quot;Smith&quot;, 30),</span>
+<span class="nc" id="L51">      Person.of(&quot;Bob&quot;, &quot;Jones&quot;, 25)</span>
+    ));
+<span class="nc" id="L53">    log.debug(&quot;Before age sort: {}&quot;, people);</span>
+    // Use an anonymous Comparator instead of a method reference
+    // (didactic) - shows the full compare method implementation.
+<span class="nc" id="L56">    people.sort(new Comparator&lt;Person&gt;() {</span>
+      @Override
+      public int compare(Person a, Person b) {
+<span class="nc" id="L59">        return Integer.compare(a.age(), b.age());</span>
+      }
+    });
+<span class="nc" id="L62">    log.debug(&quot;After age asc sort: {}&quot;, people);</span>
+<span class="nc" id="L63">    log.info(&quot;By age asc: {}&quot;, people.stream().map(p -&gt; p.getFullName() + &quot;(&quot; + p.age() + &quot;)&quot;).toList());</span>
+
+    // Modern, idiomatic equivalent (commented for reference):
+    // people.sort(Comparator.comparingInt(Person::age));
+
+    // reversed using an anonymous Comparator as well
+<span class="nc" id="L69">    people.sort(new Comparator&lt;Person&gt;() {</span>
+      @Override
+      public int compare(Person a, Person b) {
+<span class="nc" id="L72">        return Integer.compare(a.age(), b.age());</span>
+      }
+<span class="nc" id="L74">    }.reversed());</span>
+<span class="nc" id="L75">    log.debug(&quot;After age desc sort: {}&quot;, people);</span>
+<span class="nc" id="L76">    log.info(&quot;By age desc: {}&quot;, people.stream().map(p -&gt; p.getFullName() + &quot;(&quot; + p.age() + &quot;)&quot;).toList());</span>
+
+    // Modern reversed example (commented):
+    // people.sort(Comparator.comparingInt(Person::age).reversed());
+
+    // compare by firstName with anonymous Comparator (avoid method reference)
+<span class="nc" id="L82">    people.sort(new Comparator&lt;Person&gt;() {</span>
+      @Override
+      public int compare(Person a, Person b) {
+<span class="nc" id="L85">        return a.firstName().compareTo(b.firstName());</span>
+      }
+    });
+<span class="nc" id="L88">    log.debug(&quot;After firstName sort: {}&quot;, people);</span>
+<span class="nc" id="L89">    log.info(&quot;By firstName: {}&quot;, people.stream().map(Person::getFullName).toList());</span>
+
+    // Modern equivalent (commented):
+    // people.sort(Comparator.comparing(Person::firstName));
+<span class="nc" id="L93">  }</span>
+
+  /**
+   * Chaining comparators to implement multi-key sorting.
+   */
+  public static void comparatorChainingExample() {
+<span class="nc" id="L99">    log.info(&quot;=== Comparator Chaining ===&quot;);</span>
+<span class="nc" id="L100">    List&lt;Person&gt; people = new ArrayList&lt;&gt;(List.of(</span>
+<span class="nc" id="L101">      Person.of(&quot;Alice&quot;, &quot;Smith&quot;, 30),</span>
+<span class="nc" id="L102">      Person.of(&quot;Bob&quot;, &quot;Smith&quot;, 25),</span>
+<span class="nc" id="L103">      Person.of(&quot;Alice&quot;, &quot;Jones&quot;, 30),</span>
+<span class="nc" id="L104">      Person.of(&quot;Charlie&quot;, &quot;Brown&quot;, 35)</span>
+    ));
+<span class="nc" id="L106">    log.debug(&quot;Before chaining sort: {}&quot;, people);</span>
+    // Build chained comparator using anonymous classes to avoid method references
+    // (didactic). This shows how each comparator contributes to the final ordering.
+<span class="nc" id="L109">    Comparator&lt;Person&gt; lastNameCmp = new Comparator&lt;&gt;() {</span>
+      @Override
+      public int compare(Person a, Person b) {
+<span class="nc" id="L112">        return a.lastName().compareTo(b.lastName());</span>
+      }
+    };
+<span class="nc" id="L115">    Comparator&lt;Person&gt; firstNameCmp = new Comparator&lt;&gt;() {</span>
+      @Override
+      public int compare(Person a, Person b) {
+<span class="nc" id="L118">        return a.firstName().compareTo(b.firstName());</span>
+      }
+    };
+<span class="nc" id="L121">    Comparator&lt;Person&gt; ageCmp = new Comparator&lt;&gt;() {</span>
+      @Override
+      public int compare(Person a, Person b) {
+<span class="nc" id="L124">        return Integer.compare(a.age(), b.age());</span>
+      }
+    };
+<span class="nc" id="L127">    people.sort(lastNameCmp.thenComparing(firstNameCmp).thenComparing(ageCmp));</span>
+<span class="nc" id="L128">    log.debug(&quot;After chaining sort: {}&quot;, people);</span>
+<span class="nc" id="L129">    log.info(&quot;Chained: {}&quot;, people.stream().map(p -&gt; p.getFullName() + &quot;(&quot; + p.age() + &quot;)&quot;).toList());</span>
+
+    // Modern, concise alternative (commented):
+    // people.sort(Comparator.comparing(Person::lastName)
+    //                      .thenComparing(Person::firstName)
+    //                      .thenComparingInt(Person::age));
+<span class="nc" id="L135">  }</span>
+
+  /**
+   * Show Comparator factory methods such as naturalOrder, reverseOrder, nullsFirst/Last.
+   */
+  public static void comparatorFactoryMethodsExample() {
+<span class="nc" id="L141">    log.info(&quot;=== Comparator Factory Methods ===&quot;);</span>
+<span class="nc" id="L142">    List&lt;String&gt; words = new ArrayList&lt;&gt;(List.of(&quot;banana&quot;, &quot;Apple&quot;, &quot;cherry&quot;, &quot;DATE&quot;));</span>
+<span class="nc" id="L143">    List&lt;String&gt; natural = new ArrayList&lt;&gt;(words);</span>
+<span class="nc" id="L144">    natural.sort(Comparator.naturalOrder());</span>
+<span class="nc" id="L145">    List&lt;String&gt; reversed = new ArrayList&lt;&gt;(words);</span>
+<span class="nc" id="L146">    reversed.sort(Comparator.reverseOrder());</span>
+<span class="nc" id="L147">    List&lt;String&gt; ci = new ArrayList&lt;&gt;(words);</span>
+<span class="nc" id="L148">    ci.sort(String.CASE_INSENSITIVE_ORDER);</span>
+    // sort by length using anonymous Comparator (avoid method reference)
+<span class="nc" id="L150">    List&lt;String&gt; byLen = new ArrayList&lt;&gt;(words);</span>
+<span class="nc" id="L151">    byLen.sort(new Comparator&lt;String&gt;() {</span>
+      @Override
+      public int compare(String a, String b) {
+<span class="nc" id="L154">        return Integer.compare(a.length(), b.length());</span>
+      }
+    });
+    // sort by length then case-insensitive alphabetical order using anonymous comparator
+<span class="nc" id="L158">    List&lt;String&gt; lenThenAlpha = new ArrayList&lt;&gt;(words);</span>
+<span class="nc" id="L159">    lenThenAlpha.sort(new Comparator&lt;String&gt;() {</span>
+      @Override
+      public int compare(String a, String b) {
+<span class="nc" id="L162">        int c = Integer.compare(a.length(), b.length());</span>
+<span class="nc bnc" id="L163" title="All 2 branches missed.">        if (c != 0) return c;</span>
+<span class="nc" id="L164">        return String.CASE_INSENSITIVE_ORDER.compare(a, b);</span>
+      }
+    });
+<span class="nc" id="L167">    log.info(&quot;Natural {}&quot;, natural);</span>
+<span class="nc" id="L168">    log.info(&quot;Reverse {}&quot;, reversed);</span>
+<span class="nc" id="L169">    log.info(&quot;CaseInsensitive {}&quot;, ci);</span>
+<span class="nc" id="L170">    log.info(&quot;Length {}&quot;, byLen);</span>
+<span class="nc" id="L171">    log.info(&quot;Len+Alpha {}&quot;, lenThenAlpha);</span>
+
+    // Student note: avoid writing comparators that are not transitive. A non-transitive comparator
+    // can produce A&lt;B, B&lt;C but A&gt;C, which breaks sorting algorithms and collections relying on total order.
+    // Example of a bad comparator (do NOT use in real code):
+    // Comparator&lt;String&gt; bad = (a, b) -&gt; {
+    //   if (a.length() % 2 == 0 &amp;&amp; b.length() % 2 == 1) return -1;
+    //   if (a.length() % 2 == 1 &amp;&amp; b.length() % 2 == 0) return 1;
+    //   return a.compareTo(b);
+    // };
+<span class="nc" id="L181">  }</span>
+
+  /**
+   * Null-handling comparators example.
+   */
+  public static void nullHandlingExample() {
+<span class="nc" id="L187">    log.info(&quot;=== Null Handling Comparators ===&quot;);</span>
+<span class="nc" id="L188">    List&lt;String&gt; withNulls = new ArrayList&lt;&gt;(Arrays.asList(&quot;Charlie&quot;, null, &quot;Alice&quot;, &quot;Bob&quot;, null));</span>
+<span class="nc" id="L189">    List&lt;String&gt; nullsFirst = new ArrayList&lt;&gt;(withNulls);</span>
+<span class="nc" id="L190">    nullsFirst.sort(Comparator.nullsFirst(Comparator.naturalOrder()));</span>
+<span class="nc" id="L191">    List&lt;String&gt; nullsLast = new ArrayList&lt;&gt;(withNulls);</span>
+<span class="nc" id="L192">    nullsLast.sort(Comparator.nullsLast(Comparator.naturalOrder()));</span>
+<span class="nc" id="L193">    log.info(&quot;NullsFirst {}&quot;, nullsFirst);</span>
+<span class="nc" id="L194">    log.info(&quot;NullsLast {}&quot;, nullsLast);</span>
+<span class="nc" id="L195">  }</span>
+
+  /**
+   * Complex sorting example combining multiple keys on Book objects.
+   */
+  public static void complexSortingExample() {
+<span class="nc" id="L201">    log.info(&quot;=== Complex Sorting Books ===&quot;);</span>
+<span class="nc" id="L202">    List&lt;Book&gt; books = new ArrayList&lt;&gt;(List.of(</span>
+<span class="nc" id="L203">      Book.of(&quot;978-0134685991&quot;, &quot;Effective Java&quot;, &quot;Joshua Bloch&quot;, LocalDate.of(2018, 1, 6), 45.99),</span>
+<span class="nc" id="L204">      Book.of(&quot;978-0596009205&quot;, &quot;Head First Java&quot;, &quot;Kathy Sierra&quot;, LocalDate.of(2005, 2, 9), 39.99),</span>
+<span class="nc" id="L205">      Book.of(&quot;978-0134685992&quot;, &quot;Java Concurrency&quot;, &quot;Brian Goetz&quot;, LocalDate.of(2006, 5, 19), 42.99),</span>
+<span class="nc" id="L206">      Book.of(&quot;978-0321356680&quot;, &quot;Clean Code&quot;, &quot;Robert Martin&quot;, LocalDate.of(2008, 5, 28), 38.99),</span>
+<span class="nc" id="L207">      Book.of(&quot;978-0134685993&quot;, &quot;Modern Java&quot;, &quot;Joshua Bloch&quot;, LocalDate.of(2020, 3, 15), 49.99)</span>
+    ));
+<span class="nc" id="L209">    log.debug(&quot;Books initial: {}&quot;, books);</span>
+    // Use anonymous comparators to avoid method references (didactic). Students can
+    // compare this explicit form with Comparator.comparing and thenComparing.
+<span class="nc" id="L212">    List&lt;Book&gt; byPrice = new ArrayList&lt;&gt;(books);</span>
+<span class="nc" id="L213">    byPrice.sort(new Comparator&lt;Book&gt;() {</span>
+      @Override
+      public int compare(Book a, Book b) {
+<span class="nc" id="L216">        return Double.compare(a.price(), b.price());</span>
+      }
+    });
+
+<span class="nc" id="L220">    List&lt;Book&gt; byDateDesc = new ArrayList&lt;&gt;(books);</span>
+<span class="nc" id="L221">    byDateDesc.sort(new Comparator&lt;Book&gt;() {</span>
+      @Override
+      public int compare(Book a, Book b) {
+<span class="nc" id="L224">        return a.publishedDate().compareTo(b.publishedDate());</span>
+      }
+<span class="nc" id="L226">    }.reversed());</span>
+
+<span class="nc" id="L228">    List&lt;Book&gt; byAuthorPrice = new ArrayList&lt;&gt;(books);</span>
+<span class="nc" id="L229">    byAuthorPrice.sort(new Comparator&lt;Book&gt;() {</span>
+      @Override
+      public int compare(Book a, Book b) {
+<span class="nc" id="L232">        int c = a.author().compareTo(b.author());</span>
+<span class="nc bnc" id="L233" title="All 2 branches missed.">        if (c != 0) return c;</span>
+<span class="nc" id="L234">        return Double.compare(a.price(), b.price());</span>
+      }
+    });
+<span class="nc" id="L237">    log.debug(&quot;byPrice: {} byDateDesc: {} byAuthorPrice: {}&quot;, byPrice, byDateDesc, byAuthorPrice);</span>
+<span class="nc" id="L238">    MappingAndSortingExamples.printBookDescriptions(byPrice);</span>
+<span class="nc" id="L239">    MappingAndSortingExamples.printBookDescriptions(byDateDesc);</span>
+<span class="nc" id="L240">    MappingAndSortingExamples.printBookDescriptions(byAuthorPrice);</span>
+
+    // Modern equivalents (commented):
+    // byPrice.sort(Comparator.comparingDouble(Book::price));
+    // byDateDesc.sort(Comparator.comparing(Book::publishedDate).reversed());
+    // byAuthorPrice.sort(Comparator.comparing(Book::author).thenComparingDouble(Book::price));
+<span class="nc" id="L246">  }</span>
+
+  /**
+   * Min/Max examples using Comparators.
+   */
+  public static void minMaxExample() {
+<span class="nc" id="L252">    log.info(&quot;=== Min/Max Example ===&quot;);</span>
+<span class="nc" id="L253">    List&lt;Person&gt; people = List.of(</span>
+<span class="nc" id="L254">      Person.of(&quot;Charlie&quot;, &quot;Brown&quot;, 35),</span>
+<span class="nc" id="L255">      Person.of(&quot;Alice&quot;, &quot;Smith&quot;, 30),</span>
+<span class="nc" id="L256">      Person.of(&quot;Bob&quot;, &quot;Jones&quot;, 25)</span>
+    );
+    // use anonymous comparator for age
+<span class="nc" id="L259">    Comparator&lt;Person&gt; ageComparator = new Comparator&lt;&gt;() {</span>
+      @Override
+      public int compare(Person a, Person b) {
+<span class="nc" id="L262">        return Integer.compare(a.age(), b.age());</span>
+      }
+    };
+<span class="nc" id="L265">    Person youngest = Collections.min(people, ageComparator);</span>
+<span class="nc" id="L266">    Person oldest = Collections.max(people, ageComparator);</span>
+<span class="nc" id="L267">    log.info(&quot;Youngest {}({}) Oldest {}({})&quot;, youngest.getFullName(), youngest.age(), oldest.getFullName(), oldest.age());</span>
+<span class="nc" id="L268">    MappingAndSortingExamples.showMinMaxByAge(people);</span>
+<span class="nc" id="L269">  }</span>
+
+  /**
+   * Examples of custom comparator implementations (anonymous, lambda, method reference).
+   */
+  public static void customComparatorImplementationExample() {
+<span class="nc" id="L275">    log.info(&quot;=== Custom Implementation ===&quot;);</span>
+<span class="nc" id="L276">    Comparator&lt;Person&gt; anonymous = new Comparator&lt;&gt;() {</span>
+      public int compare(Person a, Person b) {
+<span class="nc" id="L278">        return Integer.compare(a.age(), b.age());</span>
+      }
+    };
+<span class="nc" id="L281">    Comparator&lt;Person&gt; lambda = (a, b) -&gt; Integer.compare(a.age(), b.age());</span>
+    // replace method reference comparator with anonymous comparator
+<span class="nc" id="L283">    Comparator&lt;Person&gt; methodRef = new Comparator&lt;&gt;() {</span>
+      @Override
+      public int compare(Person a, Person b) {
+<span class="nc" id="L286">        return Integer.compare(a.age(), b.age());</span>
+      }
+    };
+<span class="nc" id="L289">    List&lt;Person&gt; people = new ArrayList&lt;&gt;(List.of(Person.of(&quot;Charlie&quot;, &quot;Brown&quot;, 35), Person.of(&quot;Alice&quot;, &quot;Smith&quot;, 30), Person.of(&quot;Bob&quot;, &quot;Jones&quot;, 25)));</span>
+<span class="nc" id="L290">    people.sort(methodRef);</span>
+<span class="nc" id="L291">    MappingAndSortingExamples.printNamesWithAges(people);</span>
+<span class="nc" id="L292">    people.sort(anonymous.reversed());</span>
+<span class="nc" id="L293">    MappingAndSortingExamples.printNamesWithAges(people);</span>
+<span class="nc" id="L294">  }</span>
+
+  /**
+   * Runner for comparator examples.
+   *
+   * @param args ignored
+   */
+  public static void main(String[] args) {
+<span class="nc" id="L302">    naturalOrderingExample();</span>
+<span class="nc" id="L303">    customComparatorExample();</span>
+<span class="nc" id="L304">    comparatorChainingExample();</span>
+<span class="nc" id="L305">    comparatorFactoryMethodsExample();</span>
+<span class="nc" id="L306">    nullHandlingExample();</span>
+<span class="nc" id="L307">    complexSortingExample();</span>
+<span class="nc" id="L308">    minMaxExample();</span>
+<span class="nc" id="L309">    customComparatorImplementationExample();</span>
+<span class="nc" id="L310">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
