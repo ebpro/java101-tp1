@@ -125,7 +125,7 @@ for m in "${MODULES[@]:-}"; do
 done
 MODULES=("${UNIQUE_MODULES[@]:-}")
 
-if [[ ${#MODULES[@]:-} -eq 0 ]]; then
+if [[ ${#MODULES[@]:-0} -eq 0 ]]; then
   echo "No modules detected (tp*/TP*). Nothing to build." >&2
   exit 1
 fi
