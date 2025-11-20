@@ -98,7 +98,7 @@ Edge cases you must understand (short explanations & hints)
 - Hint: be explicit about ordering; use `parallel()` with care.
 
 15) Non-transitive or inconsistent Comparator
-- Problem: a comparator that is not transitive (A<B and B<C but A>C) or inconsistent with equals can break sorting algorithms and lead to IllegalArgumentException in `Arrays.sort` or unpredictable results in `Collections.sort`.
+- Problem: a comparator that is not transitive (`A < B` and `B < C` but `A > C`) or inconsistent with equals can break sorting algorithms and lead to IllegalArgumentException in `Arrays.sort` or unpredictable results in `Collections.sort`.
 - Hint: write unit tests that assert comparator transitivity for representative triplets; prefer using Comparator factory methods which tend to produce consistent comparators.
 
 16) Comparator throwing exceptions or returning inconsistent signs
