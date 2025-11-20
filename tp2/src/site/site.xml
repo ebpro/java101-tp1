@@ -7,21 +7,21 @@
   </skin>
 
   <body>
-    <menu name="TP2 — Interfaces">
+    <menu name="Overview">
       <item name="Overview" href="index.html"/>
       <item name="Back to Main" href="../index.html"/>
     </menu>
 
+    <!-- Learning Modules menu removed here to avoid duplication; it is provided by the parent site. -->
+
     <menu name="Documentation">
-      <item name="Javadoc API" href="apidocs/index.html"/>
-      <item name="Source Xref" href="xref/index.html"/>
-      <item name="Test Xref" href="xref-test/index.html"/>
+      <item name="Source Xref (Javadoc)" href="xref/index.html"/>
     </menu>
 
-    <menu name="Quality Reports">
+    <menu name="Reports">
       <item name="All Reports" href="project-reports.html"/>
       <item name="Test Results" href="surefire-report.html"/>
-      <item name="Code Coverage" href="jacoco/index.html"/>
+      <item name="Coverage" href="jacoco/index.html"/>
       <item name="Checkstyle" href="checkstyle.html"/>
       <item name="PMD" href="pmd.html"/>
       <item name="CPD" href="cpd.html"/>
@@ -36,4 +36,3 @@
     </menu>
   </body>
 </site>
-

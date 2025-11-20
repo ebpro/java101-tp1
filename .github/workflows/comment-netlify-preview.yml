@@ -1,0 +1,76 @@
+name: Comment Netlify preview on PR
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  post-preview-comment:
+    name: Post Netlify preview URL as PR comment (secure)
+    runs-on: ubuntu-latest
+    env:
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+      GITHUB_REPO: ${{ github.repository }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+    steps:
+      - name: Compute deterministic Netlify site name and fetch latest preview URL
+        id: fetch_preview
+        run: |
+          set -euo pipefail
+          REPO_PART="${GITHUB_REPO#*/}"
+          # sanitize repo and branch (lowercase, replace invalid chars with '-')
+          SANITIZED_REPO=$(echo "$REPO_PART" | tr 'A-Z' 'a-z' | sed 's/[^a-z0-9-]/-/g')
+          SANITIZED_BRANCH=$(echo "$PR_HEAD_REF" | tr 'A-Z' 'a-z' | sed 's/[^a-z0-9-]/-/g')
+          SITE_NAME="${SANITIZED_REPO}-${SANITIZED_BRANCH}-preview"
+          echo "Derived site name: $SITE_NAME"
+
+          # Query Netlify for the site and latest deploy
+          if [ -z "${NETLIFY_AUTH_TOKEN:-}" ]; then
+            echo "No NETLIFY_AUTH_TOKEN set, skipping preview lookup."
+            echo "preview_url=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          JSON=$(curl -s -H "Authorization: Bearer ${NETLIFY_AUTH_TOKEN}" "https://api.netlify.com/api/v1/sites")
+          RESOLVED_ID=$(echo "$JSON" | jq -r ".[] | select(.name==\"$SITE_NAME\") | .id" | head -n1)
+          if [ -z "$RESOLVED_ID" ] || [ "$RESOLVED_ID" = "null" ]; then
+            echo "Site '$SITE_NAME' not found on Netlify."
+            echo "preview_url=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Get latest deploys and extract a usable preview URL
+          DEPLOYS=$(curl -s -H "Authorization: Bearer ${NETLIFY_AUTH_TOKEN}" "https://api.netlify.com/api/v1/sites/${RESOLVED_ID}/deploys")
+          PREVIEW_URL=$(echo "$DEPLOYS" | jq -r '.[0].ssl_url // .[0].deploy_ssl_url // .[0].url // .[0].deploy_url // empty')
+          if [ -z "$PREVIEW_URL" ]; then
+            # fallback: construct a likely URL using alias pattern
+            ALIAS_SANITIZED=$(echo "${PR_NUMBER}-${PR_HEAD_REF}" | tr 'A-Z' 'a-z' | sed 's/[^a-z0-9-]/-/g')
+            PREVIEW_URL="https://${ALIAS_SANITIZED}--${SITE_NAME}.netlify.app"
+          fi
+          echo "preview_url=$PREVIEW_URL" >> "$GITHUB_OUTPUT"
+      - name: Post PR comment with preview URL
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const preview = process.env.PREVIEW_URL || ''
+            const prNumber = context.payload.pull_request.number
+            if (!preview) {
+              core.info('No preview URL found; skipping comment.')
+            } else {
+              const body = `Netlify preview available: ${preview}`
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body
+              })
+              core.info('Posted preview comment.')
+            }
+        env:
+          PREVIEW_URL: ${{ steps.fetch_preview.outputs.preview_url }}
+

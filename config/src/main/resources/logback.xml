@@ -2,17 +2,20 @@
 <!DOCTYPE configuration>
 
 <configuration>
-  <import class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"/>
-  <import class="ch.qos.logback.core.ConsoleAppender"/>
+  <!-- Default LOG_LEVEL can be overridden by -DLOG_LEVEL=... (fallback to DEBUG) -->
+  <property name="LOG_LEVEL" value="${LOG_LEVEL:-DEBUG}"/>
 
-  <appender name="STDOUT" class="ConsoleAppender">
-    <encoder class="PatternLayoutEncoder">
-      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%kvp- %msg%n</pattern>
+  <!-- Console appender with a simple pattern. -->
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
     </encoder>
   </appender>
 
-  <root level="debug">
+  <!-- Ensure tp3 package respects LOG_LEVEL and can show DEBUG when requested -->
+  <logger name="fr.univtln.bruno.samples.java101.tp3" level="${LOG_LEVEL}" />
+
+  <root level="${LOG_LEVEL}">
     <appender-ref ref="STDOUT"/>
   </root>
 </configuration>
-

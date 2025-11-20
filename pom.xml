@@ -48,6 +48,7 @@
     <module>config</module>
     <module>tp1</module>
     <module>tp2</module>
+    <module>tp3</module>
     <module>report-aggregate</module>
   </modules>
 
@@ -209,7 +210,13 @@
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>${maven-javadoc-plugin.version}</version>
           <configuration>
-            <skip>true</skip>
+            <!-- Enable Javadoc generation and run doclint but ignore missing comments (they are noisy).
+                 We keep failOnError=false for developer builds; CI can flip to true if desired. -->
+            <skip>false</skip>
+            <!-- Run doclint in strict mode (all checks). We keep failOnError=false so local builds don't fail.
+                 CI can opt-in to fail on warnings via a profile if desired. -->
+            <doclint>all</doclint>
+            <failOnError>false</failOnError>
           </configuration>
         </plugin>
         <plugin>
@@ -379,7 +386,10 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>${maven-javadoc-plugin.version}</version>
         <configuration>
-          <skip>true</skip>
+          <!-- Enable site-report javadoc generation and run strict doclint checks. Keep failOnError=false so the build doesn't fail on warnings. -->
+          <skip>false</skip>
+          <doclint>all</doclint>
+          <failOnError>false</failOnError>
         </configuration>
         <reportSets>
           <reportSet>
