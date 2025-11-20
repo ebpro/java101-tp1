@@ -125,7 +125,14 @@ for m in "${MODULES[@]:-}"; do
 done
 MODULES=("${UNIQUE_MODULES[@]:-}")
 
-if [[ ${#MODULES[@]:-0} -eq 0 ]]; then
+# Robustly compute module count even when `MODULES` might be unset (set -u is enabled)
+if [[ "${MODULES+x}" = "x" ]]; then
+  MODULE_COUNT=${#MODULES[@]}
+else
+  MODULE_COUNT=0
+fi
+
+if (( MODULE_COUNT == 0 )); then
   echo "No modules detected (tp*/TP*). Nothing to build." >&2
   exit 1
 fi
