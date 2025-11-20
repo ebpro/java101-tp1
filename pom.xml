@@ -48,8 +48,8 @@
     <module>config</module>
     <module>tp1</module>
     <module>tp2</module>
-    <module>report-aggregate</module>
     <module>tp3</module>
+    <module>report-aggregate</module>
   </modules>
 
   <properties>
