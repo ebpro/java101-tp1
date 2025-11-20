@@ -15,34 +15,59 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class CollectorsExamples {
-    public static void terminalOperationsExample() {
-        log.info("[functional] Terminal operations: count/any/all/none/findFirst");
-        List<Integer> nums = List.of(1,2,3,4,5,6);
-        long evenCount = nums.stream().filter(n -> n % 2 == 0).count();
-        boolean anyGt4 = nums.stream().anyMatch(n -> n > 4);
-        boolean allPositive = nums.stream().allMatch(n -> n > 0);
-        boolean noneNegative = nums.stream().noneMatch(n -> n < 0);
-        Optional<Integer> firstGt3 = nums.stream().filter(n -> n > 3).findFirst();
-        log.info("evenCount={} anyGt4={} allPositive={} noneNegative={} firstGt3={}", evenCount, anyGt4, allPositive, noneNegative, firstGt3.orElse(-1));
-    }
+  /**
+   * Private constructor to prevent instantiation.
+   */
+  private CollectorsExamples() {
+  }
 
-    public static void groupingAndCountingExample() {
-        log.info("[functional] groupingBy and counting");
-        List<Person> people = List.of(Person.of("Alice","Smith",30), Person.of("Bob","Jones",25), Person.of("Charlie","Brown",35), Person.of("David","Smith",28));
-        Map<String, List<Person>> byLast = people.stream().collect(Collectors.groupingBy(Person::getLastName));
-        byLast.forEach((ln, ps) -> log.info("{} -> {}", ln, ps.stream().map(Person::getFullName).toList()));
-        Map<String, Long> counts = people.stream().collect(Collectors.groupingBy(Person::getLastName, Collectors.counting()));
-        log.info("counts: {}", counts);
-    }
+  /**
+   * Showcases terminal stream operations like count/any/all/none/findFirst.
+   */
+  public static void terminalOperationsExample() {
+    log.info("[functional] Terminal operations: count/any/all/none/findFirst");
+    List<Integer> nums = List.of(1, 2, 3, 4, 5, 6);
+    long evenCount = nums.stream().filter(n -> n % 2 == 0).count();
+    boolean anyGt4 = nums.stream().anyMatch(n -> n > 4);
+    boolean allPositive = nums.stream().allMatch(n -> n > 0);
+    boolean noneNegative = nums.stream().noneMatch(n -> n < 0);
+    Optional<Integer> firstGt3 = nums.stream().filter(n -> n > 3).findFirst();
+    log.debug("nums: {}", nums);
+    log.info("evenCount={} anyGt4={} allPositive={} noneNegative={} firstGt3={}", evenCount, anyGt4, allPositive, noneNegative, firstGt3.orElse(-1));
+  }
 
-    public static void complexCollectorsBooksExample() {
-        log.info("[functional] complex collectors for Book examples");
-        List<Book> books = List.of(
-                Book.of("978-0134685991","Effective Java","Joshua Bloch", LocalDate.of(2018,1,6),45.99),
-                Book.of("978-0596009205","Head First Java","Kathy Sierra", LocalDate.of(2005,2,9),39.99),
-                Book.of("978-0134685992","Java Concurrency","Brian Goetz", LocalDate.of(2006,5,19),42.99)
-        );
-        Map<String, List<String>> titlesByAuthor = books.stream().collect(Collectors.groupingBy(Book::getAuthor, Collectors.mapping(Book::getTitle, Collectors.toList())));
-        titlesByAuthor.forEach((a,t) -> log.info("{} -> {}", a, t));
-    }
+  /**
+   * Demonstrates groupingBy and counting collectors on Person collections.
+   */
+  public static void groupingAndCountingExample() {
+    log.info("[functional] groupingBy and counting");
+    List<Person> people = List.of(Person.of("Alice", "Smith", 30), Person.of("Bob", "Jones", 25), Person.of("Charlie", "Brown", 35), Person.of("David", "Smith", 28));
+    log.debug("people for grouping: {}", people);
+    Map<String, List<Person>> byLast = people.stream().collect(Collectors.groupingBy(Person::lastName));
+    byLast.forEach((ln, ps) -> log.info("{} -> {}", ln, ps.stream().map(Person::getFullName).toList()));
+    Map<String, Long> counts = people.stream().collect(Collectors.groupingBy(Person::lastName, Collectors.counting()));
+    log.debug("group counts: {}", counts);
+    log.info("counts: {}", counts);
+  }
+
+  /**
+   * Demonstrates complex collectors (mapping + grouping) using Book examples.
+   */
+  public static void complexCollectorsBooksExample() {
+    log.info("[functional] complex collectors for Book examples");
+    List<Book> books = List.of(
+      Book.of("978-0134685991", "Effective Java", "Joshua Bloch", LocalDate.of(2018, 1, 6), 45.99),
+      Book.of("978-0596009205", "Head First Java", "Kathy Sierra", LocalDate.of(2005, 2, 9), 39.99),
+      Book.of("978-0134685992", "Java Concurrency", "Brian Goetz", LocalDate.of(2006, 5, 19), 42.99)
+    );
+    log.debug("books: {}", books);
+    Map<String, List<String>> titlesByAuthor = books.stream().collect(Collectors.groupingBy(Book::author, Collectors.mapping(Book::title, Collectors.toList())));
+    log.debug("titlesByAuthor: {}", titlesByAuthor);
+    titlesByAuthor.forEach((a, t) -> log.info("{} -> {}", a, t));
+
+    // Student note: beware of Collectors.toMap when keys might collide. The 2-arg toMap throws
+    // IllegalStateException on duplicate keys. Use the 3-arg version to resolve duplicates, for example:
+    // Map<String, Book> byIsbn = books.stream().collect(Collectors.toMap(Book::isbn, b -> b, (a,b) -> a)); // keep first
+    // Or groupingBy when keys are not unique.
+  }
 }

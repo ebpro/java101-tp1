@@ -1,192 +1,146 @@
-# TP3 — Collections & Streams
+# TP3 — Collections & Streams (student guide)
 
-Ce module illustre les concepts avancés et les bonnes pratiques du Framework Collections de Java ainsi que l'API Streams.
+This module contains concise examples you will use in practical sessions to learn how Java collections and streams work.
 
-## Objectifs pédagogiques
+What you will learn
+- Choose the right collection type (List / Set / Map / Queue / Deque) and why.
+- Spot and fix common bugs: nulls, mutable keys, concurrent modification, parallel streams issues.
 
-- Choisir la bonne structure de données (List, Set, Map, Queue, Deque)
-- Comprendre les caractéristiques de performance et les complexités
-- Maîtriser Comparable et Comparator pour l'ordre naturel et personnalisé
-- Exploiter l'API Streams (création, opérations intermédiaires, opérations terminales, collectors)
-- Appliquer les bonnes pratiques : immutabilité, copie défensive, sélection d'implémentation adaptée
-- Éviter les pièges courants (modification pendant itération, clés mutables, mauvaise gestion des null)
+Quick map of examples
+- `list` — ArrayList, LinkedList, subList, unmodifiable views, iteration patterns.
+- `set` — HashSet, LinkedHashSet, TreeSet, deduplication and set operations.
+- `map` — HashMap, modern map APIs (`computeIfAbsent`, `merge`), iteration patterns.
+- `queue` — ArrayDeque, PriorityQueue, FIFO/LIFO usage and task scheduling demos.
+- `comparable` — Comparable and Comparator examples, chaining, nullsFirst/nullsLast.
+- `bestpractices` — short demonstrations of defensive copying and common pitfalls.
+- `guava` — small examples using Google Guava utilities and collections utilities.
+- `eclipse` — examples using Eclipse Collections to illustrate alternative collection APIs and primitives support.
+- `Person.java`, `Book.java` — small immutable models used in many examples.
+- `Demo.java` — runs representative examples; read the code comments for quick pointers.
+- `functional` (**read after the functional programming lecture**) — Stream creation, map/filter/flatMap, collectors, parallel streams, `peek` for debugging.
 
-## Parcours recommandé
+How to run the examples and tests
 
-1. `list.ListExamples` — opérations fondamentales sur les listes
-2. `set.SetExamples` — unicité, ordre et opérations ensemblistes
-3. `map.MapExamples` — associations clé/valeur et méthodes modernes (compute, merge...)
-4. `queue.QueueExamples` — FIFO, LIFO, PriorityQueue, fenêtres glissantes
-5. `comparable.ComparatorExamples` — stratégies de tri avancées
-6. `streams.StreamBasicsExamples` — création et opérations intermédiaires (appliquées aux collections)
-7. `streams.StreamCollectorsExamples` — opérations terminales et collectors (appliquées aux collections)
-8. `bestpractices.CollectionBestPractices` — synthèse des bonnes pratiques
-
-## Lancer les démonstrations
-
-Compilez et exécutez une classe spécifique :
+- Build a shaded (fat) jar for the module and run it directly (preferred for instructors/students who do not want to use the Maven exec plugin):
 
 ```bash
-./mvnw -q -pl tp3 -am compile
-./mvnw -q -pl tp3 exec:java -Dexec.mainClass=fr.univtln.bruno.samples.java101.tp3.list.ListExamples
-```
+# From project root, package the module (includes running tests by default)
+./mvnw -pl tp3 -am package
 
-Ou créez un JAR ombré :
+# Run the shaded jar produced in the module's target directory. The project uses the "-withdependencies" suffix
+# for the fat artifact (example: tp3-0.0.1-SNAPSHOT-withdependencies.jar). Use a wildcard to match the file:
+java -jar tp3/target/*-withdependencies.jar
+```
 
 ```bash
-./mvnw -q -pl tp3 -am package -Dshadedjar
-java -jar tp3/target/tp3-0.0.1-SNAPSHOT-withdependencies.jar
+# Optionally, set the log level (DEBUG, INFO, WARN, ERROR) via system property:
+java -DLOG_LEVEL=INFO -jar tp3/target/*-withdependencies.jar
 ```
 
-## Commandes rapides {#run-commands}
+Note: if your build is configured to produce a differently named shaded artifact, adjust the path accordingly.
 
-Voici des commandes pratiques pour exécuter le démonstrateur principal et d'autres exemples optionnels.
+Edge cases you must understand (short explanations & hints)
 
-### Démo principale (TP3 — par défaut) {#run-demo}
+1) Nulls and Comparators
+- Problem: calling methods on `null` causes NPE; sorting lists with `null` elements throws when comparator doesn't handle nulls.
+- Hint: use `Comparator.nullsFirst(Comparator.naturalOrder())` or validate inputs (factories that reject nulls).
 
-- Exécution rapide via le plugin exec (sans générer le jar ombré) :
+2) equals() vs compareTo() consistency
+- Problem: if `compareTo(a,b) == 0` but `!a.equals(b)`, `TreeSet` and `TreeMap` behave strangely (duplicates or lost entries).
+- Hint: design `compareTo` to consider the same fields used by `equals`, or document the difference and avoid mixing them as keys.
 
-```bash
-./mvnw -q -pl tp3 -am exec:java -Dexec.mainClass=fr.univtln.bruno.samples.java101.tp3.Demo
-```
+3) Mutable keys in Hash-based collections
+- Problem: mutating a key's fields that affect `equals`/`hashCode` after insertion breaks lookups: the entry becomes "lost".
+- Hint: use immutable objects as keys (records) or avoid mutating key fields.
 
-- Générer le JAR ombré (profil parent `shadedjar`) et l'exécuter :
+4) subList is a view (backed by the original list)
+- Problem: modifying the subList modifies the original list and structural changes on the original list may invalidate the subList.
+- Hint: when you need a detached list, create a copy: `new ArrayList<>(original.subList(a,b))`.
 
-```bash
-./mvnw -pl tp3 -am -Pshadedjar -Dapp.main.class=fr.univtln.bruno.samples.java101.tp3.Demo -DskipTests=true package
-java -jar tp3/target/tp3-0.0.1-SNAPSHOT-withdependencies.jar
-```
+5) ConcurrentModificationException (modifying during iteration)
+- Problem: modifying a collection while iterating (for-each) throws `ConcurrentModificationException`.
+- Hint: use `Iterator` + `iterator.remove()` or collect elements to remove, or use concurrent collections (e.g., `CopyOnWriteArrayList`) if appropriate.
 
-### Exemple Guava (Multimap) {#run-guava}
+6) Parallel streams and shared mutable state
+- Problem: using shared mutable containers inside parallel streams leads to race conditions and data corruption.
+- Hint: use collectors (e.g., `Collectors.toList()`), thread-safe collectors (e.g., `toConcurrentMap`) or avoid side-effects.
 
-- Avec `exec:java` :
+7) Performance surprises: LinkedList vs ArrayList
+- Problem: `LinkedList` has O(n) random access; `ArrayList` has O(1) indexed access and better cache locality.
+- Hint: prefer `ArrayList` unless you specifically need frequent head/tail inserts/removals.
 
-```bash
-./mvnw -q -pl tp3 -am exec:java -Dexec.mainClass=fr.univtln.bruno.samples.java101.tp3.guava.GuavaExamples
-```
+8) Boxing/unboxing and collections of primitives
+- Problem: using `List<Integer>` causes boxing overhead; large numeric collections may be slow/memory heavy.
+- Hint: consider `IntStream`/primitive streams or third-party primitive collections if performance matters.
 
-- Via le JAR ombré :
+9) PriorityQueue and comparator mutability
+- Problem: if comparator or elements change after insertion, the queue ordering may become inconsistent.
+- Hint: avoid mutating elements used for ordering, or reinsert elements after mutation.
 
-```bash
-./mvnw -pl tp3 -am -Pshadedjar -Dapp.main.class=fr.univtln.bruno.samples.java101.tp3.guava.GuavaExamples -DskipTests=true package
-java -jar tp3/target/tp3-0.0.1-SNAPSHOT-withdependencies.jar
-```
+10) Floating point ordering and NaN
+- Problem: `Double.NaN` ordering and equality behave oddly with `Double.compare` and `equals`.
+- Hint: be explicit about handling NaN if it can appear in your data (filter or map to a sentinel).
 
-### Exemple Eclipse Collections (primitives) {#run-eclipse}
+11) toArray and generics pitfalls
+- Problem: `someList.toArray(new T[0])` idiom is common, but raw `toArray()` returns `Object[]` and needs a cast.
+- Hint: prefer `toArray(T[]::new)` (Java 11+) when you want a typed array: `list.toArray(String[]::new)`.
 
-- Avec `exec:java` :
+12) Map.computeIfAbsent race conditions (multi-threaded)
+- Problem: `computeIfAbsent` can race in concurrent contexts if the mapping function has side-effects.
+- Hint: use `ConcurrentHashMap` and be careful with side-effects in mapping functions.
 
-```bash
-./mvnw -q -pl tp3 -am exec:java -Dexec.mainClass=fr.univtln.bruno.samples.java101.tp3.eclipse.EclipseCollectionsExamples
-```
+13) Iteration order differences
+- Problem: `HashSet` has no stable order, `LinkedHashSet` preserves insertion order, `TreeSet` sorts elements.
+- Hint: choose the set implementation that matches required ordering semantics.
 
-- Via le JAR ombré :
+14) Stream ordering and short-circuiting
+- Problem: operations like `limit()` or `findFirst()` depend on stream encounter order; unordered streams may change results.
+- Hint: be explicit about ordering; use `parallel()` with care.
 
-```bash
-./mvnw -pl tp3 -am -Pshadedjar -Dapp.main.class=fr.univtln.bruno.samples.java101.tp3.eclipse.EclipseCollectionsExamples -DskipTests=true package
-java -jar tp3/target/tp3-0.0.1-SNAPSHOT-withdependencies.jar
-```
+15) Non-transitive or inconsistent Comparator
+- Problem: a comparator that is not transitive (A<B and B<C but A>C) or inconsistent with equals can break sorting algorithms and lead to IllegalArgumentException in `Arrays.sort` or unpredictable results in `Collections.sort`.
+- Hint: write unit tests that assert comparator transitivity for representative triplets; prefer using Comparator factory methods which tend to produce consistent comparators.
 
-### Programmation fonctionnelle appliquée aux collections (Streams) {#run-parallel}
+16) Comparator throwing exceptions or returning inconsistent signs
+- Problem: comparator code can throw exceptions (NPE, ClassCastException) if it assumes non-null or wrong types.
+- Hint: validate inputs or use `Comparator.nullsFirst` and avoid casting inside comparators.
 
-> Note : la programmation fonctionnelle n'est ici abordée que dans le cadre des collections et de l'API Streams (pipeline, collectors, parallélisme mesuré).
+17) Using identity equality vs equals (IdentityHashMap / IdentityHashSet)
+- Problem: some examples or students may think identity == equals; choosing the wrong semantics can cause bugs.
+- Hint: explain the difference and show when IdentityHashMap is useful (caches keyed by object identity).
 
-- Exemples à consulter / exécuter :
-  - `streams.StreamBasicsExamples` — map, filter, flatMap appliqués à des collections
-  - `streams.StreamCollectorsExamples` — collectors et agrégations sur collections
-  - `streams.ParallelStreamsExamples` — parallélisation des pipelines (attention aux effets de bords)
+18) Weak/soft references and cache semantics (WeakHashMap)
+- Problem: using WeakHashMap for caches can lead to entries disappearing when GC runs, surprising students.
+- Hint: explain lifetime semantics and that WeakHashMap keys are garbage-collected when no strong refs exist.
 
-- Commandes :
+19) Spliterator characteristics and parallel stream pitfalls
+- Problem: certain collection spliterators report size or characteristics that affect parallel division; using custom spliterators incorrectly can break parallel performance or correctness.
+- Hint: rely on standard collections; when implementing custom spliterators, carefully set characteristics and test parallel behavior.
 
-```bash
-# stream basics
-./mvnw -q -pl tp3 -am exec:java -Dexec.mainClass=fr.univtln.bruno.samples.java101.tp3.functionnal.StreamBasicsExamples
+20) Removing while streaming
+- Problem: modifying the underlying collection while it is being streamed can cause CME or inconsistent results.
+- Hint: avoid side-effects while streaming; collect first then modify, or use safe concurrent collections.
 
-# collectors
-./mvnw -q -pl tp3 -am exec:java -Dexec.mainClass=fr.univtln.bruno.samples.java101.tp3.functionnal.StreamCollectorsExamples
+21) Collector characteristics (CONCURRENT, UNORDERED, IDENTITY_FINISH)
+- Problem: custom collectors must correctly declare characteristics; otherwise they may be unsafe for parallel execution.
+- Hint: prefer built-in collectors or follow the Collector contract when implementing your own.
 
-# parallel streams (à mesurer avant usage)
-./mvnw -q -pl tp3 -am exec:java -Dexec.mainClass=fr.univtln.bruno.samples.java101.tp3.functionnal.ParallelStreamsExamples
-```
+22) HashCode collisions and performance traps
+- Problem: many objects with the same hashCode degrade HashMap/HashSet performance to O(n) in worst-case scenarios.
+- Hint: use good hashCode implementations (records help), and for security-sensitive contexts consider defenses.
 
-## Liens vers le cours
+23) Locale-sensitive comparisons and sorting
+- Problem: String ordering may depend on locale (case, accents); `String.compareTo` is not locale-aware.
+- Hint: use `Collator` or `Locale`-aware comparators when sorting human-readable text.
 
-- Cours : https://bruno.univ-tln.fr/notebooks/notebook-java-java101/06_java_101_L_Collections.html
-- Pratique : https://bruno.univ-tln.fr/notebooks/notebook-java-java101/06_java_101_P_Collections.html
+24) Serialization compatibility for records
+- Problem: serializing records across versions can be brittle if fields change.
+- Hint: avoid relying on Java serialization for long-lived persisted data; prefer explicit DTO/versioning.
 
-## Tests
+25) Resource-heavy collectors and memory blow-up
+- Problem: collecting very large streams into lists or maps may OOM the JVM.
+- Hint: prefer streaming processing, use limits, or external storage when processing large datasets.
 
-Les tests valident les comportements essentiels (ex: `PersonTest`). Lancez :
-
-```bash
-./mvnw -q test -pl tp3
-```
-
-## Points d'attention
-
-- Utilisez `List.of`, `Set.of`, `Map.of` pour créer des collections immuables.
-- Préférez `ArrayDeque` à `Stack` (legacy) pour LIFO.
-- N'utilisez pas de clés mutables dans HashMap / HashSet.
-- Préparez la capacité initiale quand la taille est connue pour réduire les reallocations (`new ArrayList<>(expectedSize)`).
-- Évitez `Arrays.asList()` si vous devez modifier la taille (liste de taille fixe).
-
----
-
-## Librairies alternatives : Guava & Eclipse Collections (rappel et exemples)
-
-Cette section compare rapidement deux bibliothèques de collections tierces souvent utiles en production et propose des mini-exemples pour se faire une idée.
-
-Pourquoi les envisager :
-
-- Certaines API historiques (Guava) ou orientées performance/prise en charge mémoire (Eclipse Collections) offrent des structures et utilitaires absents de la JDK ou plus optimisés.
-- Elles peuvent simplifier le code (primitives collections, Multimap, Bags, Fluent APIs) ou améliorer la performance sur des workloads spécifiques.
-
-Guava (Google) — points clés :
-
-- Fournit `ImmutableList`, `ImmutableSet`, `ImmutableMap`, `Multimap`, `BiMap`, `Table`, `Hashes`.
-- API ergonomique et bien documentée.
-- Exemple : Multimap pour associer plusieurs valeurs à une seule clé.
-
-```java
-// Exemple Guava Multimap
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-
-Multimap<String, String> mm = ArrayListMultimap.create();
-mm.put("key1", "v1");
-mm.put("key1", "v2");
-mm.put("key2", "v3");
-
-for (String k : mm.keySet()) {
-  System.out.println(k + " -> " + mm.get(k));
-}
-```
-
-Eclipse Collections — points clés :
-
-- Collections optimisées et API riche (primitive lists/maps, Bags, multimaps).
-- Très performant pour les opérations sur collections primitives (int/long) grâce aux collections spécialisées.
-- Exemple : IntArrayList et RichIterable operations.
-
-```java
-// Exemple Eclipse Collections (int primitive list)
-import org.eclipse.collections.impl.list.mutable.primitive.IntArrayList;
-import org.eclipse.collections.api.list.primitive.IntList;
-
-IntList list = IntArrayList.newListWith(1,2,3,4,5);
-int sum = list.sum();
-System.out.println("sum=" + sum);
-```
-
-Critères de choix (pratique) :
-
-- Besoin d'API (Multimap, BiMap, Table) → Guava si vous voulez une bibliothèque légère et bien intégrée.
-- Performance sur primitives / gros volumes → Eclipse Collections pour ses collections primitives spécialisées.
-- Immutabilité & sécurité thread-safe → JDK `List.of` / `Collections.unmodifiable*` ou `Immutable*` de Guava selon préférences.
-- Dépendances & maintenance → Guava est largement utilisée, Eclipse Collections est très active pour cas de performance. Choisissez selon la maturité et la contrainte de dépendances du projet.
-
-Conseil : commencez par la JDK ; n'ajoutez Guava/Eclipse Collections que si vous avez un besoin concret (API manquante, profil de performance mesuré).
-
----
-
-Bon apprentissage !
+Small tips
+- Use `List.of` / `Set.of` for small immutable collections in examples.
+- When in doubt, write a unit test that expresses the expected behavior.

@@ -16,37 +16,49 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AppliedFunctionnalExamples {
 
-    /**
-     * Demonstrate mapping and collecting on a list of Person instances.
-     */
-    public static void listStreamsExample() {
-        log.info("=== List stream mapping example ===");
-        List<Person> people = List.of(
-                Person.of("Charlie","Brown",35),
-                Person.of("Alice","Smith",30),
-                Person.of("Bob","Jones",25)
-        );
-        log.info("Original names: {}", people.stream().map(Person::getFullName).toList());
-        log.info("Names with ages: {}", people.stream().map(p -> p.getFullName() + "(" + p.getAge() + ")").toList());
-    }
+  /**
+   * Private constructor to prevent instantiation.
+   */
+  private AppliedFunctionnalExamples() {
+    // utility class
+  }
 
-    /**
-     * Demonstrate streaming over grouped values (e.g. after a grouping operation) to extract names.
-     */
-    public static void mapStreamGroupingExample() {
-        log.info("=== Map grouping stream example ===");
-        List<Person> people = List.of(
-                Person.of("Alice","Smith",30),
-                Person.of("Bob","Jones",25),
-                Person.of("Charlie","Brown",35),
-                Person.of("David","Smith",40)
-        );
-        Map<String, List<Person>> byLast = people.stream().collect(Collectors.groupingBy(Person::getLastName));
-        byLast.forEach((ln, ps) -> log.info("{} -> {}", ln, ps.stream().map(Person::getFullName).toList()));
-    }
+  /**
+   * Demonstrate mapping and collecting on a list of Person instances.
+   */
+  public static void listStreamsExample() {
+    log.info("=== List stream mapping example ===");
+    List<Person> people = List.of(
+      Person.of("Charlie", "Brown", 35),
+      Person.of("Alice", "Smith", 30),
+      Person.of("Bob", "Jones", 25)
+    );
+    log.info("Original names: {}", people.stream().map(Person::getFullName).toList());
+    log.info("Names with ages: {}", people.stream().map(p -> p.getFullName() + "(" + p.age() + ")").toList());
+  }
 
-    public static void main(String[] args) {
-        listStreamsExample();
-        mapStreamGroupingExample();
-    }
+  /**
+   * Demonstrate streaming over grouped values (e.g. after a grouping operation) to extract names.
+   */
+  public static void mapStreamGroupingExample() {
+    log.info("=== Map grouping stream example ===");
+    List<Person> people = List.of(
+      Person.of("Alice", "Smith", 30),
+      Person.of("Bob", "Jones", 25),
+      Person.of("Charlie", "Brown", 35),
+      Person.of("David", "Smith", 40)
+    );
+    Map<String, List<Person>> byLast = people.stream().collect(Collectors.groupingBy(Person::lastName));
+    byLast.forEach((ln, ps) -> log.info("{} -> {}", ln, ps.stream().map(Person::getFullName).toList()));
+  }
+
+  /**
+   * Runner for applied functional examples.
+   *
+   * @param args ignored
+   */
+  public static void main(String[] args) {
+    listStreamsExample();
+    mapStreamGroupingExample();
+  }
 }

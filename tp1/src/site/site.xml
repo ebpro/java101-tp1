@@ -12,11 +12,7 @@
       <item name="Back to Main" href="../index.html"/>
     </menu>
 
-    <menu name="Learning Modules">
-      <item name="TP1 — Fundamentals &amp; Patterns" href="../tp1/index.html"/>
-      <item name="TP2 — Interfaces &amp; Polymorphism" href="../tp2/index.html"/>
-      <item name="TP3 — Collections &amp; Streams" href="../tp3/index.html"/>
-    </menu>
+    <!-- Learning Modules menu removed here to avoid duplication; it is provided by the parent site. -->
 
     <menu name="Documentation">
       <item name="Source Xref (Javadoc)" href="xref/index.html"/>

@@ -1,31 +1,30 @@
 package fr.univtln.bruno.samples.java101.tp3;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.*;
 
-@DisplayName("Book tests")
 class BookTest {
-    @Test
-    void shouldCreateValidBook() {
-        Book b = Book.of("ISBN","Title","Author", LocalDate.of(2020,1,1), 10.5);
-        assertThat(b.getIsbn()).isEqualTo("ISBN");
-        assertThat(b.getTitle()).isEqualTo("Title");
-        assertThat(b.getAuthor()).isEqualTo("Author");
-        assertThat(b.getPrice()).isEqualTo(10.5);
-    }
-    @Test
-    void shouldRejectNegativePrice() {
-        assertThatThrownBy(() -> Book.of("ISBN","T","A", LocalDate.now(), -1)).isInstanceOf(IllegalArgumentException.class);
-    }
-    @Test
-    void shouldCompareByTitle() {
-        Book a = Book.of("1","Alpha","Auth", LocalDate.now(), 1);
-        Book b = Book.of("2","Beta","Auth", LocalDate.now(), 1);
-        assertThat(a.compareTo(b)).isLessThan(0);
-    }
+
+  @Test
+  void of_validatesArguments() {
+    assertThatThrownBy(() -> Book.of(null, "Title", "Author", LocalDate.now(), 10.0)).isInstanceOf(IllegalArgumentException.class);
+    assertThatThrownBy(() -> Book.of("978", "  ", "Author", LocalDate.now(), 10.0)).isInstanceOf(IllegalArgumentException.class);
+    assertThatThrownBy(() -> Book.of("978", "Title", "", LocalDate.now(), 10.0)).isInstanceOf(IllegalArgumentException.class);
+    assertThatThrownBy(() -> Book.of("978", "Title", "Author", null, 10.0)).isInstanceOf(IllegalArgumentException.class);
+    assertThatThrownBy(() -> Book.of("978", "Title", "Author", LocalDate.now(), -1)).isInstanceOf(IllegalArgumentException.class);
+  }
+
+  @Test
+  void compareTo_consistent_ordering() {
+    Book b1 = Book.of("111", "A", "Auth", LocalDate.of(2020,1,1), 10.0);
+    Book b2 = Book.of("111", "A", "Auth", LocalDate.of(2020,1,1), 10.0);
+    Book b3 = Book.of("112", "B", "Auth2", LocalDate.of(2019,1,1), 12.0);
+
+    assertThat(b1.compareTo(b2)).isZero();
+    assertThat(b1.compareTo(b3)).isNegative();
+  }
 }
 

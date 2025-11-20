@@ -1,57 +1,70 @@
 package fr.univtln.bruno.samples.java101.tp3;
 
+import fr.univtln.bruno.samples.java101.tp3.bestpractices.CollectionBestPractices;
+import fr.univtln.bruno.samples.java101.tp3.comparable.ComparatorExamples;
+import fr.univtln.bruno.samples.java101.tp3.functional.CollectorsExamples;
+import fr.univtln.bruno.samples.java101.tp3.functional.StreamBasicsExamples;
 import fr.univtln.bruno.samples.java101.tp3.list.ListExamples;
-import fr.univtln.bruno.samples.java101.tp3.set.SetExamples;
 import fr.univtln.bruno.samples.java101.tp3.map.MapExamples;
 import fr.univtln.bruno.samples.java101.tp3.queue.QueueExamples;
-import fr.univtln.bruno.samples.java101.tp3.comparable.ComparatorExamples;
-import fr.univtln.bruno.samples.java101.tp3.functionnal.StreamBasicsExamples;
-import fr.univtln.bruno.samples.java101.tp3.functionnal.CollectorsExamples;
-import fr.univtln.bruno.samples.java101.tp3.bestpractices.CollectionBestPractices;
+import fr.univtln.bruno.samples.java101.tp3.set.SetExamples;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Small demo runner that executes representative examples from TP3 (Collections & Streams).
  *
- * <p>This class prints labeled sections and invokes selected example methods from the
+ * <p>This class logs labeled sections and invokes selected example methods from the
  * subpackages so students can run a compact demonstration of the module.</p>
  */
+@Slf4j
 public class Demo {
-    public static void main(String[] args) {
-        System.out.println("==== TP3 Demo (Collections & Streams) ====");
+  /**
+   * Private constructor to prevent instantiation.
+   */
+  private Demo() {
+  }
 
-        // Each block invokes a representative subset to keep output readable.
-        System.out.println("\n-- ListExamples --");
-        ListExamples.arrayListExample();
-        ListExamples.sortingExample();
+  /**
+   * Demo runner for TP3 examples (logs output via SLF4J).
+   *
+   * @param args ignored
+   */
+  public static void main(String[] args) {
+    log.info("==== TP3 Demo (Collections & Streams) ====");
 
-        System.out.println("\n-- SetExamples --");
-        SetExamples.hashSetExample();
-        SetExamples.setOperationsExample();
+    // Each block invokes a representative subset to keep output readable.
+    log.info("-- ListExamples --");
+    ListExamples.arrayListExample();
+    ListExamples.sortingExample();
 
-        System.out.println("\n-- MapExamples --");
-        MapExamples.hashMapExample();
-        MapExamples.modernMapMethodsExample();
+    log.info("-- SetExamples --");
+    SetExamples.hashSetExample();
+    SetExamples.setOperationsExample();
 
-        System.out.println("\n-- QueueExamples --");
-        QueueExamples.priorityQueueExample();
-        QueueExamples.taskSchedulingExample();
+    log.info("-- MapExamples --");
+    MapExamples.hashMapExample();
+    MapExamples.modernMapMethodsExample();
 
-        System.out.println("\n-- ComparatorExamples --");
-        ComparatorExamples.customComparatorExample();
-        ComparatorExamples.comparatorChainingExample();
+    log.info("-- QueueExamples --");
+    QueueExamples.priorityQueueExample();
+    QueueExamples.taskSchedulingExample();
 
-        System.out.println("\n-- StreamBasicsExamples --");
-        StreamBasicsExamples.streamCreationExample();
-        StreamBasicsExamples.distinctSortedLimitExample();
+    log.info("-- ComparatorExamples --");
+    ComparatorExamples.customComparatorExample();
+    ComparatorExamples.comparatorChainingExample();
 
-        System.out.println("\n-- StreamCollectorsExamples (CollectorsExamples) --");
-        CollectorsExamples.groupingAndCountingExample();
-        CollectorsExamples.terminalOperationsExample();
+    log.info("-- StreamBasicsExamples --");
+    StreamBasicsExamples.streamCreationExample();
+    StreamBasicsExamples.distinctSortedLimitExample();
 
-        System.out.println("\n-- CollectionBestPractices --");
-        CollectionBestPractices.defensiveCopyingExample();
-        CollectionBestPractices.commonPitfallsExample();
+    log.info("-- StreamCollectorsExamples (CollectorsExamples) --");
+    CollectorsExamples.groupingAndCountingExample();
+    CollectorsExamples.terminalOperationsExample();
 
-        System.out.println("\n==== End of TP3 demonstration ====");
-    }
+    log.info("-- CollectionBestPractices --");
+    CollectionBestPractices.defensiveCopyingExample();
+    CollectionBestPractices.commonPitfallsExample();
+
+    log.info("==== End of TP3 demonstration ====");
+  }
 }
