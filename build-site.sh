@@ -163,10 +163,24 @@ fi
 CMD=()
 CMD+=("${MVN_CMD[@]}")
 CMD+=("${MVN_GOALS[@]}")
-if [[ ${#MVN_EXTRA[@]:-0} -gt 0 ]]; then
+
+# Safely check MVN_EXTRA length (avoid `${#MVN_EXTRA[@]:-0}` bad-substitution)
+if [[ "${MVN_EXTRA+x}" = "x" ]]; then
+  MVN_EXTRA_COUNT=${#MVN_EXTRA[@]}
+else
+  MVN_EXTRA_COUNT=0
+fi
+if (( MVN_EXTRA_COUNT > 0 )); then
   CMD+=("${MVN_EXTRA[@]}")
 fi
-if [[ ${#PMD_SKIP_ARRAY[@]:-0} -gt 0 ]]; then
+
+# Safely check PMD_SKIP_ARRAY length (avoid `${#PMD_SKIP_ARRAY[@]:-0}` bad-substitution)
+if [[ "${PMD_SKIP_ARRAY+x}" = "x" ]]; then
+  PMD_SKIP_COUNT=${#PMD_SKIP_ARRAY[@]}
+else
+  PMD_SKIP_COUNT=0
+fi
+if (( PMD_SKIP_COUNT > 0 )); then
   CMD+=("${PMD_SKIP_ARRAY[@]}")
 fi
 
