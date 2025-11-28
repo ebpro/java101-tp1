@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>fr.univtln.bruno.samples.java101</groupId>
+    <artifactId>java101-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>tp4</artifactId>
+  <name>TP4 - Functional Programming &amp; Modern Java</name>
+  <description>Teaching examples for TP4 (Functional Programming, Lambdas, Streams, Modern Java features up to Java 25)</description>
+
+  <url>https://github.com/ebpro/java101-tp1/tp4</url>
+
+  <properties>
+    <!-- default executable class for shaded jar; can be overridden by CLI -Dapp.main.class=... -->
+    <app.main.class>fr.univtln.bruno.samples.java101.tp4.Demo</app.main.class>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+    </dependency>
+    <!-- Centralized configuration module providing logback.xml -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>config</artifactId>
+      <version>${project.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.6.2</version>
+        <configuration>
+          <mainClass>${app.main.class}</mainClass>
+        </configuration>
+      </plugin>
+      <!-- Note: shading is handled by the parent 'shadedjar' profile; no per-module shade config here. -->
+    </plugins>
+  </build>
+</project>
+
