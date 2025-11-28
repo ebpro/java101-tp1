@@ -27,6 +27,13 @@ Explore Java Collections and Streams with best practices and examples:
 - Stream pipelines, collectors, and grouping
 - Parallel streams and thread-safety considerations
 
+### [TP4 — Functional Programming & Modern Java](./tp4/index.html)
+Learn modern, functional-style Java and recent language features (up to Java 25):
+- Lambdas, method references, and functional interfaces
+- Stream API: creation, intermediate and terminal operations, collectors
+- Optional, records, pattern matching, and other modern features
+- Best practices for immutable data and side-effect-free code
+
 ## 📊 Reports & Documentation
 
 ### Consolidated Reports
@@ -35,7 +42,7 @@ Explore Java Collections and Streams with best practices and examples:
 - Combined quality analysis
 
 ### Module Reports
-For detailed module-level reports (tests, coverage, quality metrics), open the page of the module you want (e.g. navigate to TP1, TP2 or TP3). This homepage shows only aggregated reports:
+For detailed module-level reports (tests, coverage, quality metrics), open the page of the module you want (e.g. navigate to TP1, TP2, TP3). This homepage shows only aggregated reports:
 
 - **[Aggregated Reports](./report-aggregate/index.html)** — consolidated metrics across all modules
 
@@ -43,6 +50,7 @@ For detailed module-level reports (tests, coverage, quality metrics), open the p
 - [TP1 Javadoc](./tp1/xref/index.html)
 - [TP2 Javadoc](./tp2/xref/index.html)
 - [TP3 Javadoc](./tp3/xref/index.html)
+- [TP4 Javadoc](./tp4/xref/index.html)
 
 ## 🚀 Quick Start
 
@@ -71,14 +79,15 @@ cd java101-tp1
 1. Start with **[TP1](./tp1/index.html)** to learn fundamental patterns
 2. Progress to **[TP2](./tp2/index.html)** for advanced OOP concepts
 3. Explore **[TP3](./tp3/index.html)** for collections & streams
-4. Explore the **tests** to see patterns in action
-5. Review **[quality reports](./report-aggregate/index.html)** to understand code metrics
+4. Dive into **[TP4](./tp4/index.html)** for functional programming and modern Java features
+5. Explore the **tests** to see patterns in action
+6. Review **[quality reports](./report-aggregate/index.html)** to understand code metrics
 
 ### Key Concepts Covered:
 - **Design Patterns**: Factory, Builder, Singleton, Value Object
 - **OOP Principles**: Encapsulation, Inheritance, Polymorphism, Composition
 - **Best Practices**: Immutability, Interface Segregation, Testing
-- **Modern Java**: Records, Default Methods, Lombok
+- **Modern Java**: Records, Default Methods, Lombok, Pattern Matching
 
 ## 🛠️ Technology Stack
 
