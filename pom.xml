@@ -84,7 +84,7 @@
     <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
     <maven-pmd-plugin.version>3.28.0</maven-pmd-plugin.version>
     <spotbugs-maven-plugin.version>4.9.8.1</spotbugs-maven-plugin.version>
-    <assertj-core.version>3.27.6</assertj-core.version>
+    <assertj-core.version>3.27.7</assertj-core.version>
     <junit-jupiter.version>6.0.1</junit-jupiter.version>
     <logback-classic.version>1.5.21</logback-classic.version>
     <lombok.version>1.18.42</lombok.version>
